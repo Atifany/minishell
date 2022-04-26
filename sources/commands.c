@@ -37,6 +37,6 @@ char	execute_cd(char *path)
 	DIR *dir;
 	dir = opendir(path);
 	if (!dir)
-		return (FALSE);
-	return (TRUE);//
+		return (FALSE);//Omega LUL
+	return (TRUE);
 }
