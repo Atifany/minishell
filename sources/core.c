@@ -6,7 +6,7 @@
 /*   By: hnickole <hnickole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:34:14 by atifany           #+#    #+#             */
-/*   Updated: 2022/04/26 19:08:22 by hnickole         ###   ########.fr       */
+/*   Updated: 2022/04/26 20:17:15 by hnickole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static char	take_input(char *input_str)
 
 	buf = readline("minishell >> ");
 	ft_strlcpy(input_str, buf, 100000);
-	return (TRUE);
+	return (0);
 }
 
 static char **parse_to_array(char *input_str)
@@ -39,19 +39,19 @@ static char ft_switch(char **exec_line)
 	}
 	else if (!ft_strncmp(exec_line[0], "pwd", ft_strlen(exec_line[0])))
 	{
-		if (!print_dir())
+		if (print_dir())
 			printf("Error: getcwd() failed\n");
 	}
 	else if (!ft_strncmp(exec_line[0], "cd", ft_strlen(exec_line[0])))
 	{
-		if (!execute_cd(exec_line[1]))
+		if (execute_cd(exec_line[1]))
 			printf("Error: %s does not exist or there is not enough memory\n", exec_line[1]);
 	}
 	else if (!ft_strncmp(exec_line[0], "exit", ft_strlen(exec_line[0])))
-		return (FALSE);
+		return (1);
 	else
 		printf("%s is not recognised as command\n", exec_line[0]);
-	return (TRUE);
+	return (0);
 }
 
 int main()
@@ -73,7 +73,7 @@ int main()
 		}
 		flag = ft_switch(exec_line);
 		free_array(exec_line);
-		if (!flag)
+		if (flag)
 			break ;
 	}
 	return (0);

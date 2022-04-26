@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 	printf("LOG: argument| %d is %s\n", argc, *argv);
 	while (i <= argv[1][0] - '0')
 	{
-		printf("[%d]\n", i);
+		printf("[%d]\ngit pull", i);
 		i++;
 	}
 	return (0);

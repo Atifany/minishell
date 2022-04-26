@@ -7,7 +7,7 @@ char	execute_file(char *command, char **arguments)
 
 	child_id = fork();
 	if (child_id == -1)
-		return (FALSE);
+		return (1);
 	//child
 	if (child_id == 0)
 	{
@@ -18,7 +18,7 @@ char	execute_file(char *command, char **arguments)
 	//parent
 	else
 		wait(&status);
-	return (TRUE);
+	return (0);
 }
 
 char	print_dir(void)
@@ -27,10 +27,10 @@ char	print_dir(void)
 
 	buf = getcwd(NULL, 0);
 	if (!buf)
-		return (FALSE);
+		return (1);
 	printf("%s\n", buf);
 	free(buf);
-	return (TRUE);
+	return (0);
 }
 
 char	execute_cd(char *path)
@@ -38,6 +38,6 @@ char	execute_cd(char *path)
 	int dir;
 	dir = chdir(path);
 	if (dir == -1)
-		return (FALSE);
-	return (TRUE);
+		return (1);
+	return (0);
 }
