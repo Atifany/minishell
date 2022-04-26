@@ -32,9 +32,9 @@ int main()
 		//print_dir();
 		take_input(input_str);
 		//printf("Confirm input: %s\n", input_str);
-		//>>>>ANIME<<<<
-		//>>>>>MUST<<<<
-		//>>>>>>>DIE<<<
+		//>>>>memese<<<<
+		//>>>>>lolies<<<<
+		//>>>>>>>uwu<<<
 		//exec_comms(commands);
 	}
 	return (0);
