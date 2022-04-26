@@ -41,6 +41,6 @@
 void	print_dir(void);
 
 // implemented built-in's
-char	execute_file(char *command);
+char	execute_file(char *command, char **arguments);
 
 #endif

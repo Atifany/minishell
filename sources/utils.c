@@ -12,12 +12,3 @@
 
 #include "../minishell.h"
 
-void	print_dir(void)
-{
-	char	*buf;
-
-	buf = NULL;
-	printf("%s\n", getcwd(buf, 0));
-	if (buf)
-		free(buf);
-}
