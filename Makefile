@@ -2,7 +2,7 @@
 NAME = minishell
 
 # sources
-_SRC = core.c utils.c
+_SRC = core.c utils.c commands.c
 SRC_DIR = sources
 SRC = $(_SRC:%=$(SRC_DIR)/%)
 # tmp files

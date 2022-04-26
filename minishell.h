@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 // includes
+# include "libs/libft/libft.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -37,9 +38,9 @@
 # define NC "\e[0m"
 
 //utils
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
-size_t	ft_strlen(char *str);
 void	print_dir(void);
-void	ft_bzero(char *str, size_t bytes);
+
+// implemented built-in's
+char	execute_file(char *command);
 
 #endif

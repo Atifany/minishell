@@ -21,26 +21,10 @@ static char	take_input(char *input_str)
 	return (TRUE);
 }
 
-static char	execute_file(char *command)
+static char **parse_to_array(char *input_str)
 {
-	int child_id;
-	int status;
-
-	child_id = fork();
-	if (child_id == -1)
-		return (FALSE);
-	//child
-	if (child_id == 0)
-	{
-		execve(command, NULL, NULL);
-		exit(0);
-	}
-	//parent
-	else
-	{
-		wait(&status);
-	}
-	return (TRUE);
+	char **array = ft_split(input_str);
+	return (array);
 }
 
 int main()
