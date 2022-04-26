@@ -16,7 +16,8 @@ static char	take_input(char *input_str)
 {
 	char	*buf;
 
-	buf = readline("minishell>> ");
+	printf("%sminishell%s >> %s", CYN, BCYN, NC);
+	buf = readline("");
 	ft_strlcpy(input_str, buf, 100000);
 	return (TRUE);
 }
@@ -27,36 +28,48 @@ static char **parse_to_array(char *input_str)
 	return (array);
 }
 
-static void ft_switch(char **exec_line)
+static char ft_switch(char **exec_line)
 {
 	if (!ft_strncmp(exec_line[0], "./", 2))
 	{
-		//check if correct line passed
+		//check if correct line was passed
 		//add executable name before arguments!
 		execute_file(*exec_line, exec_line + 1);
 		//catch error if present
 	}
-	if (!ft_strncmp(exec_line[0], "pwd", 3))
+	else if (!ft_strncmp(exec_line[0], "pwd", 3))
 	{
-		print_dir();
+		if (!print_dir())
+			printf("Error: getcwd() failed\n");
 	}
+	else if (!ft_strncmp(exec_line[0], "exit", 4))
+		return (FALSE);
+	else
+		printf("%s is not recognised as command\n", exec_line[0]);
+	return (TRUE);
 }
 
 int main()
 {
+	char	flag;
 	char	input_str[100000];
 	char	**exec_line;
 
 	ft_bzero(input_str, 100000);
 	while (TRUE)
 	{
-		//print_dir();
 		take_input(input_str);
 		//printf("Confirm input: %s\n", input_str);
-		exec_line = parse_to_array(input_str); //parse to comms and args array
-		if (exec_line)
-			ft_switch(exec_line); //choose command to execute
-
+		exec_line = parse_to_array(input_str);
+		if (!exec_line)
+		{
+			printf("Error: not enough memory");
+			break ;
+		}
+		flag = ft_switch(exec_line);
+		free_array(exec_line);
+		if (!flag)
+			break ;
 	}
 	return (0);
 }

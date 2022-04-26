@@ -16,18 +16,18 @@ char	execute_file(char *command, char **arguments)
 	}
 	//parent
 	else
-	{
 		wait(&status);
-	}
 	return (TRUE);
 }
 
-void	print_dir(void)
+char	print_dir(void)
 {
 	char	*buf;
 
-	buf = NULL;
-	printf("%s\n", getcwd(buf, 0));
-	if (buf)
-		free(buf);
+	buf = getcwd(NULL, 0);
+	if (!buf)
+		return (FALSE);
+	printf("%s\n", buf);
+	free(buf);
+	return (TRUE);
 }
