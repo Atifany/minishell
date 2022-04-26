@@ -38,5 +38,5 @@ char	execute_cd(char *path)
 	dir = opendir(path);
 	if (!dir)
 		return (FALSE);
-	return (TRUE);
+	return (TRUE);//
 }
