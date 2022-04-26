@@ -30,19 +30,19 @@ static char **parse_to_array(char *input_str)
 
 static char ft_switch(char **exec_line)
 {
-	if (!ft_strncmp(exec_line[0], "./", 2))
+	if (!ft_strncmp(exec_line[0], "./", ft_strlen(exec_line[0])))
 	{
 		//check if correct line was passed
 		//add executable name before arguments!
 		execute_file(*exec_line, exec_line + 1);
 		//catch error if present
 	}
-	else if (!ft_strncmp(exec_line[0], "pwd", 3))
+	else if (!ft_strncmp(exec_line[0], "pwd", ft_strlen(exec_line[0])))
 	{
 		if (!print_dir())
 			printf("Error: getcwd() failed\n");
 	}
-	else if (!ft_strncmp(exec_line[0], "exit", 4))
+	else if (!ft_strncmp(exec_line[0], "exit", ft_strlen(exec_line[0])))
 		return (FALSE);
 	else
 		printf("%s is not recognised as command\n", exec_line[0]);
