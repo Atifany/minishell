@@ -35,6 +35,12 @@ int main()
 		
 		// >>>>mem<<<<<
 		//parse_input(commands, input_str);
+		//handle_pipes(input_str);
+		///
+		//
+		///
+		//
+		//exec_comms(commands);
 	}
 	return (0);
 }
