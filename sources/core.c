@@ -33,7 +33,6 @@ static char ft_switch(char **exec_line)
 	if (!ft_strncmp(exec_line[0], "./", 2))
 	{
 		//check if correct line was passed
-		//add executable name before arguments!
 		execute_file(*exec_line, exec_line);
 		//catch error if present
 	}

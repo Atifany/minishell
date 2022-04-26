@@ -3,7 +3,6 @@
 char	execute_file(char *command, char **arguments)
 {
 	int child_id;
-	int status;
 
 	child_id = fork();
 	if (child_id == -1)
@@ -12,12 +11,20 @@ char	execute_file(char *command, char **arguments)
 	if (child_id == 0)
 	{
 		arguments[0] = arguments[0] + 2;
-		execve(command, arguments, NULL);
-		exit(0);
+		if (execve(command, arguments, NULL) < 0)
+		{
+			printf("Error: invalid filename\n");
+			kill(getpid(), SIGTERM);
+		}
 	}
 	//parent
 	else
-		wait(&status);
+	{
+		//waitpid(-1, NULL, 0);
+		//printf("%d\n", child_id);
+		waitpid(child_id, NULL, 0);
+		//printf("wait\n");
+	}
 	return (TRUE);
 }
 

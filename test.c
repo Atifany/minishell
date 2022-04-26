@@ -7,7 +7,7 @@ int main(int argc, char **argv)
 	if (argc != 2)
 	{
 		printf("Error: argument| %d is %s\n", argc, *argv);
-		return (1);
+		return (-5);
 	}
 	printf("LOG: argument| %d is %s\n", argc, *argv);
 	while (i <= argv[1][0] - '0')
