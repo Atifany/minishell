@@ -35,6 +35,7 @@ int main()
 		//>>>>ANIME<<<<
 		//>>>>>MUST<<<<
 		//>>>>>>>DIE<<<
+		//>>OMEGALOL<<<
 		//exec_comms(commands);
 	}
 	return (0);
