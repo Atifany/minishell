@@ -6,7 +6,7 @@
 /*   By: hnickole <hnickole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:34:14 by atifany           #+#    #+#             */
-/*   Updated: 2022/04/26 20:17:15 by hnickole         ###   ########.fr       */
+/*   Updated: 2022/04/26 20:40:01 by hnickole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ static char	take_input(char *input_str)
 
 	buf = readline("\e[0;36mminishell \e[1;36m>> \e[0m");
 	ft_strlcpy(input_str, buf, 100000);
+	free(buf);
 	return (0);
 }
 
@@ -30,7 +31,9 @@ static char **parse_to_array(char *input_str)
 
 static char ft_switch(char **exec_line)
 {
-	if (!ft_strncmp(exec_line[0], "./", 2))
+	if (exec_line == NULL || *exec_line == NULL)
+		return 0;
+	else if (!ft_strncmp(exec_line[0], "./", 2))
 	{
 		//check if correct line was passed
 		//add executable name before arguments!
@@ -63,7 +66,7 @@ int main()
 	ft_bzero(input_str, 100000);
 	while (TRUE)
 	{
-		take_input(input_str);
+		take_input(input_str); 
 		//printf("Confirm input: %s\n", input_str);
 		exec_line = parse_to_array(input_str);
 		if (!exec_line)
