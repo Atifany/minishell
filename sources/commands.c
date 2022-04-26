@@ -35,9 +35,9 @@ char	print_dir(void)
 
 char	execute_cd(char *path)
 {
-	DIR *dir;
-	dir = opendir(path);
-	if (!dir)
+	int dir;
+	dir = chdir(path);
+	if (dir == -1)
 		return (FALSE);
 	return (TRUE);
 }
