@@ -42,6 +42,11 @@ static char ft_switch(char **exec_line)
 		if (!print_dir())
 			printf("Error: getcwd() failed\n");
 	}
+	else if (!ft_strncmp(exec_line[0], "cd", ft_strlen(exec_line[0])))
+	{
+		if (!execute_cd(exec_line[1]))
+			printf("Error: %s does not exist or there is not enough memory\n", exec_line[1]);
+	}
 	else if (!ft_strncmp(exec_line[0], "exit", ft_strlen(exec_line[0])))
 		return (FALSE);
 	else

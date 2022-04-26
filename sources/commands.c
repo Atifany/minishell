@@ -31,3 +31,12 @@ char	print_dir(void)
 	free(buf);
 	return (TRUE);
 }
+
+char	execute_cd(char *path)
+{
+	DIR *dir;
+	dir = opendir(path);
+	if (!dir)
+		return (FALSE);
+	return (TRUE);
+}

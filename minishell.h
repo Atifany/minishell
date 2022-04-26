@@ -15,6 +15,7 @@
 
 // includes
 # include "libs/libft/libft.h"
+# include <dirent.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -51,5 +52,6 @@ void	free_array(char **array);
 // implemented built-in's
 char	execute_file(char *command, char **arguments);
 char	print_dir(void);
+char	execute_cd(char *path);
 
 #endif
