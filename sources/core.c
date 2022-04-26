@@ -16,7 +16,7 @@ static char	take_input(char *input_str)
 {
 	char	*buf;
 
-	buf = readline("minishell >> ");
+	buf = readline("\e[0;36mminishell \e[1;36m>> \e[0m");
 	ft_strlcpy(input_str, buf, 100000);
 	return (0);
 }
