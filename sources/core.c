@@ -16,8 +16,7 @@ static char	take_input(char *input_str)
 {
 	char	*buf;
 
-	printf("%sminishell%s >> %s", CYN, BCYN, NC);
-	buf = readline("");
+	buf = readline("minishell >> ");
 	ft_strlcpy(input_str, buf, 100000);
 	return (TRUE);
 }
