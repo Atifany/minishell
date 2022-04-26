@@ -24,6 +24,7 @@ static char	take_input(char *input_str)
 int main()
 {
 	char	input_str[100000];
+	//char	*commands[100000]
 
 	ft_bzero(input_str, 100000);
 	while (TRUE)
@@ -31,6 +32,9 @@ int main()
 		//print_dir();
 		take_input(input_str);
 		//printf("Confirm input: %s\n", input_str);
+		//parse_input(commands, input_str);
+		//handle_pipes(input_str);
+		//exec_comms(commands);
 	}
 	return (0);
 }
