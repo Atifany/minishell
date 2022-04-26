@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   core.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atifany <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: hnickole <hnickole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:34:14 by atifany           #+#    #+#             */
-/*   Updated: 2022/04/23 15:34:15 by atifany          ###   ########.fr       */
+/*   Updated: 2022/04/26 19:08:22 by hnickole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,18 @@ static char	take_input(char *input_str)
 
 static char **parse_to_array(char *input_str)
 {
-	char **array = ft_split(input_str, ' ');
+	char	**array;
+	array = ft_split(input_str, ' ');
 	return (array);
 }
 
 static char ft_switch(char **exec_line)
 {
-	if (!ft_strncmp(exec_line[0], "./", ft_strlen(exec_line[0])))
+	if (!ft_strncmp(exec_line[0], "./", 2))
 	{
 		//check if correct line was passed
 		//add executable name before arguments!
-		execute_file(*exec_line, exec_line + 1);
+		execute_file(*exec_line, exec_line);
 		//catch error if present
 	}
 	else if (!ft_strncmp(exec_line[0], "pwd", ft_strlen(exec_line[0])))

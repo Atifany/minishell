@@ -11,6 +11,7 @@ char	execute_file(char *command, char **arguments)
 	//child
 	if (child_id == 0)
 	{
+		arguments[0] = arguments[0] + 2;
 		execve(command, arguments, NULL);
 		exit(0);
 	}
@@ -34,9 +35,9 @@ char	print_dir(void)
 
 char	execute_cd(char *path)
 {
-	int	dir;
-	dir = chdir(path);
-	if (dir == -1)
+	DIR *dir;
+	dir = opendir(path);
+	if (!dir)
 		return (FALSE);
 	return (TRUE);
 }
