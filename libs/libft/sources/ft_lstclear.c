@@ -1,23 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   ft_lstclear.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: atifany <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/23 16:16:41 by atifany           #+#    #+#             */
-/*   Updated: 2022/04/23 16:16:42 by atifany          ###   ########.fr       */
+/*   Created: 2021/10/22 13:54:29 by atifany           #+#    #+#             */
+/*   Updated: 2021/10/22 13:54:30 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../libft.h"
 
-void	print_dir(void)
+void	ft_lstclear(t_list **lst, void (*del)(void *))
 {
-	char	*buf;
+	t_list	*tmp;
+	t_list	*buf;
 
-	buf = NULL;
-	printf("%s\n", getcwd(buf, 0));
-	if (buf)
-		free(buf);
+	if (!*lst)
+		return ;
+	tmp = *lst;
+	buf = tmp->next;
+	while (buf)
+	{
+		ft_lstdelone(tmp, del);
+		tmp = buf;
+		buf = tmp->next;
+	}
+	ft_lstdelone(tmp, del);
+	*lst = NULL;
 }

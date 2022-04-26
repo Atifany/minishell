@@ -1,23 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: atifany <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/23 16:16:41 by atifany           #+#    #+#             */
-/*   Updated: 2022/04/23 16:16:42 by atifany          ###   ########.fr       */
+/*   Created: 2021/10/26 16:04:19 by atifany           #+#    #+#             */
+/*   Updated: 2021/10/26 16:04:20 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../libft.h"
 
-void	print_dir(void)
+char	*ft_strrchr(const char *s, int c)
 {
-	char	*buf;
+	char	*target;
 
-	buf = NULL;
-	printf("%s\n", getcwd(buf, 0));
-	if (buf)
-		free(buf);
+	target = NULL;
+	while (*s)
+	{
+		if (*s == (unsigned char)c)
+			target = (char *)s;
+		s++;
+	}
+	if ((unsigned char)c == 0)
+		return ((char *)s);
+	return (target);
 }

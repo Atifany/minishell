@@ -1,23 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   ft_memchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: atifany <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/23 16:16:41 by atifany           #+#    #+#             */
-/*   Updated: 2022/04/23 16:16:42 by atifany          ###   ########.fr       */
+/*   Created: 2021/10/07 12:20:04 by atifany           #+#    #+#             */
+/*   Updated: 2021/10/07 12:20:05 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../libft.h"
 
-void	print_dir(void)
+void	*ft_memchr(const void *s, int c, size_t n)
 {
-	char	*buf;
+	const unsigned char	*str;
 
-	buf = NULL;
-	printf("%s\n", getcwd(buf, 0));
-	if (buf)
-		free(buf);
+	str = (const unsigned char *)s;
+	while (n-- > 0)
+	{
+		if (*str == (unsigned char)c)
+			return ((void *)str);
+		str++;
+	}
+	return (NULL);
 }

@@ -1,23 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: atifany <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/23 16:16:41 by atifany           #+#    #+#             */
-/*   Updated: 2022/04/23 16:16:42 by atifany          ###   ########.fr       */
+/*   Created: 2021/10/07 13:52:15 by atifany           #+#    #+#             */
+/*   Updated: 2021/10/07 13:52:15 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../libft.h"
 
-void	print_dir(void)
+char	*ft_strdup(const char *s1)
 {
-	char	*buf;
+	char	*s2;
 
-	buf = NULL;
-	printf("%s\n", getcwd(buf, 0));
-	if (buf)
-		free(buf);
+	s2 = (char *)ft_calloc(ft_strlen(s1) + 1, sizeof(char));
+	if (!s2)
+		return (s2);
+	ft_strlcpy(s2, s1, sizeof(char) * (ft_strlen(s1) + 1));
+	return (s2);
 }

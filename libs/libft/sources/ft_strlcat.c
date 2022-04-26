@@ -1,23 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: atifany <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/23 16:16:41 by atifany           #+#    #+#             */
-/*   Updated: 2022/04/23 16:16:42 by atifany          ###   ########.fr       */
+/*   Created: 2021/10/06 17:25:56 by atifany           #+#    #+#             */
+/*   Updated: 2021/10/06 17:25:58 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../libft.h"
 
-void	print_dir(void)
+size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
 {
-	char	*buf;
+	size_t	i;
+	size_t	j;
+	size_t	dst_len;
 
-	buf = NULL;
-	printf("%s\n", getcwd(buf, 0));
-	if (buf)
-		free(buf);
+	dst_len = ft_strlen(dst);
+	i = ft_strlen(dst);
+	j = 0;
+	if (dstsize <= dst_len)
+		return (dstsize + ft_strlen(src));
+	while (i + 1 < dstsize && src[j])
+		dst[i++] = src[j++];
+	dst[i] = 0;
+	return (dst_len + ft_strlen(src));
 }

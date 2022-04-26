@@ -1,23 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: atifany <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/23 16:16:41 by atifany           #+#    #+#             */
-/*   Updated: 2022/04/23 16:16:42 by atifany          ###   ########.fr       */
+/*   Created: 2021/10/11 17:37:05 by atifany           #+#    #+#             */
+/*   Updated: 2021/10/11 17:37:06 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../libft.h"
 
-void	print_dir(void)
+char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
-	char	*buf;
+	char	*ans;
+	int		i;
 
-	buf = NULL;
-	printf("%s\n", getcwd(buf, 0));
-	if (buf)
-		free(buf);
+	i = 0;
+	if (!s)
+		return (NULL);
+	ans = (char *)ft_calloc((ft_strlen(s) + 1), sizeof(char));
+	if (!ans)
+		return (NULL);
+	while (s[i] != 0)
+	{
+		ans[i] = f(i, s[i]);
+		i++;
+	}
+	return (ans);
 }

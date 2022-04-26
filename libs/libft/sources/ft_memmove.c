@@ -1,23 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: atifany <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/23 16:16:41 by atifany           #+#    #+#             */
-/*   Updated: 2022/04/23 16:16:42 by atifany          ###   ########.fr       */
+/*   Created: 2021/10/07 12:43:23 by atifany           #+#    #+#             */
+/*   Updated: 2021/10/07 12:43:24 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../libft.h"
 
-void	print_dir(void)
+void	*ft_memmove(void *dst, const void *src, size_t len)
 {
-	char	*buf;
+	unsigned char	*dstbuf;
+	unsigned char	*srcbuf;
 
-	buf = NULL;
-	printf("%s\n", getcwd(buf, 0));
-	if (buf)
-		free(buf);
+	dstbuf = dst;
+	srcbuf = (unsigned char *)src;
+	if (!dst && !src)
+		return (dst);
+	if (src < dst && dst < src + len)
+	{
+		while (len-- > 0)
+			dstbuf[len] = srcbuf[len];
+		return (dst);
+	}
+	while (len-- > 0)
+		*dstbuf++ = *srcbuf++;
+	return (dst);
 }

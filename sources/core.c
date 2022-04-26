@@ -21,10 +21,32 @@ static char	take_input(char *input_str)
 	return (TRUE);
 }
 
+static char	execute_file(char *command)
+{
+	int child_id;
+	int status;
+
+	child_id = fork();
+	if (child_id == -1)
+		return (FALSE);
+	//child
+	if (child_id == 0)
+	{
+		execve(command, NULL, NULL);
+		exit(0);
+	}
+	//parent
+	else
+	{
+		wait(&status);
+	}
+	return (TRUE);
+}
+
 int main()
 {
 	char	input_str[100000];
-	//char	*commands[100000]
+	//char	**exec_line;
 
 	ft_bzero(input_str, 100000);
 	while (TRUE)
@@ -32,11 +54,9 @@ int main()
 		//print_dir();
 		take_input(input_str);
 		//printf("Confirm input: %s\n", input_str);
-		//>>>>ANIME<<<<
-		//>>>>>MUST<<<<
-		//>>>>>>>DIE<<<
-		//>>OMEGALOL<<<
-		//exec_comms(commands);
+		//exec_line = parse_to_array(input_str) //parse to comms and args array
+		//choose_operation(exec_line) //choose command to execute
+		execute_file(input_str);
 	}
 	return (0);
 }
