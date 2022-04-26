@@ -11,6 +11,7 @@ char	execute_file(char *command, char **arguments)
 	//child
 	if (child_id == 0)
 	{
+		arguments[0] = arguments[0] + 2;
 		execve(command, arguments, NULL);
 		exit(0);
 	}
@@ -37,6 +38,6 @@ char	execute_cd(char *path)
 	DIR *dir;
 	dir = opendir(path);
 	if (!dir)
-		return (FALSE);//Omega LUL
-	return (TRUE);//lololo2
+		return (FALSE);
+	return (TRUE);
 }
