@@ -32,6 +32,8 @@ int main()
 		//print_dir();
 		take_input(input_str);
 		//printf("Confirm input: %s\n", input_str);
+		
+		// >>>>mem<<<<<
 		//parse_input(commands, input_str);
 	}
 	return (0);
