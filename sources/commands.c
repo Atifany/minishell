@@ -12,7 +12,6 @@ char	execute_file(char *command, char **arguments)
 	{
 		if (execve(command, arguments, NULL) < 0)
 		{
-			printf("Log: %s\n", command);
 			printf("Error: invalid filename\n");
 			exit(1);
 		}
@@ -23,7 +22,7 @@ char	execute_file(char *command, char **arguments)
 	return (TRUE);
 }
 
-char	print_dir(void)
+char	execute_pwd(void)
 {
 	char	*buf;
 
