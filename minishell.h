@@ -6,7 +6,7 @@
 /*   By: hnickole <hnickole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:47:55 by atifany           #+#    #+#             */
-/*   Updated: 2022/04/30 18:36:12 by hnickole         ###   ########.fr       */
+/*   Updated: 2022/04/30 20:24:12 by hnickole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,11 +63,12 @@ void	parse_line_to_struct(t_line *line, char **exec_line);
 char	**parse_to_array(char *input_str);
 
 // parse utils
-int		arrlen(char **arr);
-int		contains(char *arr, char c);
-char	**dropnulls(char **arr, int len);
-void	dropquotes(char **arr);
+int	arrlen(char **arr);
+int contains(char *arr);
+char **dropnulls(char **arr, int len);
+void dropquotes(char **arr);
 char	*ft_strj(char *s1, char *s2);
+int count(char *arr, char s);
 
 //colors
 # define BLK "\e[0;30m"
@@ -87,5 +88,13 @@ char	*ft_strj(char *s1, char *s2);
 # define WHT "\e[0;37m"
 # define BWHT "\e[1;37m"
 # define NC "\e[0m"
+
+//utils
+void	free_array(char **array);
+
+// implemented built-in's
+char	execute_file(char *command, char **arguments);
+char	print_dir(void);
+char	execute_cd(char *path);
 
 #endif

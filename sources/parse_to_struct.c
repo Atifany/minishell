@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_to_struct.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atifany <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: hnickole <hnickole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 20:01:59 by atifany           #+#    #+#             */
-/*   Updated: 2022/04/30 20:02:00 by atifany          ###   ########.fr       */
+/*   Updated: 2022/04/30 20:24:51 by hnickole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,9 +131,10 @@ char	**parse_to_array(char *input_str)
 	while (array[i])
 	{
 		j = i + 1;
-		if (contains(array[i], '"'))
+
+		if (count(array[i], '"') % 2 == 1)
 		{
-			while (!contains(array[j], '"'))
+			while (count(array[j], '"') == 0)
 			{
 				t = ft_strj(array[i], array[j]);
 				free(array[i]);
@@ -149,11 +150,28 @@ char	**parse_to_array(char *input_str)
 			array[j] = NULL;
 			j++;
 		}
+		else if (count(array[i], '\'') % 2 == 1)
+		{
+			while (count(array[j], '\'') == 0)
+			{
+				t = ft_strj(array[i], array[j]);
+				free(array[i]);
+				free(array[j]);
+				array[i] = t;
+				array[j] = NULL;
+				j++;
+			}
+			t = ft_strj(array[i], array[j]);
+			free(array[i]);
+			free(array[j]);
+			array[i] = t;
+			array[j] = NULL;
+			j++;
+		}	
 		i = j;
 	}
+	write(1,"e",1);
 	array = dropnulls(array, array_size);
 	dropquotes(array);
-	for (int l = 0; l < arrlen(array); l++)
-		printf("||%s\n", array[l]);	
 	return (array);
 }

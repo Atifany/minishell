@@ -6,7 +6,7 @@
 /*   By: hnickole <hnickole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 16:16:41 by atifany           #+#    #+#             */
-/*   Updated: 2022/04/30 19:06:34 by hnickole         ###   ########.fr       */
+/*   Updated: 2022/04/30 20:01:41 by hnickole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,18 +50,34 @@ char	*ft_strj(char *s1, char *s2)
 	return (n);
 }
 
-int contains(char *arr, char c)
+int contains(char *arr)
 {
 	int	i;
 
 	i = 0;
 	while (arr[i])
 	{
-		if (arr[i] == c)
-			return 1;
+		if (arr[i] == '"')
+			return '"';
+		if (arr[i] == '\'')
+			return '\'';
 		i++;
 	}
 	return 0;
+}
+
+int count(char *arr, char s)
+{
+	int c;
+
+	c = 0;
+	while (*arr)
+	{
+		if (*arr == s)
+			c++;
+		arr++;
+	}
+	return c;
 }
 
 int	arrlen(char **arr)
@@ -105,20 +121,6 @@ char **dropnulls(char **arr, int len)
 	return newarr;
 }
 
-int countquotes(char *s)
-{
-	int i;
-
-	i = 0;
-	while (*s)
-	{
-		if (*s == '"')
-			i++;
-		s++;
-	}
-	return i;
-}
-
 void dropquotes(char **arr)
 {
 	int i = 0;
@@ -130,15 +132,25 @@ void dropquotes(char **arr)
 	{
 		j = 0;
 		l = 0;
-		t = malloc(ft_strlen(arr[i]) - countquotes(arr[i])+1);
+		t = malloc(ft_strlen(arr[i]) + 1);
 		while (arr[i][j])
 		{
-			if (arr[i][j] != '"')
+			if (arr[i][j] == '"')
 			{
-				t[l] = arr[i][j];
-				l++;
+				j++;
+				while (arr[i][j] != '"')
+					t[l++] = arr[i][j++];
+				j++;
 			}
-			j++;	
+			if (arr[i][j] == '\'')
+			{
+				j++;
+				while (arr[i][j] != '\'')
+					t[l++] = arr[i][j++];
+				j++;
+			}
+			else
+				t[l++] = arr[i][j++];
 		}
 		t[l] = '\0';
 		free(arr[i]);

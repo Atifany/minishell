@@ -6,7 +6,7 @@
 /*   By: hnickole <hnickole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:34:14 by atifany           #+#    #+#             */
-/*   Updated: 2022/04/30 19:00:32 by hnickole         ###   ########.fr       */
+/*   Updated: 2022/04/30 20:24:48 by hnickole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ static char	take_input(char *input_str)
 
 static void	init_line(t_line *line)
 {
+	
 	line->command = NULL;
 	line->args = NULL;
 	line->fd_to_write = NULL;
