@@ -19,12 +19,7 @@ char	execute_file(char *command, char **arguments)
 	}
 	//parent
 	else
-	{
-		//waitpid(-1, NULL, 0);
-		//printf("%d\n", child_id);
-		waitpid(child_id, NULL, 0);
-		//printf("wait\n");
-	}
+		wait(NULL);
 	return (TRUE);
 }
 
@@ -43,6 +38,7 @@ char	print_dir(void)
 char	execute_cd(char *path)
 {
 	int dir;
+	
 	dir = chdir(path);
 	if (dir == -1)
 		return (1);
