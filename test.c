@@ -6,10 +6,14 @@ int main(int argc, char **argv)
 
 	printf("I recieved: ");
 	while (i < argc)
+		printf("%s ", argv[i++]);
+	printf("\n");
+	/*i = 0;
+	while (i < argc)
 	{
-		printf("%s ", argv[i]);
+		printf("[%s]\n", argv[i]);
 		i++;
 	}
-	printf("\n");
+	printf("\n");*/
 	return (0);
 }

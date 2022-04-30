@@ -6,7 +6,7 @@
 /*   By: hnickole <hnickole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:47:55 by atifany           #+#    #+#             */
-/*   Updated: 2022/04/26 18:52:24 by hnickole         ###   ########.fr       */
+/*   Updated: 2022/04/30 18:36:12 by hnickole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,28 @@ void	free_array(char **array);
 char	execute_file(char *command, char **arguments);
 char	execute_pwd(void);
 char	execute_cd(char *path);
+
+// utils
+void	free_array(char **array);
+
+// implemented built-in's
+char	execute_file(char *command, char **arguments);
+char	execute_pwd(void);
+char	execute_cd(char *path);
+
+// parse to struct
+void	find_redirections(t_line *line, char **exec_line);
+void	find_command(t_line *line, char **exec_line);
+void	find_args(t_line *line, char **exec_line);
+void	parse_line_to_struct(t_line *line, char **exec_line);
+char	**parse_to_array(char *input_str);
+
+// parse utils
+int		arrlen(char **arr);
+int		contains(char *arr, char c);
+char	**dropnulls(char **arr, int len);
+void	dropquotes(char **arr);
+char	*ft_strj(char *s1, char *s2);
 
 //colors
 # define BLK "\e[0;30m"
