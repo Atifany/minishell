@@ -170,7 +170,6 @@ char	**parse_to_array(char *input_str)
 		}	
 		i = j;
 	}
-	write(1,"e",1);
 	array = dropnulls(array, array_size);
 	dropquotes(array);
 	return (array);
