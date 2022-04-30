@@ -6,7 +6,7 @@
 /*   By: hnickole <hnickole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:47:55 by atifany           #+#    #+#             */
-/*   Updated: 2022/04/26 18:52:24 by hnickole         ###   ########.fr       */
+/*   Updated: 2022/04/30 18:36:12 by hnickole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,10 @@ void	free_array(char **array);
 char	execute_file(char *command, char **arguments);
 char	print_dir(void);
 char	execute_cd(char *path);
+int	arrlen(char **arr);
+int contains(char *arr, char c);
+char **dropnulls(char **arr, int len);
+void dropquotes(char **arr);
+char	*ft_strj(char *s1, char *s2);
 
 #endif
