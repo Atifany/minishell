@@ -6,7 +6,7 @@
 /*   By: hnickole <hnickole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:34:14 by atifany           #+#    #+#             */
-/*   Updated: 2022/04/30 19:00:32 by hnickole         ###   ########.fr       */
+/*   Updated: 2022/04/30 20:13:10 by hnickole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,10 @@ static char **parse_to_array(char *input_str)
 	while (array[i])
 	{
 		j = i + 1;
-		if (contains(array[i], '"'))
+
+		if (count(array[i], '"') % 2 == 1)
 		{
-			while (!contains(array[j], '"'))
+			while (count(array[j], '"') == 0)
 			{
 				t = ft_strj(array[i], array[j]);
 				free(array[i]);
@@ -52,12 +53,29 @@ static char **parse_to_array(char *input_str)
 			array[j] = NULL;
 			j++;
 		}
+		else if (count(array[i], '\'') % 2 == 1)
+		{
+			while (count(array[j], '\'') == 0)
+			{
+				t = ft_strj(array[i], array[j]);
+				free(array[i]);
+				free(array[j]);
+				array[i] = t;
+				array[j] = NULL;
+				j++;
+			}
+			t = ft_strj(array[i], array[j]);
+			free(array[i]);
+			free(array[j]);
+			array[i] = t;
+			array[j] = NULL;
+			j++;
+		}	
 		i = j;
 	}
+	write(1,"e",1);
 	array = dropnulls(array, array_size);
 	dropquotes(array);
-	for (int l = 0; l < arrlen(array); l++)
-		printf("||%s\n", array[l]);	
 	return (array);
 }
 
