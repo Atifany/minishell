@@ -37,7 +37,8 @@ static char ft_switch(t_line *line)
 		return 0;
 	if (!ft_strncmp(line->command, "./", 2) || *(line->command) == '/')
 	{
-		//extract program name from the full path argument
+		// put program name to the args list
+		// extract program name from the full path argument
 		execute_file(line->command, line->args);
 	}
 	else if (!ft_strncmp(line->command, "pwd", ft_strlen(line->command)))
@@ -56,21 +57,19 @@ static char ft_switch(t_line *line)
 		return (1);
 	else
 		printf("%s is not recognised as command\n", line->command);
-		/*
-	if ()
-	{
-		cur_arg++;
 
-		int save_out_stream = dup(STDOUT_FILENO);
-		int fd = open("output.file", O_WRONLY | O_CREAT, 0666);
-		dup2(fd, STDOUT_FILENO);
-		printf("%s\n", exec_line[cur_arg]);
-		cur_arg++;
-		close(fd);
-		dup2(save_out_stream, STDOUT_FILENO);
-		printf("%s\n", exec_line[cur_arg]);
-	}
-	*/
+	// int save_out_stream = dup(STDOUT_FILENO);
+	// // first redir
+	// int fd1 = open("output_file_1", O_WRONLY | O_CREAT, 0666);
+	// dup2(fd1, STDOUT_FILENO);
+	// close(fd1);
+	// // second redir
+	// int fd2 = open("output_file_2", O_WRONLY | O_CREAT, 0666);
+	// dup2(fd2, STDOUT_FILENO);
+	// close(fd2);
+	// // go back to stdout;
+	// dup2(save_out_stream, STDOUT_FILENO);
+	// printf("%s\n", "It is only natural..");
 	return (0);
 }
 
