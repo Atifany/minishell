@@ -20,6 +20,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <signal.h>
+# include <fcntl.h>
 # include <readline/readline.h>
 
 // macros
@@ -27,6 +28,24 @@
 # define FALSE 0
 # define INT_MAX 2147483647
 # define INT_MIN -2147483648
+
+//line format
+typedef struct s_line
+{
+	char	*command;
+	char	**args;
+	char	**fd_to_write;
+	char	**fd_to_read;
+	char	is_appending;
+}	t_line;
+
+//utils
+void	free_array(char **array);
+
+// implemented built-in's
+char	execute_file(char *command, char **arguments);
+char	execute_pwd(void);
+char	execute_cd(char *path);
 
 //colors
 # define BLK "\e[0;30m"
@@ -46,13 +65,5 @@
 # define WHT "\e[0;37m"
 # define BWHT "\e[1;37m"
 # define NC "\e[0m"
-
-//utils
-void	free_array(char **array);
-
-// implemented built-in's
-char	execute_file(char *command, char **arguments);
-char	print_dir(void);
-char	execute_cd(char *path);
 
 #endif

@@ -2,18 +2,14 @@
 
 int main(int argc, char **argv)
 {
-	int i = 1;
+	int i = 0;
 
-	if (argc != 2)
+	printf("I recieved: ");
+	while (i < argc)
 	{
-		printf("Error: argument| %d is %s\n", argc, *argv);
-		return (-5);
-	}
-	printf("LOG: argument| %d is %s\n", argc, *argv);
-	while (i <= argv[1][0] - '0')
-	{
-		printf("[%d]\n", i);
+		printf("%s ", argv[i]);
 		i++;
 	}
+	printf("\n");
 	return (0);
 }
