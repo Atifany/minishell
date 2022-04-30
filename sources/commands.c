@@ -14,7 +14,7 @@ char	execute_file(char *command, char **arguments)
 		if (execve(command, arguments, NULL) < 0)
 		{
 			printf("Error: invalid filename\n");
-			kill(getpid(), SIGTERM);
+			exit(1);
 		}
 	}
 	//parent
