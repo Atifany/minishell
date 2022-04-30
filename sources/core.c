@@ -33,12 +33,8 @@ static char ft_switch(char **exec_line)
 {
 	if (exec_line == NULL || *exec_line == NULL)
 		return 0;
-	else if (!ft_strncmp(exec_line[0], "./", 2))
-	{
-		//check if correct line was passed
+	else if (!ft_strncmp(exec_line[0], "./", 2) || *(exec_line[0]) == '/')
 		execute_file(*exec_line, exec_line);
-		//catch error if present
-	}
 	else if (!ft_strncmp(exec_line[0], "pwd", ft_strlen(exec_line[0])))
 	{
 		if (print_dir())
