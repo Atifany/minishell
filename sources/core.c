@@ -6,7 +6,7 @@
 /*   By: hnickole <hnickole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:34:14 by atifany           #+#    #+#             */
-/*   Updated: 2022/04/30 15:48:28 by hnickole         ###   ########.fr       */
+/*   Updated: 2022/04/30 19:00:32 by hnickole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,39 @@ static char	take_input(char *input_str)
 static char **parse_to_array(char *input_str)
 {
 	char	**array;
+	int i = 0;
+	int j = 0;
+	char *t;
+
 	array = ft_split(input_str, ' ');
+	int array_size = arrlen(array);
+	while (array[i])
+	{
+		j = i + 1;
+		if (contains(array[i], '"'))
+		{
+			while (!contains(array[j], '"'))
+			{
+				t = ft_strj(array[i], array[j]);
+				free(array[i]);
+				free(array[j]);
+				array[i] = t;
+				array[j] = NULL;
+				j++;
+			}
+			t = ft_strj(array[i], array[j]);
+			free(array[i]);
+			free(array[j]);
+			array[i] = t;
+			array[j] = NULL;
+			j++;
+		}
+		i = j;
+	}
+	array = dropnulls(array, array_size);
+	dropquotes(array);
+	for (int l = 0; l < arrlen(array); l++)
+		printf("||%s\n", array[l]);	
 	return (array);
 }
 
