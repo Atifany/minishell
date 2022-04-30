@@ -10,9 +10,9 @@ char	execute_file(char *command, char **arguments)
 	//child
 	if (child_id == 0)
 	{
-		arguments[0] = arguments[0] + 2;
 		if (execve(command, arguments, NULL) < 0)
 		{
+			printf("Log: %s\n", command);
 			printf("Error: invalid filename\n");
 			exit(1);
 		}
