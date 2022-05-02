@@ -6,7 +6,7 @@
 /*   By: hnickole <hnickole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:34:14 by atifany           #+#    #+#             */
-/*   Updated: 2022/04/30 20:24:48 by hnickole         ###   ########.fr       */
+/*   Updated: 2022/05/02 17:37:44 by hnickole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,25 @@ static char	take_input(char *input_str)
 
 	buf = readline("\e[0;36mminishell \e[1;36m>> \e[0m");
 	ft_strlcpy(input_str, buf, 100000);
-	free(buf);
+	if (buf)
+		free(buf);
 	return (0);
+}
+
+static void	clear_struct(t_line *line)
+{
+	if (line->command)
+		free(line->command);
+	if (line->args)
+		free_array(line->args);
+	if (line->fd_to_write)
+		free_array(line->fd_to_write);
+	if (line->fd_to_read)
+		free_array(line->fd_to_read);
 }
 
 static void	init_line(t_line *line)
 {
-	
 	line->command = NULL;
 	line->args = NULL;
 	line->fd_to_write = NULL;
@@ -34,51 +46,105 @@ static void	init_line(t_line *line)
 
 static char ft_switch(t_line *line)
 {
-	if (!line->command)
-		return 0;
-	if (!ft_strncmp(line->command, "./", 2) || *(line->command) == '/')
-	{
-		//extract program name from the full path argument
-		execute_file(line->command, line->args);
-	}
-	else if (!ft_strncmp(line->command, "pwd", ft_strlen(line->command)))
-	{
-		// check "too many args"
-		if (execute_pwd())
-			printf("Error: getcwd() failed\n");
-	}
-	else if (!ft_strncmp(line->command, "cd", ft_strlen(line->command)))
-	{
-		// check "too many args"
-		if (execute_cd(line->args[0]))
-			printf("Error: %s does not exist or there is not enough memory\n", line->args[0]);
-	}
-	else if (!ft_strncmp(line->command, "exit", ft_strlen(line->command)))
-		return (1);
-	else
-		printf("%s is not recognised as command\n", line->command);
-		/*
-	if ()
-	{
-		cur_arg++;
+	// create pipe and redirect stdout to it if there is any redirections
+	int		pip[2];
+	pid_t	child_id = 0;
+	int		save_out_stream;
 
-		int save_out_stream = dup(STDOUT_FILENO);
-		int fd = open("output.file", O_WRONLY | O_CREAT, 0666);
-		dup2(fd, STDOUT_FILENO);
-		printf("%s\n", exec_line[cur_arg]);
-		cur_arg++;
-		close(fd);
-		dup2(save_out_stream, STDOUT_FILENO);
-		printf("%s\n", exec_line[cur_arg]);
+	if (line->fd_to_write)
+	{
+		save_out_stream = dup(STDOUT_FILENO);
+		pipe(pip);
+		child_id = fork();
 	}
-	*/
+	// down goes parent process
+	if (child_id == 0)
+	{
+		if (line->fd_to_write)
+		{
+			close(pip[READ]);
+			dup2(pip[WRITE], STDOUT_FILENO);
+		}
+		// If, for example, I enter "exi", ft_strncmp will consider it as "exit" command and execute it,
+		// which is totaly incorrect!
+		if (!line->command)
+			return 0;
+		if (!ft_strncmp(line->command, "./", 2) || *(line->command) == '/')
+		{
+			// put program name to the args list
+			// extract program name from the full path argument
+			execute_file(line->command, line->args);
+		}
+		else if (!ft_strncmp(line->command, "pwd", ft_strlen(line->command)))
+		{
+			if (line->args)
+				printf("pwd: too many arguments\n");
+			if (execute_pwd())
+				printf("Error: getcwd() failed\n");
+		}
+		else if (!ft_strncmp(line->command, "cd", ft_strlen(line->command)))
+		{
+			if (line->args && line->args[1])
+				printf("cd: too many arguments\n");
+			if (execute_cd(line->args[0]))
+				printf("Error: %s does not exist or there is not enough memory\n", line->args[0]);
+		}
+		else if (!ft_strncmp(line->command, "exit", ft_strlen(line->command)))
+		{
+			clear_struct(line);
+			return (1);
+		}
+		else
+			printf("%s is not recognised as command\n", line->command);
+		if (line->fd_to_write)
+		{
+			close(pip[WRITE]);
+			wait(NULL);
+			dup2(save_out_stream, STDOUT_FILENO);
+		}
+	}
+	// down goes child process wich reads from pipe, opens all files needed and writes to all of them what he read.
+	else
+	{
+		int		fd;
+		int		i = 0;
+		char	str[100];
+
+		close(pip[WRITE]);
+		ft_bzero(str, 100);
+		read(pip[READ], &str, 100);
+		close(pip[READ]);
+		while (line->fd_to_write[i])
+		{
+			fd = open(line->fd_to_write[i], O_WRONLY | O_CREAT | O_TRUNC, 0666);
+			if (fd == -1)
+				printf("Error: connot open/create file %s\n", line->fd_to_write[i]);
+			write(fd, str, ft_strlen(str));
+			close(fd);
+			i++;
+		}
+		exit(0);
+	}
+
+	// int save_out_stream = dup(STDOUT_FILENO);
+	// // first redir
+	// int fd1 = open("output_file_1", O_WRONLY | O_CREAT, 0666);
+	// dup2(fd1, STDOUT_FILENO);
+	// close(fd1);
+	// // second redir
+	// int fd2 = open("output_file_2", O_WRONLY | O_CREAT, 0666);
+	// dup2(fd2, STDOUT_FILENO);
+	// close(fd2);
+
+	// // go back to stdout;
+	// dup2(save_out_stream, STDOUT_FILENO);
+	// printf("%s\n", "It is only natural..");
 	return (0);
 }
 
 int main()
 {
 	t_line	line;
-	char	flag;
 	char	input_str[100000];
 	char	**exec_line;
 
@@ -86,18 +152,17 @@ int main()
 	ft_bzero(input_str, 100000);
 	while (TRUE)
 	{
-		take_input(input_str); 
+		take_input(input_str);
 		//printf("Confirm input: %s\n", input_str);
 		exec_line = parse_to_array(input_str);
-		parse_line_to_struct(&line, exec_line);
 		if (!exec_line)
 		{
-			printf("Error: not enough memory");
+			printf("Error: not enough memory\n");
 			break ;
 		}
-		flag = ft_switch(&line);
+		parse_line_to_struct(&line, exec_line);
 		free_array(exec_line);
-		if (flag)
+		if (ft_switch(&line))
 			break ;
 	}
 	return (0);

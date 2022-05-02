@@ -6,32 +6,20 @@
 /*   By: hnickole <hnickole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 20:01:59 by atifany           #+#    #+#             */
-/*   Updated: 2022/05/02 17:33:20 by hnickole         ###   ########.fr       */
+/*   Updated: 2022/05/02 17:36:16 by hnickole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	find_redirections(t_line *line, char **exec_line)
+// think how to downsize this shit!!!!
+static int	find_redirecions_runner(t_line *line, char **exec_line, char action)
 {
 	int	files;
 	int	i;
 	int	j;
 
 	files = 0;
-	i = 0;
-	line->fd_to_write = NULL;
-	while (exec_line[i])
-	{
-		if (!ft_strncmp(exec_line[i], ">", ft_strlen(exec_line[i]))
-			&& exec_line[i + 1] != NULL
-			&& ft_strncmp(exec_line[i + 1], ">", ft_strlen(exec_line[i + 1])))
-			files++;
-		i++;
-	}
-	if (files == 0)
-		return ;
-	line->fd_to_write = (char **)malloc(sizeof(char *) * (files + 1));
 	j = 0;
 	i = 0;
 	while (exec_line[i])
@@ -39,23 +27,45 @@ void	find_redirections(t_line *line, char **exec_line)
 		if (!ft_strncmp(exec_line[i], ">", ft_strlen(exec_line[i]))
 			&& exec_line[i + 1] != NULL
 			&& ft_strncmp(exec_line[i + 1], ">", ft_strlen(exec_line[i + 1])))
-			line->fd_to_write[j++] = ft_strdup(exec_line[i + 1]);
+		{
+			if (action)
+				files++;
+			else
+				line->fd_to_write[j++] = ft_strdup(exec_line[i + 1]);
+		}
 		i++;
 	}
-	line->fd_to_write[j] = NULL;
+	return (files);
 }
 
-void	find_command(t_line *line, char **exec_line)
+static void	find_redirections(t_line *line, char **exec_line)
+{
+	int	files;
+
+	if (line->fd_to_write)
+		free_array(line->fd_to_write);
+	line->fd_to_write = NULL;
+	files = find_redirecions_runner(line, exec_line, TRUE);
+	if (files == 0)
+		return ;
+	line->fd_to_write = (char **)malloc(sizeof(char *) * (files + 1));
+	find_redirecions_runner(line, exec_line, FALSE);
+	line->fd_to_write[files] = NULL;
+}
+
+static void	find_command(t_line *line, char **exec_line)
 {
 	int	i;
 
 	i = 0;
+	if (line->command)
+		free(line->command);
 	line->command = NULL;
 	while (exec_line[i])
 	{
 		if ((ft_strncmp(exec_line[i], ">", ft_strlen(exec_line[i])) && i == 0)
 			|| (ft_strncmp(exec_line[i], ">", ft_strlen(exec_line[i]))
-			&& ft_strncmp(exec_line[i - 1], ">", ft_strlen(exec_line[i - 1]))))
+				&& ft_strncmp(exec_line[i - 1], ">", ft_strlen(exec_line[i - 1]))))
 		{
 			line->command = ft_strdup(exec_line[i]);
 			break ;
@@ -64,52 +74,46 @@ void	find_command(t_line *line, char **exec_line)
 	}
 }
 
-void	find_args(t_line *line, char **exec_line)
+static int	find_args_runner(t_line *line, char **exec_line, char action)
 {
-	char	flag;
-	int		args;
 	int		i;
 	int		j;
+	int		args;
 
-	flag = TRUE;
-	args = 0;
 	i = 0;
-	line->args = NULL;
+	j = 0;
+	args = -1;
 	while (exec_line[i])
 	{
 		if (i == 0 && ft_strncmp(exec_line[i], ">", ft_strlen(exec_line[i])))
-			flag = FALSE;
-		if (i != 0
-			&& ft_strncmp(exec_line[i], ">", ft_strlen(exec_line[i]))
+			args++;
+		if (i > 0 && ft_strncmp(exec_line[i], ">", ft_strlen(exec_line[i]))
 			&& ft_strncmp(exec_line[i - 1], ">", ft_strlen(exec_line[i - 1])))
 		{
-			if (!flag)
-				args++;
-			flag = FALSE;
+			args++;
+			if (args > 0 && action)
+				line->args[j++] = ft_strdup(exec_line[i]);
 		}
 		i++;
 	}
+	return (args);
+}
+
+static void	find_args(t_line *line, char **exec_line)
+{
+	int		args;
+
+	if (line->args)
+		free_array(line->args);
+	line->args = NULL;
+	if (exec_line[0] == NULL || exec_line[1] == NULL)
+		return ;
+	args = find_args_runner(line, exec_line, FALSE);
 	if (args == 0)
 		return ;
 	line->args = (char **)malloc(sizeof(char *) * (args + 1));
-	flag = TRUE;
-	j = 0;
-	i = 0;
-	while (exec_line[i])
-	{
-		if (i == 0 && ft_strncmp(exec_line[i], ">", ft_strlen(exec_line[i])))
-			flag = FALSE;
-		if (i != 0
-			&& ft_strncmp(exec_line[i], ">", ft_strlen(exec_line[i]))
-			&& ft_strncmp(exec_line[i - 1], ">", ft_strlen(exec_line[i - 1])))
-		{
-			if (!flag)
-				line->args[j++] = ft_strdup(exec_line[i]);
-			flag = FALSE;
-		}
-		i++;
-	}
-	line->args[j] = NULL;
+	find_args_runner(line, exec_line, TRUE);
+	line->args[args] = NULL;
 }
 
 void	parse_line_to_struct(t_line *line, char **exec_line)
