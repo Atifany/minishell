@@ -56,9 +56,9 @@ char	execute_pwd(void);
 char	execute_cd(char *path);
 
 // parse to struct
-void	find_redirections(t_line *line, char **exec_line);
-void	find_command(t_line *line, char **exec_line);
-void	find_args(t_line *line, char **exec_line);
+//void	find_redirections(t_line *line, char **exec_line);
+//void	find_command(t_line *line, char **exec_line);
+//void	find_args(t_line *line, char **exec_line);
 void	parse_line_to_struct(t_line *line, char **exec_line);
 char	**parse_to_array(char *input_str);
 

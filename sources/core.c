@@ -22,9 +22,20 @@ static char	take_input(char *input_str)
 	return (0);
 }
 
+static void	clear_struct(t_line *line)
+{
+	if (line->command)
+		free(line->command);
+	if (line->args)
+		free_array(line->args);
+	if (line->fd_to_write)
+		free_array(line->fd_to_write);
+	if (line->fd_to_read)
+		free_array(line->fd_to_read);
+}
+
 static void	init_line(t_line *line)
 {
-	
 	line->command = NULL;
 	line->args = NULL;
 	line->fd_to_write = NULL;
@@ -34,6 +45,8 @@ static void	init_line(t_line *line)
 
 static char ft_switch(t_line *line)
 {
+	// If, for example, I enter "exi", ft_strncmp will consider it as "exit" command and execute it.
+	// That is totaly incorrect!
 	if (!line->command)
 		return 0;
 	if (!ft_strncmp(line->command, "./", 2) || *(line->command) == '/')
@@ -44,18 +57,23 @@ static char ft_switch(t_line *line)
 	}
 	else if (!ft_strncmp(line->command, "pwd", ft_strlen(line->command)))
 	{
-		// check "too many args"
+		if (line->args)
+			printf("pwd: too many arguments\n");
 		if (execute_pwd())
 			printf("Error: getcwd() failed\n");
 	}
 	else if (!ft_strncmp(line->command, "cd", ft_strlen(line->command)))
 	{
-		// check "too many args"
+		if (line->args && line->args[1])
+			printf("cd: too many arguments\n");
 		if (execute_cd(line->args[0]))
 			printf("Error: %s does not exist or there is not enough memory\n", line->args[0]);
 	}
 	else if (!ft_strncmp(line->command, "exit", ft_strlen(line->command)))
+	{
+		clear_struct(line);
 		return (1);
+	}
 	else
 		printf("%s is not recognised as command\n", line->command);
 
