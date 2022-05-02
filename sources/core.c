@@ -62,6 +62,7 @@ static char ft_switch(t_line *line)
 	{
 		if (line->fd_to_write)
 		{
+			printf("redirect to a child!\n");
 			close(pip[READ]);
 			dup2(pip[WRITE], STDOUT_FILENO);
 		}
@@ -101,6 +102,7 @@ static char ft_switch(t_line *line)
 			close(pip[WRITE]);
 			wait(NULL);
 			dup2(save_out_stream, STDOUT_FILENO);
+			printf("redirect back!\n");
 		}
 	}
 	// down goes child process wich reads from pipe, opens all files needed and writes to all of them what he read.
@@ -117,6 +119,7 @@ static char ft_switch(t_line *line)
 		while (line->fd_to_write[i])
 		{
 			fd = open(line->fd_to_write[i], O_WRONLY | O_CREAT | O_TRUNC, 0666);
+			// throw this error back with another pipe in order to actually catch it in parent
 			if (fd == -1)
 				printf("Error: connot open/create file %s\n", line->fd_to_write[i]);
 			write(fd, str, ft_strlen(str));

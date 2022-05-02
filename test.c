@@ -1,4 +1,5 @@
 # include <stdio.h>
+# include <unistd.h>
 
 int main(int argc, char **argv)
 {
@@ -6,7 +7,11 @@ int main(int argc, char **argv)
 
 	printf("I recieved: ");
 	while (i < argc)
+	{
+		if (argv[0][0] == '.')
+			sleep(1);
 		printf("%s\n", argv[i++]);
+	}
 	printf("\n");
 	/*i = 0;
 	while (i < argc)
