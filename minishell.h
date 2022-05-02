@@ -24,6 +24,8 @@
 # include <readline/readline.h>
 
 // macros
+# define WRITE 1
+# define READ 0
 # define TRUE 1
 # define FALSE 0
 # define INT_MAX 2147483647
@@ -56,9 +58,9 @@ char	execute_pwd(void);
 char	execute_cd(char *path);
 
 // parse to struct
-//void	find_redirections(t_line *line, char **exec_line);
-//void	find_command(t_line *line, char **exec_line);
-//void	find_args(t_line *line, char **exec_line);
+// void	find_redirections(t_line *line, char **exec_line);
+// void	find_command(t_line *line, char **exec_line);
+// void	find_args(t_line *line, char **exec_line);
 void	parse_line_to_struct(t_line *line, char **exec_line);
 char	**parse_to_array(char *input_str);
 
