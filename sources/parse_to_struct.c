@@ -6,7 +6,7 @@
 /*   By: hnickole <hnickole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 20:01:59 by atifany           #+#    #+#             */
-/*   Updated: 2022/05/02 17:36:16 by hnickole         ###   ########.fr       */
+/*   Updated: 2022/05/02 18:06:44 by hnickole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ int helper(char *input_str, void f(void *, int, char), void *arr)
 
 	while (input_str[j] != 0)
 	{
-		while (input_str[j] == ' '&& input_str[j] != 0)
+		while (input_str[j] == ' ')
 			j++;
 		while (input_str[j] != ' ' && input_str[j] != 0)
 		{	
@@ -173,9 +173,9 @@ int helper(char *input_str, void f(void *, int, char), void *arr)
 char	**parse_to_array(char *input_str)
 {
 	char	**arr;
-	int		*len_arr = ft_calloc(count(input_str, ' '), 8);
+	int		*len_arr = ft_calloc(count(input_str, ' ') + 1, 8);
 
-	int i = helper(input_str, *len_arr_inc, len_arr);
+	int i = helper(input_str, *len_arr_inc, len_arr);	
 	arr = malloc(8 * (i + 1));	
 	arr[i] = NULL;
 	while (--i >= 0)
@@ -183,6 +183,7 @@ char	**parse_to_array(char *input_str)
 	i = helper(input_str, *copy_symbol, arr);	
 	while (--i >= 0)
 		arr[i] = arr[i]-len_arr[i];
+	printf("%d\n", len_arr[0]);
 	free(len_arr);
 	return (arr);
 }
