@@ -6,7 +6,7 @@
 /*   By: hnickole <hnickole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:47:55 by atifany           #+#    #+#             */
-/*   Updated: 2022/04/30 20:24:12 by hnickole         ###   ########.fr       */
+/*   Updated: 2022/05/02 18:30:59 by hnickole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,9 @@
 # define INT_MAX 2147483647
 # define INT_MIN -2147483648
 
+//global
+int child_pid;
+
 //line format
 typedef struct s_line
 {
@@ -42,14 +45,6 @@ typedef struct s_line
 }	t_line;
 
 //utils
-void	free_array(char **array);
-
-// implemented built-in's
-char	execute_file(char *command, char **arguments);
-char	execute_pwd(void);
-char	execute_cd(char *path);
-
-// utils
 void	free_array(char **array);
 
 // implemented built-in's
@@ -91,12 +86,5 @@ int count(char *arr, char s);
 # define BWHT "\e[1;37m"
 # define NC "\e[0m"
 
-//utils
-void	free_array(char **array);
-
-// implemented built-in's
-char	execute_file(char *command, char **arguments);
-char	print_dir(void);
-char	execute_cd(char *path);
 
 #endif

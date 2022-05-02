@@ -6,7 +6,7 @@
 /*   By: hnickole <hnickole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:34:14 by atifany           #+#    #+#             */
-/*   Updated: 2022/05/02 17:39:07 by hnickole         ###   ########.fr       */
+/*   Updated: 2022/05/02 21:02:13 by hnickole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,11 +142,28 @@ static char ft_switch(t_line *line)
 	return (0);
 }
 
+void	sighandler(int sig)
+{
+
+		if (child_pid != 0)
+		{
+			kill(child_pid, SIGINT);
+			write(1, "\n", 1);
+		}
+		sig = 0;
+}
+
 int main()
 {
 	t_line	line;
 	char	input_str[100000];
 	char	**exec_line;
+	struct sigaction	act;
+	
+	child_pid = 0;
+	act.sa_flags = 0;
+	act.sa_handler = sighandler;
+	sigaction(SIGINT, &act, NULL);
 
 	init_line(&line);
 	ft_bzero(input_str, 100000);
