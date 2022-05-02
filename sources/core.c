@@ -48,14 +48,14 @@ static void	init_line(t_line *line)
 static char ft_switch(t_line *line)
 {
 	// create pipe and redirect stdout to it if there is any redirections
-	int		pipe[2];
+	int		pip[2];
 	pid_t	child_id = 0;
 	int		save_out_stream;
 
 	if (line->fd_to_write)
 	{
 		save_out_stream = dup(STDOUT_FILENO);
-		pipe(pipe);
+		pipe(pip);
 		child_id = fork();
 	}
 	// down goes parent process
@@ -63,8 +63,8 @@ static char ft_switch(t_line *line)
 	{
 		if (line->fd_to_write)
 		{
-			close(pipe[READ]);
-			dup2(pipe[WRITE], STDOUT_FILENO);
+			close(pip[READ]);
+			dup2(pip[WRITE], STDOUT_FILENO);
 		}
 		// If, for example, I enter "exi", ft_strncmp will consider it as "exit" command and execute it,
 		// which is totaly incorrect!
@@ -99,7 +99,7 @@ static char ft_switch(t_line *line)
 			printf("%s is not recognised as command\n", line->command);
 		if (line->fd_to_write)
 		{
-			close(pipe[WRITE]);
+			close(pip[WRITE]);
 			wait(NULL);
 			dup2(save_out_stream, STDOUT_FILENO);
 		}
@@ -111,10 +111,10 @@ static char ft_switch(t_line *line)
 		int		i = 0;
 		char	str[100];
 
-		close(pipe[WRITE]);
+		close(pip[WRITE]);
 		ft_bzero(str, 100);
-		read(pipe[READ], &str, 100);
-		close(fd1[0]);
+		read(pip[READ], &str, 100);
+		close(pip[READ]);
 		while (line->fd_to_write[i])
 		{
 			fd = open(line->fd_to_write[i], O_WRONLY | O_CREAT | O_TRUNC, 0666);
