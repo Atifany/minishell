@@ -6,7 +6,7 @@
 /*   By: hnickole <hnickole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 20:01:59 by atifany           #+#    #+#             */
-/*   Updated: 2022/04/30 20:24:51 by hnickole         ###   ########.fr       */
+/*   Updated: 2022/05/02 17:33:20 by hnickole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,59 +119,66 @@ void	parse_line_to_struct(t_line *line, char **exec_line)
 	find_args(line, exec_line);
 }
 
+void len_arr_inc(void *len_arr, int i, char str)
+{
+	str = 0;
+	((int *)(len_arr))[i]++;
+}
+
+void copy_symbol(void *arr, int i, char str)
+{
+	*(((char **)(arr))[i]) = str;
+	((char **)arr)[i]++;
+}
+
+int helper(char *input_str, void f(void *, int, char), void *arr)
+{
+	int		i = 0;
+	int		j = 0;
+
+	while (input_str[j] != 0)
+	{
+		while (input_str[j] == ' '&& input_str[j] != 0)
+			j++;
+		while (input_str[j] != ' ' && input_str[j] != 0)
+		{	
+			if (input_str[j] == '"')
+			{
+				j++;
+				while (input_str[j] != '"')//catch error of unclosed quotes here
+					f(arr, i, input_str[j++]);
+				j++;
+			}
+			else if (input_str[j] == '\'')
+			{
+				j++;
+				while (input_str[j] != '\'')//catch error of unclosed quotes here
+					f(arr, i, input_str[j++]);
+				j++;
+			}
+			else
+				f(arr, i, input_str[j++]);
+		}
+		i++; 
+		if (input_str[j] != 0)
+			j++;
+	}
+	return i;
+}
+
 char	**parse_to_array(char *input_str)
 {
-	char	**array;
-	int i = 0;
-	int j = 0;
-	char *t;
+	char	**arr;
+	int		*len_arr = ft_calloc(count(input_str, ' '), 8);
 
-	array = ft_split(input_str, ' ');
-	int array_size = arrlen(array);
-	while (array[i])
-	{
-		j = i + 1;
-
-		if (count(array[i], '"') % 2 == 1)
-		{
-			while (count(array[j], '"') == 0)
-			{
-				t = ft_strj(array[i], array[j]);
-				free(array[i]);
-				free(array[j]);
-				array[i] = t;
-				array[j] = NULL;
-				j++;
-			}
-			t = ft_strj(array[i], array[j]);
-			free(array[i]);
-			free(array[j]);
-			array[i] = t;
-			array[j] = NULL;
-			j++;
-		}
-		else if (count(array[i], '\'') % 2 == 1)
-		{
-			while (count(array[j], '\'') == 0)
-			{
-				t = ft_strj(array[i], array[j]);
-				free(array[i]);
-				free(array[j]);
-				array[i] = t;
-				array[j] = NULL;
-				j++;
-			}
-			t = ft_strj(array[i], array[j]);
-			free(array[i]);
-			free(array[j]);
-			array[i] = t;
-			array[j] = NULL;
-			j++;
-		}	
-		i = j;
-	}
-	write(1,"e",1);
-	array = dropnulls(array, array_size);
-	dropquotes(array);
-	return (array);
+	int i = helper(input_str, *len_arr_inc, len_arr);
+	arr = malloc(8 * (i + 1));	
+	arr[i] = NULL;
+	while (--i >= 0)
+		arr[i] = ft_calloc(len_arr[i] + 1, 1);	
+	i = helper(input_str, *copy_symbol, arr);	
+	while (--i >= 0)
+		arr[i] = arr[i]-len_arr[i];
+	free(len_arr);
+	return (arr);
 }
