@@ -2,13 +2,11 @@
 
 char	execute_file(char *command, char **arguments)
 {
-	int child_id;
-
-	child_id = fork();
-	if (child_id == -1)
+	child_pid = fork();
+	if (child_pid == -1)
 		return (1);
 	//child
-	if (child_id == 0)
+	if (child_pid == 0)
 	{
 		if (execve(command, arguments, NULL) < 0)
 		{
@@ -19,6 +17,7 @@ char	execute_file(char *command, char **arguments)
 	//parent
 	else
 		wait(NULL);
+	child_pid = 0;
 	return (TRUE);
 }
 
