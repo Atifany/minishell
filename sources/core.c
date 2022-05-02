@@ -17,6 +17,7 @@ static char	take_input(char *input_str)
 	char	*buf;
 
 	buf = readline("\e[0;36mminishell \e[1;36m>> \e[0m");
+	//printf("Input: %s\n", buf);
 	ft_strlcpy(input_str, buf, 100000);
 	if (buf)
 		free(buf);
@@ -48,21 +49,29 @@ static char ft_switch(t_line *line)
 {
 	// create pipe and redirect stdout to it if there is any redirections
 	int		pip[2];
-	pid_t	child_id = 0;
+	pid_t	child_id = 1;
 	int		save_out_stream;
 
 	if (line->fd_to_write)
 	{
 		save_out_stream = dup(STDOUT_FILENO);
-		pipe(pip);
+		if (pipe(pip) < 0)
+		{
+			printf("Pipe error\n");
+			return (1);
+		}
 		child_id = fork();
+		if (child_id < 0)
+		{
+			printf("Fork error\n");
+			return (1);
+		}
 	}
 	// down goes parent process
-	if (child_id == 0)
+	if (child_id > 0)
 	{
 		if (line->fd_to_write)
 		{
-			printf("redirect to a child!\n");
 			close(pip[READ]);
 			dup2(pip[WRITE], STDOUT_FILENO);
 		}
@@ -99,10 +108,9 @@ static char ft_switch(t_line *line)
 			printf("%s is not recognised as command\n", line->command);
 		if (line->fd_to_write)
 		{
-			close(pip[WRITE]);
 			wait(NULL);
+			close(pip[WRITE]);
 			dup2(save_out_stream, STDOUT_FILENO);
-			printf("redirect back!\n");
 		}
 	}
 	// down goes child process wich reads from pipe, opens all files needed and writes to all of them what he read.
@@ -115,7 +123,6 @@ static char ft_switch(t_line *line)
 		close(pip[WRITE]);
 		ft_bzero(str, 100);
 		read(pip[READ], &str, 100);
-		close(pip[READ]);
 		while (line->fd_to_write[i])
 		{
 			fd = open(line->fd_to_write[i], O_WRONLY | O_CREAT | O_TRUNC, 0666);
@@ -126,6 +133,7 @@ static char ft_switch(t_line *line)
 			close(fd);
 			i++;
 		}
+		close(pip[READ]);
 		exit(0);
 	}
 

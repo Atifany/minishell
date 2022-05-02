@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 // includes
+# include <errno.h>
 # include "libs/libft/libft.h"
 # include <dirent.h>
 # include <stdio.h>

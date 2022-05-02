@@ -183,7 +183,6 @@ char	**parse_to_array(char *input_str)
 	i = helper(input_str, *copy_symbol, arr);	
 	while (--i >= 0)
 		arr[i] = arr[i]-len_arr[i];
-	printf("%d\n", len_arr[0]);
 	free(len_arr);
 	return (arr);
 }
