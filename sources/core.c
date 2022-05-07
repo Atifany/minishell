@@ -92,7 +92,8 @@ static char	redirects(t_line *line)
 
 	if (!line->fd_to_write)
 	{
-		ft_switch(line);
+		if (ft_switch(line))
+			return (2);
 		return (0);
 	}
 	// create pipe and redirect stdout to it if there is any redirections
