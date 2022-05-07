@@ -47,120 +47,120 @@ static void	init_line(t_line *line)
 
 static char ft_switch(t_line *line)
 {
-	// create pipe and redirect stdout to it if there is any redirections
+	// If, for example, I enter "exi", ft_strncmp will consider it as "exit" command and execute it,
+	// which is totaly incorrect!
+	if (!line->command)
+		return 0;
+	if (!ft_strncmp(line->command, "./", 2) || *(line->command) == '/')
+	{
+		// put program name to the args list
+		// extract program name from the full path argument
+		execute_file(line->command, line->args);
+	}
+	else if (!ft_strncmp(line->command, "pwd", ft_strlen(line->command)))
+	{
+		if (line->args)
+			printf("pwd: too many arguments\n");
+		if (execute_pwd())
+			printf("Error: getcwd() failed\n");
+	}
+	else if (!ft_strncmp(line->command, "cd", ft_strlen(line->command)))
+	{
+		if (line->args && line->args[1])
+			printf("cd: too many arguments\n");
+		if (execute_cd(line->args[0]))
+			printf("Error: %s does not exist or there is not enough memory\n", line->args[0]);
+	}
+	else if (!ft_strncmp(line->command, "exit", ft_strlen(line->command)))
+	{
+		clear_struct(line);
+		return (1);
+	}
+	else
+		printf("%s is not recognised as command\n", line->command);
+	return (0);
+}
+
+static char	redirects(t_line *line)
+{
+	char	str[100]; // make this buffer better, cuase currently programm breaks if input is greater than 100
+	int		i;
+	int		fd;
 	int		pip[2];
 	pid_t	child_id = 1;
 	int		save_out_stream;
 
-	if (line->fd_to_write)
+	if (!line->fd_to_write)
 	{
-		save_out_stream = dup(STDOUT_FILENO);
-		if (pipe(pip) < 0)
-		{
-			printf("Pipe error\n");
-			return (1);
-		}
-		child_id = fork();
-		if (child_id < 0)
-		{
+		ft_switch(line);
+		return (0);
+	}
+	// create pipe and redirect stdout to it if there is any redirections
+	save_out_stream = dup(STDOUT_FILENO);
+	if (pipe(pip) < 0)
+	{
+		printf("Pipe error\n");
+		return (1);
+	}
+	switch (child_id = fork())
+	{
+		case -1:
 			printf("Fork error\n");
 			return (1);
-		}
-	}
-	// down goes parent process
-	if (child_id > 0)
-	{
-		if (line->fd_to_write)
-		{
+		// child
+		case 0:
+			close(pip[WRITE]);
+			ft_bzero(str, 100);
+			read(pip[READ], &str, 100);
+			i = 0;
+			while (line->fd_to_write[i])
+			{
+				fd = open(line->fd_to_write[i], O_WRONLY | O_CREAT | O_TRUNC, 0666);
+				// throw this error back with another pipe in order to actually catch it in parent
+				if (fd == -1)
+					printf("Error: connot open/create file %s\n", line->fd_to_write[i]);
+				write(fd, str, ft_strlen(str));
+				close(fd);
+				i++;
+			}
+			close(pip[READ]);
+			exit(0);
+		// parent
+		default:
 			close(pip[READ]);
 			dup2(pip[WRITE], STDOUT_FILENO);
-		}
-		// If, for example, I enter "exi", ft_strncmp will consider it as "exit" command and execute it,
-		// which is totaly incorrect!
-		if (!line->command)
-			return 0;
-		if (!ft_strncmp(line->command, "./", 2) || *(line->command) == '/')
-		{
-			// put program name to the args list
-			// extract program name from the full path argument
-			execute_file(line->command, line->args);
-		}
-		else if (!ft_strncmp(line->command, "pwd", ft_strlen(line->command)))
-		{
-			if (line->args)
-				printf("pwd: too many arguments\n");
-			if (execute_pwd())
-				printf("Error: getcwd() failed\n");
-		}
-		else if (!ft_strncmp(line->command, "cd", ft_strlen(line->command)))
-		{
-			if (line->args && line->args[1])
-				printf("cd: too many arguments\n");
-			if (execute_cd(line->args[0]))
-				printf("Error: %s does not exist or there is not enough memory\n", line->args[0]);
-		}
-		else if (!ft_strncmp(line->command, "exit", ft_strlen(line->command)))
-		{
-			clear_struct(line);
-			return (1);
-		}
-		else
-			printf("%s is not recognised as command\n", line->command);
-		if (line->fd_to_write)
-		{
+			if (ft_switch(line))
+			{
+				wait(NULL);
+				close(pip[WRITE]);
+				dup2(save_out_stream, STDOUT_FILENO);
+				return (2);
+			}
 			wait(NULL);
 			close(pip[WRITE]);
 			dup2(save_out_stream, STDOUT_FILENO);
-		}
 	}
-	// down goes child process wich reads from pipe, opens all files needed and writes to all of them what he read.
-	else
-	{
-		int		fd;
-		int		i = 0;
-		char	str[100];
-
-		close(pip[WRITE]);
-		ft_bzero(str, 100);
-		read(pip[READ], &str, 100);
-		while (line->fd_to_write[i])
-		{
-			fd = open(line->fd_to_write[i], O_WRONLY | O_CREAT | O_TRUNC, 0666);
-			// throw this error back with another pipe in order to actually catch it in parent
-			if (fd == -1)
-				printf("Error: connot open/create file %s\n", line->fd_to_write[i]);
-			write(fd, str, ft_strlen(str));
-			close(fd);
-			i++;
-		}
-		close(pip[READ]);
-		exit(0);
-	}
-
-	// int save_out_stream = dup(STDOUT_FILENO);
-	// // first redir
-	// int fd1 = open("output_file_1", O_WRONLY | O_CREAT, 0666);
-	// dup2(fd1, STDOUT_FILENO);
-	// close(fd1);
-	// // second redir
-	// int fd2 = open("output_file_2", O_WRONLY | O_CREAT, 0666);
-	// dup2(fd2, STDOUT_FILENO);
-	// close(fd2);
-
-	// // go back to stdout;
-	// dup2(save_out_stream, STDOUT_FILENO);
-	// printf("%s\n", "It is only natural..");
 	return (0);
 }
 
 void	sighandler(int sig)
 {
-
+		//printf("%x\n", RL_READLINE_VERSION);
+		//rl_redisplay();
+		//rl_replace_line();
+		//rl_on_new_line();
 		if (child_pid != 0)
 		{
+			printf("kill child");
 			kill(child_pid, SIGINT);
 			write(1, "\n", 1);
 		}
+		// else
+		// {
+		// 	rl_replace_line("", 0);
+		// 	//rl_line_buffer = malloc(ft_strlen("AMONGUS! HIHIHIHIHIHIHIHIHI"));
+		// 	//rl_line_buffer = "AMONGUS! HIHIHIHIHIHIHIHIHI";
+		// }
 		sig = 0;
 }
 
@@ -190,7 +190,7 @@ int main()
 		}
 		parse_line_to_struct(&line, exec_line);
 		free_array(exec_line);
-		if (ft_switch(&line))
+		if (redirects(&line) == 2)
 			break ;
 	}
 	return (0);

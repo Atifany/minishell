@@ -1,10 +1,12 @@
 # include <stdio.h>
 # include <unistd.h>
+# include <readline/readline.h>
 
 int main(int argc, char **argv)
 {
 	int i = 0;
 
+	printf("%x\n", RL_READLINE_VERSION);
 	printf("I recieved: ");
 	while (i < argc)
 	{
