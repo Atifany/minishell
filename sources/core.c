@@ -45,7 +45,7 @@ static void	init_line(t_line *line)
 	line->is_appending = FALSE;
 }
 
-static char ft_switch(t_line *line)
+char ft_switch(t_line *line)
 {
 	// If, for example, I enter "exi", ft_strncmp will consider it as "exit" command and execute it,
 	// which is totaly incorrect!
@@ -81,68 +81,7 @@ static char ft_switch(t_line *line)
 	return (0);
 }
 
-static char	redirects(t_line *line)
-{
-	char	str[100]; // make this buffer better, cuase currently programm breaks if input is greater than 100
-	int		i;
-	int		fd;
-	int		pip[2];
-	pid_t	child_id = 1;
-	int		save_out_stream;
 
-	if (!line->fd_to_write)
-	{
-		if (ft_switch(line))
-			return (2);
-		return (0);
-	}
-	// create pipe and redirect stdout to it if there is any redirections
-	save_out_stream = dup(STDOUT_FILENO);
-	if (pipe(pip) < 0)
-	{
-		printf("Pipe error\n");
-		return (1);
-	}
-	switch (child_id = fork())
-	{
-		case -1:
-			printf("Fork error\n");
-			return (1);
-		// child
-		case 0:
-			close(pip[WRITE]);
-			ft_bzero(str, 100);
-			read(pip[READ], &str, 100);
-			i = 0;
-			while (line->fd_to_write[i])
-			{
-				fd = open(line->fd_to_write[i], O_WRONLY | O_CREAT | O_TRUNC, 0666);
-				// throw this error back with another pipe in order to actually catch it in parent
-				if (fd == -1)
-					printf("Error: connot open/create file %s\n", line->fd_to_write[i]);
-				write(fd, str, ft_strlen(str));
-				close(fd);
-				i++;
-			}
-			close(pip[READ]);
-			exit(0);
-		// parent
-		default:
-			close(pip[READ]);
-			dup2(pip[WRITE], STDOUT_FILENO);
-			if (ft_switch(line))
-			{
-				wait(NULL);
-				close(pip[WRITE]);
-				dup2(save_out_stream, STDOUT_FILENO);
-				return (2);
-			}
-			wait(NULL);
-			close(pip[WRITE]);
-			dup2(save_out_stream, STDOUT_FILENO);
-	}
-	return (0);
-}
 
 void	sighandler(int sig)
 {
@@ -191,8 +130,14 @@ int main()
 		}
 		parse_line_to_struct(&line, exec_line);
 		free_array(exec_line);
-		if (redirects(&line) == 2)
-			break ;
+		if (!line.fd_to_write)
+		{
+			if (ft_switch(&line))
+				break ;
+		}
+		else
+			if (redirects(&line) == 2)
+				break ;
 	}
 	return (0);
 }

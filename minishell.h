@@ -46,7 +46,12 @@ typedef struct s_line
 	char	is_appending;
 }	t_line;
 
-//utils
+char	ft_switch(t_line *line);
+
+// Redirects file output to a chosen file
+char	redirects(t_line *line);
+
+// utils
 void	free_array(char **array);
 
 // implemented built-in's

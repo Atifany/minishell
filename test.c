@@ -6,7 +6,7 @@ int main(int argc, char **argv)
 {
 	int i = 0;
 
-	printf("%x\n", RL_READLINE_VERSION);
+	printf("FIRST ME!\n");
 	printf("I recieved: ");
 	while (i < argc)
 	{
