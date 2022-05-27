@@ -49,6 +49,7 @@ typedef struct s_line
 	char	*command;
 	char	**args;
 	char	**fd_to_write;
+	int		*pip;
 	char	**fd_to_read;
 	char	is_appending;
 }	t_line;
@@ -88,7 +89,7 @@ int count(char *arr, char s);
 //dict
 char *dict_get(t_list **lst, char* key);
 void dict_set(t_list **lst, char* key, void* value);
-void dict_delete(t_list **lst, char* key);
+void dict_del(t_list **lst, char* key);
 
 //env
 char *get_env(t_list **env, char* key);

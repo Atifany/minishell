@@ -26,6 +26,7 @@ static int	find_redirecions_runner(t_line *line, char **exec_line, char action)
 	{
 		if (!ft_strcmp(exec_line[i], "|")){
 			break ;
+			//return (files + 1);
 		}
 		if (!ft_strncmp(exec_line[i], ">", ft_strlen(exec_line[i]))
 			&& exec_line[i + 1] != NULL
@@ -157,6 +158,21 @@ int	parse_line_to_struct(t_line *line, char **exec_line)
 	find_command(line, exec_line);
 	total_shift += find_redirections(line, exec_line) * 2;
 	total_shift += find_args(line, exec_line);
+	if (*(exec_line + total_shift) != NULL){ // That means find_* funcs stoped at pipe, not a EOL
+		int *pip = malloc(sizeof(int) * 2);
+		if (pipe(pip) < 0)
+		{
+			printf("Pipe error\n");
+			return (1);
+		}
+		//close(pip[READ]);
+		int i = 0;
+		while (line->fd_to_write[i]){
+			i++;
+		}
+		line->pip = pip;
+		// DONT FORGET TO CLOSE THE PIPE[WRITE]
+	}
 	temp_print_struct(line);
 	return (total_shift);
 }

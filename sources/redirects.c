@@ -20,6 +20,8 @@ static void	child_redirector(int *pip, t_line *line)
 		close(fd);
 		i++;
 	}
+	write(line->pip[WRITE], str, ft_strlen(str));
+	close(line->pip[WRITE]);
 	close(pip[READ]);
 	exit(0);
 }
@@ -41,14 +43,19 @@ static char	parent_redirector(int save_out_stream, int *pip, t_line *line)
 	return (0);
 }
 
+// pipes won't work. top priority fix!
 char	redirects(t_line *line)
 {
 	int		pip[2];
 	pid_t	child_id;
 	int		save_out_stream;
+	int		save_in_stream;
 
 	// create pipe and redirect stdout to it if there is any redirections
 	save_out_stream = dup(STDOUT_FILENO);
+	save_in_stream = dup(STDIN_FILENO);
+	close(line->pip[WRITE]);
+	dup2(line->pip[READ], STDIN_FILENO);
 	if (pipe(pip) < 0)
 	{
 		printf("Pipe error\n");
@@ -66,4 +73,6 @@ char	redirects(t_line *line)
 		default:
 			return (parent_redirector(save_out_stream, pip, line)); // make returns clearer
 	}
+	close(line->pip[READ]);
+	dup2(save_in_stream, STDIN_FILENO);
 }

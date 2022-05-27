@@ -2,7 +2,8 @@
 NAME = minishell
 
 # sources
-_SRC = core.c utils.c commands.c parse_to_struct.c redirects.c
+_SRC =	core.c utils.c commands.c parse_to_struct.c redirects.c \
+		environment.c dictionary.c
 SRC_DIR = sources
 SRC = $(_SRC:%=$(SRC_DIR)/%)
 # tmp files
@@ -25,7 +26,7 @@ all: compile_libs create_dirs compile_libs log_compile_start $(NAME)
 
 compile_libs:
 	@printf "\n>> compile libft\n"
-	@make -C $(LIBFT_DIR)
+	@make -C $(LIBFT_DIR) bonus
 
 create_dirs:
 	@mkdir -p tmp_files

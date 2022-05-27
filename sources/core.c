@@ -38,6 +38,7 @@ static void	clear_struct(t_line *line)
 
 static void	init_line(t_line *line)
 {
+	line->pip = NULL;
 	line->command = NULL;
 	line->args = NULL;
 	line->fd_to_write = NULL;
@@ -120,8 +121,8 @@ int	main()
 	char	rotate;
 	char	**exec_line;
 	t_line	line;
-	t_list *env;
-	t_list *shell;
+	//t_list *env;
+	//t_list *shell;
 	char	input_str[100000];
 	struct sigaction	act;
 	int		total_shift;
@@ -151,7 +152,7 @@ int	main()
 			shift = parse_line_to_struct(&line, exec_line);
 			total_shift += shift;
 			exec_line += shift;
-			if (!*(line.fd_to_write))
+			if (!*(line.fd_to_write) && !line.pip)
 			{
 				if (ft_switch(&line))
 					rotate = FALSE;
