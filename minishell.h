@@ -6,7 +6,7 @@
 /*   By: hnickole <hnickole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:47:55 by atifany           #+#    #+#             */
-/*   Updated: 2022/05/27 16:56:18 by hnickole         ###   ########.fr       */
+/*   Updated: 2022/05/27 18:31:40 by hnickole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,6 @@
 
 //global
 int child_pid;
-typedef struct s_env
-{
-	char	*PATH;
-	char	*PWD;
-	char	*HOME;
-	char	*LOGNAME;
-	char	*USER;
-	char	*SHELL;
-} t_env;
 
 typedef struct s_key_value
 {
@@ -76,6 +67,8 @@ char	execute_file(char *command, char **arguments);
 char	execute_pwd(void);
 char	execute_cd(char *path);
 char	execute_echo(char **args);
+void	execute_env(t_list *env);
+void	execute_export(t_list **env, t_list **shell, char* key);
 
 // parse to struct
 // void	find_redirections(t_line *line, char **exec_line);
@@ -91,6 +84,14 @@ char **dropnulls(char **arr, int len);
 void dropquotes(char **arr);
 char	*ft_strj(char *s1, char *s2);
 int count(char *arr, char s);
+
+//dict
+char *dict_get(t_list **lst, char* key);
+void dict_set(t_list **lst, char* key, void* value);
+void dict_delete(t_list **lst, char* key);
+
+//env
+char *get_env(t_list **env, char* key);
 
 //colors
 # define BLK "\e[0;30m"

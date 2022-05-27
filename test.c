@@ -6,6 +6,7 @@
 int main(int argc, char **argv)
 {
 	int i = 0;
+	t_list *env;
 
 	/*printf("FIRST ME!\n");
 	printf("I recieved: ");
