@@ -6,7 +6,7 @@
 /*   By: hnickole <hnickole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:47:55 by atifany           #+#    #+#             */
-/*   Updated: 2022/05/02 18:30:59 by hnickole         ###   ########.fr       */
+/*   Updated: 2022/05/27 16:52:28 by hnickole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,22 @@
 
 //global
 int child_pid;
+typedef struct s_env
+{
+	char	*PATH;
+	char	*PWD;
+	char	*HOME;
+	char	*LOGNAME;
+	char	*USER;
+	char	*SHELL;
+} t_env;
+
+typedef struct s_key_value
+{
+	char *key;
+	void *value;
+} kv;
+
 
 //line format
 typedef struct s_line
