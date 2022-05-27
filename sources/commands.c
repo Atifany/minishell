@@ -42,3 +42,23 @@ char	execute_cd(char *path)
 		return (1);
 	return (0);
 }
+
+char	execute_echo(char **args){
+	char nl_flag;
+
+	nl_flag = '\n';
+	if (!args){
+		printf("\n");
+		return (0);
+	}
+	if (!ft_strcmp(args[0], "-n")){
+		args++;
+		nl_flag = '\0';
+	}
+	while (*args){
+		printf("%s ", *args);
+		args++;
+	}
+	printf("%c", nl_flag);
+	return (0);
+}

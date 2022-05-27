@@ -49,15 +49,18 @@ typedef struct s_line
 char	ft_switch(t_line *line);
 
 // Redirects file output to a chosen file
+void		rl_replace_line(const char *text, int clear_undo);
 char	redirects(t_line *line);
 
 // utils
+int		ft_strcmp(char *str1, char *str2);
 void	free_array(char **array);
 
 // implemented built-in's
 char	execute_file(char *command, char **arguments);
 char	execute_pwd(void);
 char	execute_cd(char *path);
+char	execute_echo(char **args);
 
 // parse to struct
 // void	find_redirections(t_line *line, char **exec_line);
