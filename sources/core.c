@@ -59,7 +59,7 @@ char ft_switch(t_line *line)
 	}
 	else if (!ft_strcmp(line->command, "pwd"))
 	{
-		if (line->args){
+		if (line->args[0]){
 			printf("pwd: too many arguments\n");
 			return (0);
 		}
@@ -68,7 +68,7 @@ char ft_switch(t_line *line)
 	}
 	else if (!ft_strcmp(line->command, "cd"))
 	{
-		if (line->args && line->args[1]){
+		if (line->args[0] && line->args[1]){
 			printf("cd: too many arguments\n");
 			return (0);
 		}
@@ -111,24 +111,19 @@ void	sighandler(int sig)
 		sig = 0;
 }
 
-void	parse(char *input_str, t_line *line){
-	char	**exec_line;
+/*void	parse(char *input_str, t_line *line){
 
-	take_input(input_str);
-	//printf("Confirm input: %s\n", input_str);
-	exec_line = parse_to_array(input_str);
-	if (!exec_line){
-		printf("Error: not enough memory\n");
-	}
-	parse_line_to_struct(line, exec_line);
-	free_array(exec_line);
-}
+}*/
 
 int	main()
 {
+	char	rotate;
+	char	**exec_line;
 	t_line	line;
 	char	input_str[100000];
 	struct sigaction	act;
+	int		total_shift;
+	int		shift;	
 	
 	child_pid = 0;
 	act.sa_flags = 0;
@@ -137,17 +132,34 @@ int	main()
 
 	init_line(&line);
 	ft_bzero(input_str, 100000);
-	while (TRUE)
+	rotate = TRUE;
+	while (rotate)
 	{
-		parse(input_str, &line);
-		if (!line.fd_to_write)
-		{
-			if (ft_switch(&line))
-				break ;
+		//parse(input_str, &line);
+		take_input(input_str);
+
+		exec_line = parse_to_array(input_str);
+		if (!exec_line){
+			printf("Error: not enough memory\n");
+			break ;
 		}
-		else
-			if (redirects(&line) == 2)
-				break ;
+		shift = 0;
+		total_shift = 0;
+		while (*exec_line){
+			shift = parse_line_to_struct(&line, exec_line);
+			total_shift += shift;
+			exec_line += shift;
+			if (!*(line.fd_to_write))
+			{
+				if (ft_switch(&line))
+					rotate = FALSE;
+			}
+			else
+				if (redirects(&line) == 2)
+					rotate = FALSE;
+		}
+		exec_line -= total_shift;
+		free_array(exec_line);
 	}
 	return (0);
 }

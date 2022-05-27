@@ -31,6 +31,8 @@ static char	parent_redirector(int save_out_stream, int *pip, t_line *line)
 	close(pip[READ]);
 	dup2(pip[WRITE], STDOUT_FILENO);
 	switch_ret = ft_switch(line);
+	write(1, "\0", 1); // Makes sure that if switch prints nothing child actually reads EOF,
+					   // instead of endlessly waiting for input
 	wait(NULL);
 	close(pip[WRITE]);
 	dup2(save_out_stream, STDOUT_FILENO);
@@ -64,5 +66,4 @@ char	redirects(t_line *line)
 		default:
 			return (parent_redirector(save_out_stream, pip, line)); // make returns clearer
 	}
-	return (0);
 }

@@ -65,7 +65,6 @@ typedef struct s_line
 char	ft_switch(t_line *line);
 
 // Redirects file output to a chosen file
-void		rl_replace_line(const char *text, int clear_undo);
 char	redirects(t_line *line);
 
 // utils
@@ -82,7 +81,7 @@ char	execute_echo(char **args);
 // void	find_redirections(t_line *line, char **exec_line);
 // void	find_command(t_line *line, char **exec_line);
 // void	find_args(t_line *line, char **exec_line);
-void	parse_line_to_struct(t_line *line, char **exec_line);
+int		parse_line_to_struct(t_line *line, char **exec_line);
 char	**parse_to_array(char *input_str);
 
 // parse utils

@@ -15,10 +15,11 @@ char	execute_file(char *command, char **arguments)
 		}
 	}
 	//parent
-	else
+	else{
 		wait(NULL);
+	}
 	child_pid = 0;
-	return (TRUE);
+	return (0);
 }
 
 char	execute_pwd(void)
