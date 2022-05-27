@@ -42,3 +42,18 @@ char	execute_cd(char *path)
 		return (1);
 	return (0);
 }
+
+void execute_env(t_list *env)
+{
+	while (env)
+	{
+		printf("%s=%s\n", ((kv *)env->content)->key, ((kv *)env->content)->value);
+		env = env->next;
+	}
+}
+
+void execute_export(t_list **env, t_list **shell, char* key)
+{
+	dict_set(env, key, dict_get(shell, key));
+	dict_del(shell, key);
+}

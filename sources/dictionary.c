@@ -1,31 +1,17 @@
-#include "minishell.h"
+#include "../minishell.h"
 
-char *get_value(t_list *lst, char* key)
+char *dict_get(t_list **lst, char* key)
 {
-	while (lst)
+	while (*lst)
 	{
-		if (((kv *)lst->content)->key == key)
-			return ((kv *)lst->content)->value;
-		lst = lst->next;
+		if (((kv *)(*lst)->content)->key == key)
+			return ((kv *)(*lst)->content)->value;
+		*lst = (*lst)->next;
 	}
 	return NULL;
 }
 
-void set_value(t_list **lst, char* key, void* value)
-{
-	while (lst)
-	{
-		if (((kv *)(*lst)->content)->key == key)
-		{
-			((kv *)(*lst)->content)->value = value;
-			return ;
-		}
-		*lst = (*lst)->next;
-		add_value(lst, key, value);	
-	}
-}
-
-void add_value(t_list **lst, char* key, void* value)
+void dict_add(t_list **lst, char* key, void* value)
 {
 	kv *kv;
 
@@ -35,11 +21,44 @@ void add_value(t_list **lst, char* key, void* value)
 	ft_lstadd_back(lst, ft_lstnew(kv));
 }
 
-char print_lst(t_list *lst)
+void dict_set(t_list **lst, char* key, void* value)
 {
-	while (lst)
+	t_list *start;
+
+	start = *lst;
+	while (*lst)
 	{
-		printf("%s=%s", ((kv *)lst->content)->key, ((kv *)lst->content)->value);
-		lst = lst->next;
+		if (((kv *)(*lst)->content)->key == key)
+		{
+			((kv *)(*lst)->content)->value = value;
+			*lst = start;
+			return ;
+		}
+		*lst = (*lst)->next;
 	}
+	*lst = start;
+	dict_add(lst, key, value);
+}
+
+void dict_del(t_list **lst, char* key)
+{
+	t_list *start;
+	t_list *lstnext;
+
+	start  = *lst;
+	while (*lst)
+	{
+		if ((*lst) && (*lst)->next && ((kv *)(*lst)->next->content)->key == key)
+		{
+			lstnext = (*lst)->next;
+			(*lst)->next = NULL;
+			ft_lstadd_back(lst, lstnext->next);		
+			//free(((kv *)(lstnext)->content)->value); //Zdes viletaet
+			free(lstnext);
+			*lst = start;
+			return ;
+		}
+		*lst = (*lst)->next;
+	}
+	*lst = start;
 }

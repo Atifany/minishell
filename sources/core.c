@@ -6,7 +6,7 @@
 /*   By: hnickole <hnickole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:34:14 by atifany           #+#    #+#             */
-/*   Updated: 2022/05/02 21:02:13 by hnickole         ###   ########.fr       */
+/*   Updated: 2022/05/27 17:40:40 by hnickole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,8 @@ void	sighandler(int sig)
 int main()
 {
 	t_line	line;
+	t_list *env;
+	t_list *shell;
 	char	input_str[100000];
 	char	**exec_line;
 	struct sigaction	act;
