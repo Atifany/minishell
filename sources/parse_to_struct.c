@@ -154,26 +154,28 @@ void	temp_print_struct(t_line *line){
 
 int	parse_line_to_struct(t_line *line, char **exec_line)
 {
+	if (line->pip_out){
+		free(line->pip_out);
+		line->pip_out = NULL;
+	}
+	line->pip_out = malloc(sizeof(int) * 2);
+	pipe(line->pip_out);
+
 	int	total_shift = 1; // one and not a zero is because the command must be present!
 	find_command(line, exec_line);
 	total_shift += find_redirections(line, exec_line) * 2;
 	total_shift += find_args(line, exec_line);
+	line->is_redirecting = FALSE;
+	line->is_piping = FALSE;
 	if (*(exec_line + total_shift) != NULL){ // That means find_* funcs stoped at pipe, not a EOL
-		int *pip = malloc(sizeof(int) * 2);
-		if (pipe(pip) < 0)
-		{
-			printf("Pipe error\n");
-			return (1);
-		}
-		//close(pip[READ]);
-		int i = 0;
-		while (line->fd_to_write[i]){
-			i++;
-		}
-		line->pip = pip;
-		// DONT FORGET TO CLOSE THE PIPE[WRITE]
+		line->is_piping = TRUE;
+		line->is_redirecting = TRUE;
+		total_shift++;
 	}
-	temp_print_struct(line);
+	if (*(line->fd_to_write)){
+		line->is_redirecting = TRUE;
+	}
+	//temp_print_struct(line);
 	return (total_shift);
 }
 

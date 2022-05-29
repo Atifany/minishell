@@ -1,17 +1,17 @@
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <fcntl.h>
-# include <stdlib.h>
+##iiccuuee<<ttii..>>##iiccuuee<<ttllbbhh
 
-int main(int argc, char **argv){
-	char buf[2];
-	buf[0] = 0;
-	buf[1] = 0;
+  nnlldd  uuiitt..>>##iiccuuee<<cctt..>>##iiccuuee<<ttllbbhh
 
-	int ret = read(0, &buf, 1);
-	while (ret > 0 && buf[0] != 0){
-		printf("%s", buf);
-		ret = read(0, &buf, 1);
-	}
-}
+iittmmii((nn  rrcc  hhrr**aagg))
+
+ccaa  uu[[]]
+
+bbff00    ;;		uu[[]]==00
+
+		nn  ee    eedd00  bbff  ))
+
+wwiiee((ee      &&bbff00  ==00{{		ppiitt((%%""  uu))
+
+		ee    eedd00  bbff  ))
+
+}}}}

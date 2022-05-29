@@ -38,7 +38,10 @@ static void	clear_struct(t_line *line)
 
 static void	init_line(t_line *line)
 {
-	line->pip = NULL;
+	line->pip_in = NULL;
+	line->pip_out = NULL;
+	line->is_redirecting = FALSE;
+	line->is_piping = FALSE;
 	line->command = NULL;
 	line->args = NULL;
 	line->fd_to_write = NULL;
@@ -112,12 +115,29 @@ void	sighandler(int sig)
 		sig = 0;
 }
 
-/*void	parse(char *input_str, t_line *line){
+void	redirect_input(t_line *line, char *mode){
+	static int	save_in_stream;
 
-}*/
+	if (!ft_strcmp(mode, "init")){
+		save_in_stream = dup(STDIN_FILENO);
+		line->pip_in = (int *)malloc(sizeof(int) * 2);
+		pipe(line->pip_in);
+	}
+	else if (!ft_strcmp(mode, "open")){
+		dup2(line->pip_in[READ], STDIN_FILENO);
+	}
+	else if (!ft_strcmp(mode, "close") && line->pip_in){
+		close(line->pip_in[READ]);
+		close(line->pip_in[WRITE]);
+		dup2(save_in_stream, STDIN_FILENO);
+		free(line->pip_in);
+		line->pip_in = NULL;
+	}
+}
 
 int	main()
 {
+	char	is_pipe_in_opened = FALSE;
 	char	rotate;
 	char	**exec_line;
 	t_line	line;
@@ -125,8 +145,8 @@ int	main()
 	//t_list *shell;
 	char	input_str[100000];
 	struct sigaction	act;
-	int		total_shift;
-	int		shift;	
+	int		total_shift;	// represents total shift on exec_line
+	int		shift;			// represents current cmd shift on exec_line
 	
 	child_pid = 0;
 	act.sa_flags = 0;
@@ -138,7 +158,7 @@ int	main()
 	rotate = TRUE;
 	while (rotate)
 	{
-		//parse(input_str, &line);
+		redirect_input(&line, "init");
 		take_input(input_str);
 
 		exec_line = parse_to_array(input_str);
@@ -148,21 +168,32 @@ int	main()
 		}
 		shift = 0;
 		total_shift = 0;
-		while (*exec_line){
+		while (*exec_line){		// iterates each command in current line
+			if (line.is_piping && !is_pipe_in_opened){
+				is_pipe_in_opened = TRUE;
+				redirect_input(&line, "open");
+				//printf("Opened pipe_in!\n");
+			}
 			shift = parse_line_to_struct(&line, exec_line);
 			total_shift += shift;
 			exec_line += shift;
-			if (!*(line.fd_to_write) && !line.pip)
-			{
+			if (!line.is_redirecting){
 				if (ft_switch(&line))
 					rotate = FALSE;
 			}
-			else
+			else{
 				if (redirects(&line) == 2)
 					rotate = FALSE;
+			}
+		}
+		if (is_pipe_in_opened){
+			redirect_input(&line, "close");
+			//printf("Closed pipe_in!\n");
+			is_pipe_in_opened = FALSE;
 		}
 		exec_line -= total_shift;
 		free_array(exec_line);
 	}
+	redirect_input(&line, "close");
 	return (0);
 }

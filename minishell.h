@@ -49,7 +49,10 @@ typedef struct s_line
 	char	*command;
 	char	**args;
 	char	**fd_to_write;
-	int		*pip;
+	char	is_redirecting;	// turns on/off redirector for every cmd
+	char	is_piping;		// tells writer to write all output to pipe_in also;
+	int		*pip_in;		// pipe from which every command reads (stdin is redirected here)
+	int		*pip_out;		// pipe to which every command writes (including pipe_in if needed)
 	char	**fd_to_read;
 	char	is_appending;
 }	t_line;
