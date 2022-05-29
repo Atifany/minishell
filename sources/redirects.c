@@ -66,6 +66,7 @@ char	redirects(t_line *line)
 	pid_t	child_id;
 
 	redirect_output(line, "open");
+	// Why do I even use fork here? I can easily do it without multiprocessing
 	switch (child_id = fork())
 	{
 		case -1:

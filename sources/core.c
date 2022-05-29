@@ -92,29 +92,6 @@ char ft_switch(t_line *line)
 	return (0);
 }
 
-
-
-void	sighandler(int sig)
-{
-		//printf("%x\n", RL_READLINE_VERSION);
-		//rl_redisplay();
-		//rl_replace_line();
-		//rl_on_new_line();
-		if (child_pid != 0)
-		{
-			printf("kill child");
-			kill(child_pid, SIGINT);
-			write(1, "\n", 1);
-		}
-		// else
-		// {
-		// 	rl_replace_line("", 0);
-		// 	//rl_line_buffer = malloc(ft_strlen("AMONGUS! HIHIHIHIHIHIHIHIHI"));
-		// 	//rl_line_buffer = "AMONGUS! HIHIHIHIHIHIHIHIHI";
-		// }
-		sig = 0;
-}
-
 void	redirect_input(t_line *line, char *mode){
 	static int	save_in_stream;
 
@@ -133,6 +110,17 @@ void	redirect_input(t_line *line, char *mode){
 		free(line->pip_in);
 		line->pip_in = NULL;
 	}
+}
+
+void	sighandler(int sig)
+{
+	if (child_pid != 0)
+	{
+		printf("kill child\n");
+		kill(child_pid, SIGINT);
+		write(1, "\n", 1);
+	}
+	sig = 0;
 }
 
 int	main()
