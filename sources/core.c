@@ -194,6 +194,5 @@ int	main()
 		exec_line -= total_shift;
 		free_array(exec_line);
 	}
-	redirect_input(&line, "close");
 	return (0);
 }
