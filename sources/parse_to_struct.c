@@ -134,6 +134,7 @@ static int	find_args(t_line *line, char **exec_line)
 	return (args);
 }
 
+// tmp func. Delete it later.
 void	temp_print_struct(t_line *line){
 	int i;
 
@@ -152,17 +153,22 @@ void	temp_print_struct(t_line *line){
 	printf("\n");
 }
 
-int	parse_line_to_struct(t_line *line, char **exec_line)
-{
+void	refresh_pip_out(t_line *line){
 	if (line->pip_out){
 		free(line->pip_out);
 		line->pip_out = NULL;
 	}
 	line->pip_out = malloc(sizeof(int) * 2);
 	pipe(line->pip_out);
+}
 
-	int	total_shift = 1; // one and not a zero is because the command must be present!
+int	parse_line_to_struct(t_line *line, char **exec_line)
+{
+	int	total_shift;
+
+	refresh_pip_out(line);
 	find_command(line, exec_line);
+	total_shift = 1; // one and not a zero is because the command must be present!
 	total_shift += find_redirections(line, exec_line) * 2;
 	total_shift += find_args(line, exec_line);
 	line->is_redirecting = FALSE;

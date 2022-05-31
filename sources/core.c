@@ -36,7 +36,7 @@ static void	clear_struct(t_line *line)
 		free_array(line->fd_to_read);
 }
 
-static void	init_line(t_line *line)
+static void	init_struct(t_line *line)
 {
 	line->pip_in = NULL;
 	line->pip_out = NULL;
@@ -123,9 +123,42 @@ void	sighandler(int sig)
 	sig = 0;
 }
 
+char	iterate_exec_line(char **exec_line, t_line *line){
+	char	is_pipe_in_opened = FALSE;
+	int		total_shift;	// represents total shift on exec_line
+	int		shift;			// represents current cmd shift on exec_line
+
+	shift = 0;
+	total_shift = 0;
+	while (*exec_line){		// iterates each command in current line
+		if (line->is_piping && !is_pipe_in_opened){
+			is_pipe_in_opened = TRUE;
+			redirect_input(line, "open");
+			//printf("Opened pipe_in!\n");
+		}
+		shift = parse_line_to_struct(line, exec_line);
+		total_shift += shift;
+		exec_line += shift;
+		if (!line->is_redirecting){
+			if (ft_switch(line))
+				return (1);
+		}
+		else{
+			if (redirects(line) == 2)
+				return (1);
+		}
+	}
+	exec_line -= total_shift;
+	if (is_pipe_in_opened){
+		redirect_input(line, "close");
+		//printf("Closed pipe_in!\n");
+		is_pipe_in_opened = FALSE;
+	}
+	return (0);
+}
+
 int	main()
 {
-	char	is_pipe_in_opened = FALSE;
 	char	rotate;
 	char	**exec_line;
 	t_line	line;
@@ -133,18 +166,17 @@ int	main()
 	//t_list *shell;
 	char	input_str[100000];
 	struct sigaction	act;
-	int		total_shift;	// represents total shift on exec_line
-	int		shift;			// represents current cmd shift on exec_line
+
 	
 	child_pid = 0;
 	act.sa_flags = 0;
 	act.sa_handler = sighandler;
 	sigaction(SIGINT, &act, NULL);
 
-	init_line(&line);
+	init_struct(&line);
 	ft_bzero(input_str, 100000);
-	rotate = TRUE;
-	while (rotate)
+	rotate = 0;
+	while (!rotate)
 	{
 		redirect_input(&line, "init");
 		take_input(input_str);
@@ -154,32 +186,7 @@ int	main()
 			printf("Error: not enough memory\n");
 			break ;
 		}
-		shift = 0;
-		total_shift = 0;
-		while (*exec_line){		// iterates each command in current line
-			if (line.is_piping && !is_pipe_in_opened){
-				is_pipe_in_opened = TRUE;
-				redirect_input(&line, "open");
-				//printf("Opened pipe_in!\n");
-			}
-			shift = parse_line_to_struct(&line, exec_line);
-			total_shift += shift;
-			exec_line += shift;
-			if (!line.is_redirecting){
-				if (ft_switch(&line))
-					rotate = FALSE;
-			}
-			else{
-				if (redirects(&line) == 2)
-					rotate = FALSE;
-			}
-		}
-		if (is_pipe_in_opened){
-			redirect_input(&line, "close");
-			//printf("Closed pipe_in!\n");
-			is_pipe_in_opened = FALSE;
-		}
-		exec_line -= total_shift;
+		rotate = iterate_exec_line(exec_line, &line);
 		free_array(exec_line);
 	}
 	return (0);
