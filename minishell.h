@@ -60,7 +60,7 @@ typedef struct s_line
 char	ft_switch(t_line *line);
 
 // Redirects file output to a chosen file
-char	redirects(t_line *line);
+void	redirects(t_line *line, char *mode);
 
 // utils
 int		ft_strcmp(char *str1, char *str2);

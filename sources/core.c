@@ -124,6 +124,7 @@ void	sighandler(int sig)
 }
 
 char	iterate_exec_line(char **exec_line, t_line *line){
+	char	ret;
 	char	is_pipe_in_opened = FALSE;
 	int		total_shift;	// represents total shift on exec_line
 	int		shift;			// represents current cmd shift on exec_line
@@ -139,14 +140,15 @@ char	iterate_exec_line(char **exec_line, t_line *line){
 		shift = parse_line_to_struct(line, exec_line);
 		total_shift += shift;
 		exec_line += shift;
-		if (!line->is_redirecting){
-			if (ft_switch(line))
-				return (1);
+		if (line->is_redirecting){
+			redirects(line, "open");
 		}
-		else{
-			if (redirects(line) == 2)
-				return (1);
+		ret = ft_switch(line);
+		if (line->is_redirecting){
+			redirects(line, "close");
 		}
+		if (ret) // switch returned exit code.
+			return (1);
 	}
 	exec_line -= total_shift;
 	if (is_pipe_in_opened){

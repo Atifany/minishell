@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-static void	child_redirector(t_line *line)
+static void	write_output(t_line *line)
 {
 	size_t	str_len;
 	int		i;
@@ -29,20 +29,6 @@ static void	child_redirector(t_line *line)
 		write(line->pip_in[WRITE], "\0", 1);
 	}
 	close(line->pip_out[READ]);
-	exit(0);
-}
-
-static char	parent_redirector(t_line *line)
-{
-	char	switch_ret;
-
-	switch_ret = ft_switch(line);
-	write(1, "\0", 1); // Makes sure that if switch prints nothing child actually reads EOF,
-					   // instead of endlessly waiting for input
-	wait(NULL);
-	if (switch_ret)
-		return (2);
-	return (0);
 }
 
 void	redirect_output(t_line *line, char *mode){
@@ -60,25 +46,13 @@ void	redirect_output(t_line *line, char *mode){
 }
 
 // pipes won't work. top priority fix!
-char	redirects(t_line *line)
+void	redirects(t_line *line, char *mode)
 {
-	char	ret;
-	pid_t	child_id;
-
-	redirect_output(line, "open");
-	// Why do I even use fork here? I can easily do it without multiprocessing
-	switch (child_id = fork())
-	{
-		case -1:
-			printf("Fork error\n");
-			return (1);
-		// child
-		case 0:
-			child_redirector(line);
-		// parent
-		default:
-			ret = parent_redirector(line); // make returns clearer
-			redirect_output(line, "close");
-			return (ret);
+	if (!ft_strcmp(mode, "open")){
+		redirect_output(line, "open");
+	}
+	if (!ft_strcmp(mode, "close")){
+		write_output(line);
+		redirect_output(line, "close");
 	}
 }
