@@ -12,126 +12,64 @@
 
 #include "../minishell.h"
 
-// think how to downsize this shit!!!!
-static int	find_redirecions_runner(t_line *line, char **exec_line, char action)
-{
-	int	files;
-	int	i;
-	int	j;
-
-	files = 0;
-	j = 0;
-	i = 0;
-	while (exec_line[i])
+char	is_arrow(char *str){
+	if (!ft_strcmp(str, ">") ||
+		!ft_strcmp(str, ">>") ||
+		!ft_strcmp(str, "<") ||
+		!ft_strcmp(str, "<<"))
 	{
-		if (!ft_strcmp(exec_line[i], "|")){
-			break ;
-			//return (files + 1);
-		}
-		if (!ft_strncmp(exec_line[i], ">", ft_strlen(exec_line[i]))
-			&& exec_line[i + 1] != NULL
-			&& ft_strncmp(exec_line[i + 1], ">", ft_strlen(exec_line[i + 1])))
-		{
-			if (action)
-				files++;
-			else
-				line->fd_to_write[j++] = ft_strdup(exec_line[i + 1]);
-		}
-		i++;
+		return (TRUE);
 	}
-	return (files);
+	return (FALSE);
 }
 
-static int	find_redirections(t_line *line, char **exec_line)
-{
-	int	files;
-
-	if (line->fd_to_write){
-		free_array(line->fd_to_write);
+static char	identify(char **exec_line, int i){
+	if (i == 0){
+		if (!is_arrow(exec_line[i])){
+			return (ARG);
+		}
+		return (ARROW);
 	}
-		
-	line->fd_to_write = NULL;
-	files = find_redirecions_runner(line, exec_line, TRUE);
-	line->fd_to_write = (char **)malloc(sizeof(char *) * (files + 1));
-	if (files > 0)
-		find_redirecions_runner(line, exec_line, FALSE);
-	line->fd_to_write[files] = NULL;
-	return (files);
+	if (!is_arrow(exec_line[i]) && !is_arrow(exec_line[i - 1])){
+		return (ARG);
+	}
+	if (!is_arrow(exec_line[i]) && is_arrow(exec_line[i - 1])){
+		if (!ft_strcmp(exec_line[i - 1], ">")){
+			return (FD_WRITE);
+		}
+		if (!ft_strcmp(exec_line[i - 1], ">>")){
+			return (FD_AP_WRITE);
+		}
+		if (!ft_strcmp(exec_line[i - 1], "<")){
+			return (FD_READ);
+		}
+		if (!ft_strcmp(exec_line[i - 1], "<<")){
+			return (FD_AP_READ);
+		}
+	}
+	return (ERROR);
 }
 
-static void	find_command(t_line *line, char **exec_line)
-{
-	int	i;
+static int	iterate_line(char **exec_line, char **arr, char to_search, char mode){
+	int	ret = 0;
+	int i = 0;
+	int j = 0;
 
-	i = 0;
-	if (line->command){
-		free(line->command);
-	}
-		
-	line->command = NULL;
-	while (exec_line[i])
-	{
+	while (exec_line[i]){
 		if (!ft_strcmp(exec_line[i], "|")){
 			break ;
 		}
-		if ((ft_strncmp(exec_line[i], ">", ft_strlen(exec_line[i])) && i == 0)
-			|| (ft_strncmp(exec_line[i], ">", ft_strlen(exec_line[i]))
-				&& ft_strncmp(exec_line[i - 1], ">", ft_strlen(exec_line[i - 1]))))
-		{
-			line->command = ft_strdup(exec_line[i]);
-			break ;
+		if (identify(exec_line, i) == to_search){
+			if (mode == COUNT){
+				ret++;
+			}
+			if (mode == COLLECT){
+				arr[j++] = ft_strdup(exec_line[i]);
+			}
 		}
 		i++;
 	}
-}
-
-static int	find_args_runner(t_line *line, char **exec_line, char action)
-{
-	int		i;
-	int		j;
-	int		args;
-
-	i = 0;
-	j = 0;
-	args = -1;
-	while (exec_line[i])
-	{
-		if (!ft_strcmp(exec_line[i], "|")){
-			break ;
-		}
-		if (i == 0 && ft_strncmp(exec_line[i], ">", ft_strlen(exec_line[i])))
-			args++;
-		if (i > 0 && ft_strncmp(exec_line[i], ">", ft_strlen(exec_line[i]))
-			&& ft_strncmp(exec_line[i - 1], ">", ft_strlen(exec_line[i - 1])))
-		{
-			args++;
-			if (args > 0 && action)
-				line->args[j++] = ft_strdup(exec_line[i]);
-		}
-		i++;
-	}
-	return (args);
-}
-
-static int	find_args(t_line *line, char **exec_line)
-{
-	int		args;
-
-	if (line->args){
-		free_array(line->args);
-	}
-		
-	line->args = NULL;
-	//if (exec_line[0] == NULL || exec_line[1] == NULL)
-	//	return ();
-	args = find_args_runner(line, exec_line, FALSE);
-	if (args < 1)
-		args = 0;
-	line->args = (char **)malloc(sizeof(char *) * (args + 1));
-	if (args > 0)
-		find_args_runner(line, exec_line, TRUE);
-	line->args[args] = NULL;
-	return (args);
+	return (ret);
 }
 
 // tmp func. Delete it later.
@@ -145,10 +83,16 @@ void	temp_print_struct(t_line *line){
 		printf("%s ", line->args[i++]);
 	}
 	printf("\n");
-	printf("redirects: ");
+	printf("writes: ");
 	i = 0;
 	while (line->fd_to_write[i]){
 		printf("%s ", line->fd_to_write[i++]);
+	}
+	printf("\n");
+	printf("app writes: ");
+	i = 0;
+	while (line->fd_to_appwrite[i]){
+		printf("%s ", line->fd_to_appwrite[i++]);
 	}
 	printf("\n");
 }
@@ -162,15 +106,33 @@ void	refresh_pip_out(t_line *line){
 	pipe(line->pip_out);
 }
 
+static int	parse(char **exec_line, char ***arr, char to_search){
+	int	ret;
+
+	if (*arr){
+		free_array(*arr);
+	}
+	*arr = NULL;
+	ret = iterate_line(exec_line, *arr, to_search, COUNT);
+	*arr = (char **)malloc(sizeof(char *) * (ret + 1));
+	iterate_line(exec_line, *arr, to_search, COLLECT);
+	(*arr)[ret] = NULL;
+	return (ret);
+}
+
 int	parse_line_to_struct(t_line *line, char **exec_line)
 {
 	int	total_shift;
 
 	refresh_pip_out(line);
-	find_command(line, exec_line);
-	total_shift = 1; // one and not a zero is because the command must be present!
-	total_shift += find_redirections(line, exec_line) * 2;
-	total_shift += find_args(line, exec_line);
+	total_shift = parse(exec_line, &(line->args), ARG);
+	line->command = ft_strdup(line->args[0]);
+	// multyplied by two because "> keks.txt"
+	total_shift += 2 * parse(exec_line, &(line->fd_to_write), FD_WRITE);
+	total_shift += 2 * parse(exec_line, &(line->fd_to_appwrite), FD_AP_WRITE);
+	total_shift += 2 * parse(exec_line, &(line->fd_to_read), FD_READ);
+	total_shift += 2 * parse(exec_line, &(line->fd_to_appread), FD_AP_READ);
+
 	line->is_redirecting = FALSE;
 	line->is_piping = FALSE;
 	if (*(exec_line + total_shift) != NULL){ // That means find_* funcs stoped at pipe, not a EOL
@@ -178,7 +140,7 @@ int	parse_line_to_struct(t_line *line, char **exec_line)
 		line->is_redirecting = TRUE;
 		total_shift++;
 	}
-	if (*(line->fd_to_write)){
+	if (*(line->fd_to_write) || *(line->fd_to_appwrite)){
 		line->is_redirecting = TRUE;
 	}
 	//temp_print_struct(line);

@@ -46,10 +46,16 @@ static void	init_struct(t_line *line)
 	line->args = NULL;
 	line->fd_to_write = NULL;
 	line->fd_to_read = NULL;
+	line->fd_to_appwrite = NULL;
+	line->fd_to_appread = NULL;
 	line->is_appending = FALSE;
 }
 
-char ft_switch(t_line *line)
+// char	run(t_line *line, char (*f)(char *)){
+// 	return (f(line->args[0]));
+// }
+
+char	ft_switch(t_line *line)
 {
 	// If, for example, I enter "exi", ft_strncmp will consider it as "exit" command and execute it,
 	// which is totaly incorrect!
@@ -78,6 +84,9 @@ char ft_switch(t_line *line)
 		}
 		if (execute_cd(line->args[0]))
 			printf("Error: %s does not exist or there is not enough memory\n", line->args[0]);
+		// printf("uwu\n");
+		// run(line, dict_get(&line->cmds, line->command));
+		// printf("keks\n");
 	}
 	else if (!ft_strcmp(line->command, "echo")){
 		execute_echo(line->args);
@@ -121,6 +130,11 @@ void	sighandler(int sig)
 		write(1, "\n", 1);
 	}
 	sig = 0;
+}
+
+void	init_commands(t_line *line){
+	line->cmds = NULL;
+	dict_set(&line->cmds, "cd", &execute_cd);
 }
 
 char	iterate_exec_line(char **exec_line, t_line *line){
@@ -175,11 +189,13 @@ int	main()
 	act.sa_handler = sighandler;
 	sigaction(SIGINT, &act, NULL);
 
-	init_struct(&line);
+	//init_commands(&line);
+	//init_struct(&line, "first");
 	ft_bzero(input_str, 100000);
 	rotate = 0;
 	while (!rotate)
 	{
+		init_struct(&line);
 		redirect_input(&line, "init");
 		take_input(input_str);
 
