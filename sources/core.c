@@ -12,16 +12,12 @@
 
 #include "../minishell.h"
 
-static char	take_input(char *input_str)
+static char	*take_input()
 {
 	char	*buf;
 
 	buf = readline("\e[0;36mminishell \e[1;36m>> \e[0m");
-	//printf("Input: %s\n", buf);
-	ft_strlcpy(input_str, buf, 100000);
-	if (buf)
-		free(buf);
-	return (0);
+	return (buf);
 }
 
 static void	clear_struct(t_line *line)
@@ -91,6 +87,9 @@ char	ft_switch(t_line *line)
 	else if (!ft_strcmp(line->command, "echo")){
 		execute_echo(line->args);
 	}
+	else if (!ft_strcmp(line->command, "cat")){
+		execute_cat(line);
+	}
 	else if (!ft_strcmp(line->command, "exit"))
 	{
 		clear_struct(line);
@@ -101,18 +100,18 @@ char	ft_switch(t_line *line)
 	return (0);
 }
 
-void	redirect_input(t_line *line, char *mode){
+void	redirect_input(t_line *line, char mode){
 	static int	save_in_stream;
 
-	if (!ft_strcmp(mode, "init")){
+	if (mode == INIT){
 		save_in_stream = dup(STDIN_FILENO);
 		line->pip_in = (int *)malloc(sizeof(int) * 2);
 		pipe(line->pip_in);
 	}
-	else if (!ft_strcmp(mode, "open")){
+	else if (mode == OPEN){
 		dup2(line->pip_in[READ], STDIN_FILENO);
 	}
-	else if (!ft_strcmp(mode, "close") && line->pip_in){
+	else if (mode == CLOSE && line->pip_in){
 		close(line->pip_in[READ]);
 		close(line->pip_in[WRITE]);
 		dup2(save_in_stream, STDIN_FILENO);
@@ -137,42 +136,82 @@ void	init_commands(t_line *line){
 	dict_set(&line->cmds, "cd", &execute_cd);
 }
 
+int	open_pipe_in_and_parse(t_line *line, char **exec_line, char mode){
+	static char	is_pipe_in_opened = FALSE;
+	char		is_open_queued = FALSE;
+	int 		shift = 0;
+
+	if (mode == OPEN){
+		if (line->is_piping && !is_pipe_in_opened){
+			is_open_queued = TRUE;
+		}
+		shift = parse_line_to_struct(line, exec_line);
+		if ((*(line->fd_to_read) || *(line->fd_to_appread) || is_open_queued)
+			&& !is_pipe_in_opened){
+			is_pipe_in_opened = TRUE;
+			redirect_input(line, OPEN);
+		}
+		is_open_queued = FALSE;
+	}
+	else{
+		if (is_pipe_in_opened){
+			redirect_input(line, CLOSE);
+			is_pipe_in_opened = FALSE;
+		}
+	}
+	return (shift);
+}
+
+void cat_to_pipe_in(t_line *line){
+	char	*str;
+	int		i = 0;
+	int		fd;
+
+	while (line->fd_to_read[i]){
+		fd = open(line->fd_to_read[i], O_CREAT | O_RDWR, 0666);
+		while (ft_cat(fd, &str) > 0){
+			write(line->pip_in[WRITE], str, ft_strlen(str));
+			free(str);
+			str = NULL;
+		}
+		close(fd);
+		i++;
+	}
+}
+
 char	iterate_exec_line(char **exec_line, t_line *line){
 	char	ret;
-	char	is_pipe_in_opened = FALSE;
 	int		total_shift;	// represents total shift on exec_line
 	int		shift;			// represents current cmd shift on exec_line
 
 	shift = 0;
 	total_shift = 0;
 	while (*exec_line){		// iterates each command in current line
-		if (line->is_piping && !is_pipe_in_opened){
-			is_pipe_in_opened = TRUE;
-			redirect_input(line, "open");
-			//printf("Opened pipe_in!\n");
+		shift = open_pipe_in_and_parse(line, exec_line, OPEN);
+		if (*(line->fd_to_read) || *(line->fd_to_appread)){
+			cat_to_pipe_in(line);
 		}
-		shift = parse_line_to_struct(line, exec_line);
+		if (line->pip_in){
+			write(line->pip_in[WRITE], "\0", 1);
+		}
 		total_shift += shift;
 		exec_line += shift;
 		if (line->is_redirecting){
-			redirects(line, "open");
+			redirect_output(line, "open");
 		}
 		ret = ft_switch(line);
 		if (line->is_redirecting){
-			redirects(line, "close");
+			redirect_output(line, "close");
 		}
 		if (ret) // switch returned exit code.
 			return (1);
 	}
 	exec_line -= total_shift;
-	if (is_pipe_in_opened){
-		redirect_input(line, "close");
-		//printf("Closed pipe_in!\n");
-		is_pipe_in_opened = FALSE;
-	}
+	open_pipe_in_and_parse(line, exec_line, CLOSE);
 	return (0);
 }
 
+// move everything out of main!!!!
 int	main()
 {
 	char	rotate;
@@ -180,9 +219,8 @@ int	main()
 	t_line	line;
 	//t_list *env;
 	//t_list *shell;
-	char	input_str[100000];
+	char	*input_str = NULL;
 	struct sigaction	act;
-
 	
 	child_pid = 0;
 	act.sa_flags = 0;
@@ -191,15 +229,15 @@ int	main()
 
 	//init_commands(&line);
 	//init_struct(&line, "first");
-	ft_bzero(input_str, 100000);
 	rotate = 0;
 	while (!rotate)
 	{
-		init_struct(&line);
-		redirect_input(&line, "init");
-		take_input(input_str);
-
+		init_struct(&line); // I guess it leaks, so add free() inside this func
+		redirect_input(&line, INIT);
+		input_str = take_input();
 		exec_line = parse_to_array(input_str);
+		free(input_str);
+		input_str = NULL;
 		if (!exec_line){
 			printf("Error: not enough memory\n");
 			break ;

@@ -25,7 +25,10 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-// macros
+// general macros
+# define INIT 0
+# define OPEN 1
+# define CLOSE 2
 # define READ 0
 # define WRITE 1
 # define APPEND 2
@@ -33,7 +36,7 @@
 # define FALSE 0
 # define INT_MAX 2147483647
 # define INT_MIN -2147483648
-// parser macroses
+// parser macros
 # define COUNT 0
 # define COLLECT 1
 # define CMD 0
@@ -44,6 +47,8 @@
 # define FD_READ 5
 # define FD_AP_READ 6
 # define ERROR 7
+// read macros
+# define READ_BUFFER_SIZE 1024 // 1KB
 
 //global
 int child_pid;
@@ -76,9 +81,10 @@ typedef struct s_line
 char	ft_switch(t_line *line);
 
 // Redirects file output to a chosen file
-void	redirects(t_line *line, char *mode);
+void	redirect_output(t_line *line, char *mode);
 
 // utils
+int		ft_cat(int fd, char **str_ptr);
 int		ft_strcmp(char *str1, char *str2);
 void	free_array(char **array);
 
@@ -89,6 +95,7 @@ char	execute_cd(char *path);
 char	execute_echo(char **args);
 void	execute_env(t_list *env);
 void	execute_export(t_list **env, t_list **shell, char* key);
+char	execute_cat(t_line *line);
 
 // parse to struct
 int		parse_line_to_struct(t_line *line, char **exec_line);
