@@ -31,10 +31,23 @@
 # define STR_EMPTY ""
 # define WRITE 1
 # define READ 0
+# define WRITE 1
+# define APPEND 2
 # define TRUE 1
 # define FALSE 0
 # define INT_MAX 2147483647
 # define INT_MIN -2147483648
+// parser macroses
+# define COUNT 0
+# define COLLECT 1
+# define CMD 0
+# define ARROW 1
+# define ARG 2
+# define FD_WRITE 3
+# define FD_AP_WRITE 4
+# define FD_READ 5
+# define FD_AP_READ 6
+# define ERROR 7
 
 //global
 int child_pid;
@@ -48,24 +61,28 @@ typedef struct s_key_value
 //line format
 typedef struct s_line
 {
+	// better sort it with "union"
 	char	*command;
 	char	**args;
 	char	**fd_to_write;
+	char	**fd_to_appwrite;
+	char	**fd_to_read;
+	char	**fd_to_appread;
 	char	is_redirecting;	// turns on/off redirector for every cmd
 	char	is_piping;		// tells writer to write all output to pipe_in also;
 	int		*pip_in;		// pipe from which every command reads (stdin is redirected here)
 	int		*pip_out;		// pipe to which every command writes (including pipe_in if needed)
-	char	**fd_to_read;
 	char	is_appending;
 	t_list *func_dict;
 	t_list *env;
 	t_list *shell;
+	t_list	*cmds;
 }	t_line;
 
 char	ft_switch(t_line *line);
 
 // Redirects file output to a chosen file
-char	redirects(t_line *line);
+void	redirects(t_line *line, char *mode);
 
 // utils
 int		ft_strcmp(char *str1, char *str2);
@@ -85,9 +102,6 @@ typedef struct s_func
 
 
 // parse to struct
-// void	find_redirections(t_line *line, char **exec_line);
-// void	find_command(t_line *line, char **exec_line);
-// void	find_args(t_line *line, char **exec_line);
 int		parse_line_to_struct(t_line *line, char **exec_line);
 char	**parse_to_array(char *input_str);
 
@@ -100,9 +114,9 @@ char	*ft_strj(char *s1, char *s2);
 int count(char *arr, char s);
 
 //dict
-char *dict_get(t_list **lst, char* key);
+void *dict_get(t_list **lst, char* key);
 void dict_set(t_list **lst, char* key, void* value);
-void dict_del(t_list **lst, char* key, void (*del)(void *));
+void dict_del(t_list **lst, char* key/*, void (*del)(void *)*/);
 
 //env
 char *get_env(t_list **env, char* key);

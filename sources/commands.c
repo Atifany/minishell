@@ -26,7 +26,7 @@ char	*execute_pwd(t_line *line)
 {
 	char	*buf;
 
-	if (line->args[0])
+	if (line->args[1])
 		return "pwd: too many arguments\n";
 	buf = getcwd(NULL, 0);
 	if (!buf)
@@ -39,9 +39,9 @@ char	*execute_pwd(t_line *line)
 char	*execute_cd(t_line *line)
 {
 	int dir;
-	char *path = line->args[0];
+	char *path = line->args[1];
 	
-	if (line->args[0] && line->args[1])
+	if (line->args[1] && line->args[2])
 		return ("cd: too many arguments\n");
 	dir = chdir(path);
 	if (dir == -1)

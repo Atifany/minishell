@@ -36,7 +36,7 @@ static void	clear_struct(t_line *line)
 		free_array(line->fd_to_read);
 }
 
-static void	init_line(t_line *line)
+static void	init_struct(t_line *line)
 {
 	line->pip_in = NULL;
 	line->pip_out = NULL;
@@ -46,17 +46,16 @@ static void	init_line(t_line *line)
 	line->args = NULL;
 	line->fd_to_write = NULL;
 	line->fd_to_read = NULL;
+	line->fd_to_appwrite = NULL;
+	line->fd_to_appread = NULL;
 	line->is_appending = FALSE;
 	line->env = NULL;
 	line->shell = NULL;
 }
 
-char ft_switch(t_line *line)
+char	ft_switch(t_line *line)
 {
-	// If, for example, I enter "exi", ft_strncmp will consider it as "exit" command and execute it,
-	// which is totaly incorrect!
-
-	func *f = (func *)dict_get(&line->func_dict, "hw_func");
+	func *f = dict_get(&(line->func_dict), line->args[0]);
 	if (!f)
 	{
 		printf("%s is not recognised as command\n", line->command);
@@ -69,7 +68,7 @@ char ft_switch(t_line *line)
 		clear_struct(line);
 		return (1);
 	}
-	printf("%s",f->foo(line));		
+	printf("%s", f->foo(line));
 	return (0);
 }
 
@@ -104,40 +103,80 @@ void	sighandler(int sig)
 	sig = 0;
 }
 
-t_list *func_dict_init(void)
+void func_dict_init(t_list **func_dict)
 {
-	t_list *func_dict;
-	func_dict = NULL;
+	*func_dict = NULL;
 
 	func *pwd;
 	pwd = malloc(sizeof(func));
 	pwd->foo = execute_pwd;
-	dict_set(&func_dict, "pwd", pwd);
+	dict_set(func_dict, "pwd", pwd);
 
 	func *cd;
 	cd = malloc(sizeof(func));
 	cd->foo = execute_cd;
-	dict_set(&func_dict, "cd", cd);
+	dict_set(func_dict, "cd", cd);
 
 	func *echo;
 	echo = malloc(sizeof(func));
 	echo->foo = execute_echo;
-	dict_set(&func_dict, "echo", echo);
+	dict_set(func_dict, "echo", echo);
 
 	func *env;
 	env = malloc(sizeof(func));
 	env->foo = execute_env;
-	dict_set(&func_dict, "env", env);
+	dict_set(func_dict, "env", env);
 
 	func *export;
 	export = malloc(sizeof(func));
 	export->foo = execute_export;
-	dict_set(&func_dict, "export", export);
+	dict_set(func_dict, "export", export);
+}
+
+void	init_commands(t_line *line)
+{
+	line->cmds = NULL;
+	dict_set(&line->cmds, "cd", &execute_cd);
+}
+
+char	iterate_exec_line(char **exec_line, t_line *line){
+	char	ret;
+	char	is_pipe_in_opened = FALSE;
+	int		total_shift;	// represents total shift on exec_line
+	int		shift;			// represents current cmd shift on exec_line
+
+	shift = 0;
+	total_shift = 0;
+	while (*exec_line){		// iterates each command in current line
+		if (line->is_piping && !is_pipe_in_opened){
+			is_pipe_in_opened = TRUE;
+			redirect_input(line, "open");
+			//printf("Opened pipe_in!\n");
+		}
+		shift = parse_line_to_struct(line, exec_line);
+		total_shift += shift;
+		exec_line += shift;
+		if (line->is_redirecting){
+			redirects(line, "open");
+		}
+		ret = ft_switch(line);
+		if (line->is_redirecting){
+			redirects(line, "close");
+		}
+		if (ret) // switch returned exit code.
+			return (1);
+	}
+	exec_line -= total_shift;
+	if (is_pipe_in_opened){
+		redirect_input(line, "close");
+		//printf("Closed pipe_in!\n");
+		is_pipe_in_opened = FALSE;
+	}
+	return (0);
 }
 
 int	main()
 {
-	char	is_pipe_in_opened = FALSE;
 	char	rotate;
 	char	**exec_line;
 	t_line	line;
@@ -148,51 +187,29 @@ int	main()
 	int		total_shift;	// represents total shift on exec_line
 	int		shift;			// represents current cmd shift on exec_line
 
-	line.func_dict = func_dict_init();
+	func_dict_init(&(line.func_dict));
 	child_pid = 0;
 	//act.sa_flags = 0;
 	//act.sa_handler = sighandler;
 	//sigaction(SIGINT, &act, NULL);
 
-	init_line(&line);
+	//init_commands(&line);
+	//init_struct(&line, "first");
 	ft_bzero(input_str, 100000);
-	rotate = TRUE;
-	while (rotate)
+	rotate = 0;
+	while (!rotate)
 	{
+		init_struct(&line);
 		redirect_input(&line, "init");
 		take_input(input_str);
-
+		
+		
 		exec_line = parse_to_array(input_str);
 		if (!exec_line){
 			printf("Error: not enough memory\n");
 			break ;
 		}
-		shift = 0;
-		total_shift = 0;
-		while (*exec_line){		// iterates each command in current line
-			if (line.is_piping && !is_pipe_in_opened){
-				is_pipe_in_opened = TRUE;
-				redirect_input(&line, "open");
-				//printf("Opened pipe_in!\n");
-			}
-			shift = parse_line_to_struct(&line, exec_line);
-			total_shift += shift;
-			exec_line += shift;
-			if (!line.is_redirecting){
-				if (ft_switch(&line))
-					rotate = FALSE;
-			}
-			else{
-				if (redirects(&line) == 2)
-					rotate = FALSE;
-			}
-		}
-		if (is_pipe_in_opened){
-			redirect_input(&line, "close");
-			//printf("Closed pipe_in!\n");
-			is_pipe_in_opened = FALSE;
-		}
-		exec_line -= total_shift;
+		rotate = iterate_exec_line(exec_line, &line);
 		free_array(exec_line);
 	}
 	return (0);
