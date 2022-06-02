@@ -47,48 +47,29 @@ static void	init_line(t_line *line)
 	line->fd_to_write = NULL;
 	line->fd_to_read = NULL;
 	line->is_appending = FALSE;
+	line->env = NULL;
+	line->shell = NULL;
 }
 
 char ft_switch(t_line *line)
 {
 	// If, for example, I enter "exi", ft_strncmp will consider it as "exit" command and execute it,
 	// which is totaly incorrect!
-	if (!line->command)
-		return (0);
+
+	func *f = (func *)dict_get(&line->func_dict, "hw_func");
+	if (!f)
+	{
+		printf("%s is not recognised as command\n", line->command);
+		return 0;
+	}
 	if (!ft_strncmp(line->command, "./", 2) || *(line->command) == '/')
-	{
-		// put program name to the args list
-		// extract program name from the full path argument
-		execute_file(line->command, line->args);
-	}
-	else if (!ft_strcmp(line->command, "pwd"))
-	{
-		if (line->args[0]){
-			printf("pwd: too many arguments\n");
-			return (0);
-		}
-		if (execute_pwd())
-			printf("Error: getcwd() failed\n");
-	}
-	else if (!ft_strcmp(line->command, "cd"))
-	{
-		if (line->args[0] && line->args[1]){
-			printf("cd: too many arguments\n");
-			return (0);
-		}
-		if (execute_cd(line->args[0]))
-			printf("Error: %s does not exist or there is not enough memory\n", line->args[0]);
-	}
-	else if (!ft_strcmp(line->command, "echo")){
-		execute_echo(line->args);
-	}
+		execute_file(line->args);
 	else if (!ft_strcmp(line->command, "exit"))
 	{
 		clear_struct(line);
 		return (1);
 	}
-	else
-		printf("%s is not recognised as command\n", line->command);
+	printf("%s",f->foo(line));		
 	return (0);
 }
 
@@ -123,23 +104,55 @@ void	sighandler(int sig)
 	sig = 0;
 }
 
+t_list *func_dict_init(void)
+{
+	t_list *func_dict;
+	func_dict = NULL;
+
+	func *pwd;
+	pwd = malloc(sizeof(func));
+	pwd->foo = execute_pwd;
+	dict_set(&func_dict, "pwd", pwd);
+
+	func *cd;
+	cd = malloc(sizeof(func));
+	cd->foo = execute_cd;
+	dict_set(&func_dict, "cd", cd);
+
+	func *echo;
+	echo = malloc(sizeof(func));
+	echo->foo = execute_echo;
+	dict_set(&func_dict, "echo", echo);
+
+	func *env;
+	env = malloc(sizeof(func));
+	env->foo = execute_env;
+	dict_set(&func_dict, "env", env);
+
+	func *export;
+	export = malloc(sizeof(func));
+	export->foo = execute_export;
+	dict_set(&func_dict, "export", export);
+}
+
 int	main()
 {
 	char	is_pipe_in_opened = FALSE;
 	char	rotate;
 	char	**exec_line;
 	t_line	line;
-	//t_list *env;
-	//t_list *shell;
 	char	input_str[100000];
-	struct sigaction	act;
+	//struct sigaction	act;
+	
+
 	int		total_shift;	// represents total shift on exec_line
 	int		shift;			// represents current cmd shift on exec_line
-	
+
+	line.func_dict = func_dict_init();
 	child_pid = 0;
-	act.sa_flags = 0;
-	act.sa_handler = sighandler;
-	sigaction(SIGINT, &act, NULL);
+	//act.sa_flags = 0;
+	//act.sa_handler = sighandler;
+	//sigaction(SIGINT, &act, NULL);
 
 	init_line(&line);
 	ft_bzero(input_str, 100000);

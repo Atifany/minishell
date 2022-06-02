@@ -40,7 +40,7 @@ void dict_set(t_list **lst, char* key, void* value)
 	dict_add(lst, key, value);
 }
 
-void dict_del(t_list **lst, char* key)
+void dict_del(t_list **lst, char* key, void (*del)(void *))
 {
 	t_list *start;
 	t_list *lstnext;
@@ -53,8 +53,7 @@ void dict_del(t_list **lst, char* key)
 			lstnext = (*lst)->next;
 			(*lst)->next = NULL;
 			ft_lstadd_back(lst, lstnext->next);		
-			//free(((kv *)(lstnext)->content)->value); //Zdes viletaet
-			free(lstnext);
+			del(lstnext);
 			*lst = start;
 			return ;
 		}

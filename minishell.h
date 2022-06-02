@@ -25,7 +25,10 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
+#include <sys/wait.h>
+
 // macros
+# define STR_EMPTY ""
 # define WRITE 1
 # define READ 0
 # define TRUE 1
@@ -42,7 +45,6 @@ typedef struct s_key_value
 	void *value;
 } kv;
 
-
 //line format
 typedef struct s_line
 {
@@ -55,6 +57,9 @@ typedef struct s_line
 	int		*pip_out;		// pipe to which every command writes (including pipe_in if needed)
 	char	**fd_to_read;
 	char	is_appending;
+	t_list *func_dict;
+	t_list *env;
+	t_list *shell;
 }	t_line;
 
 char	ft_switch(t_line *line);
@@ -67,12 +72,17 @@ int		ft_strcmp(char *str1, char *str2);
 void	free_array(char **array);
 
 // implemented built-in's
-char	execute_file(char *command, char **arguments);
-char	execute_pwd(void);
-char	execute_cd(char *path);
-char	execute_echo(char **args);
-void	execute_env(t_list *env);
-void	execute_export(t_list **env, t_list **shell, char* key);
+char	execute_file(char **arguments);
+char	*execute_pwd(t_line *line);
+char	*execute_cd(t_line *line);
+char	*execute_echo(t_line	*line);
+char	*execute_env(t_line *line);
+char	*execute_export(t_line *line);
+typedef struct s_func
+{
+	char *(*foo)(t_line *);
+} func;
+
 
 // parse to struct
 // void	find_redirections(t_line *line, char **exec_line);
@@ -92,7 +102,7 @@ int count(char *arr, char s);
 //dict
 char *dict_get(t_list **lst, char* key);
 void dict_set(t_list **lst, char* key, void* value);
-void dict_del(t_list **lst, char* key);
+void dict_del(t_list **lst, char* key, void (*del)(void *));
 
 //env
 char *get_env(t_list **env, char* key);
