@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-char	execute_file(char *command, char **arguments)
+char	execute_file(char **arguments)
 {
 	child_pid = fork();
 	if (child_pid == -1)
@@ -8,7 +8,7 @@ char	execute_file(char *command, char **arguments)
 	//child
 	if (child_pid == 0)
 	{
-		if (execve(command, arguments, NULL) < 0)
+		if (execve(arguments[0], arguments + 1, NULL) < 0)
 		{
 			printf("Error: invalid filename\n");
 			exit(1);
@@ -22,35 +22,42 @@ char	execute_file(char *command, char **arguments)
 	return (0);
 }
 
-char	execute_pwd(void)
+char	*execute_pwd(t_line *line)
 {
 	char	*buf;
 
+	if (line->args[1])
+		return "pwd: too many arguments\n";
 	buf = getcwd(NULL, 0);
 	if (!buf)
-		return (1);
+		return ("Error: getcwd() failed\n");
 	printf("%s\n", buf);
 	free(buf);
-	return (0);
+	return (STR_EMPTY);
 }
 
-char	execute_cd(char *path)
+char	*execute_cd(t_line *line)
 {
 	int dir;
+	char *path = line->args[1];
 	
+	if (line->args[1] && line->args[2])
+		return ("cd: too many arguments\n");
 	dir = chdir(path);
 	if (dir == -1)
-		return (1);
-	return (0);
+		return ("Error: %s does not exist or there is not enough memory\n");
+	return (STR_EMPTY);
 }
 
-char	execute_echo(char **args){
+char	*execute_echo(t_line *line)
+{
 	char nl_flag;
+	char **args = line->args + 1;
 
 	nl_flag = '\n';
-	if (!args){
+	if (!*args){
 		printf("\n");
-		return (0);
+		return (STR_EMPTY);
 	}
 	if (!ft_strcmp(args[0], "-n")){
 		args++;
@@ -61,22 +68,28 @@ char	execute_echo(char **args){
 		args++;
 	}
 	printf("%c", nl_flag);
-	return (0);
+	return (STR_EMPTY);
 }
 
-void execute_env(t_list *env)
+char	*execute_env(t_line	*line)
 {
+	t_list *env;
+
+	env = line->env; 
 	while (env)
 	{
-		printf("%s=%s\n", ((kv *)env->content)->key, ((kv *)env->content)->value);
+		printf("%s=%s\n", (char *)((kv *)env->content)->key, (char *)((kv *)env->content)->value);
 		env = env->next;
 	}
+	return (STR_EMPTY);
 }
 
-void execute_export(t_list **env, t_list **shell, char* key)
+char	*execute_export(t_line *line)
 {
-	dict_set(env, key, dict_get(shell, key));
-	dict_del(shell, key);
+	char *key = line->args[1];
+	dict_set(&(line->env), key, dict_get(&(line->shell), key));
+	dict_del(&(line->shell), key);
+	return (STR_EMPTY);
 }
 
 char	execute_cat(t_line *line){

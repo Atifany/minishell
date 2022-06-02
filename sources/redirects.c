@@ -42,18 +42,41 @@ static void	write_output(t_line *line)
 	}
 }
 
-void	redirect_output(t_line *line, char *mode){
+void	redirect_output(t_line *line, char mode){
 	static int	save_out_stream;
 
-	if (!ft_strcmp(mode, "open")){
+	if (mode == OPEN){
 		save_out_stream = dup(STDOUT_FILENO);
+		//printf("Rerouted output to pip_out\n");
 		dup2(line->pip_out[WRITE], STDOUT_FILENO);
 	}
-	else if (!ft_strcmp(mode, "close")){
+	else if (mode == CLOSE){
 		dup2(save_out_stream, STDOUT_FILENO);
+		//printf("Rerouted output to stdout\n");
 		write(line->pip_out[WRITE], "\0", 1);
 		close(line->pip_out[WRITE]);
 		write_output(line);
 		close(line->pip_out[READ]);
+		//printf("Sent pipe contents to recievers\n");
+	}
+}
+
+void	redirect_input(t_line *line, char mode){
+	static int	save_in_stream;
+
+	if (mode == INIT){
+		save_in_stream = dup(STDIN_FILENO);
+		line->pip_in = (int *)malloc(sizeof(int) * 2);
+		pipe(line->pip_in);
+	}
+	else if (mode == OPEN){
+		dup2(line->pip_in[READ], STDIN_FILENO);
+	}
+	else if (mode == CLOSE && line->pip_in){
+		close(line->pip_in[READ]);
+		close(line->pip_in[WRITE]);
+		dup2(save_in_stream, STDIN_FILENO);
+		free(line->pip_in);
+		line->pip_in = NULL;
 	}
 }

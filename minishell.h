@@ -24,21 +24,24 @@
 # include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/wait.h>
 
 // general macros
-# define INIT 0
-# define OPEN 1
-# define CLOSE 2
-# define READ 0
-# define WRITE 1
-# define APPEND 2
+# define READ 0 	// never touch it
+# define WRITE 1 	// never touch it
+# define INIT 2
+# define OPEN 3
+# define CLOSE 4
+# define APPEND 5
 # define TRUE 1
 # define FALSE 0
 # define INT_MAX 2147483647
 # define INT_MIN -2147483648
+# define STR_EMPTY ""
 // parser macros
 # define COUNT 0
 # define COLLECT 1
+// identifier macros
 # define CMD 0
 # define ARROW 1
 # define ARG 2
@@ -46,7 +49,7 @@
 # define FD_AP_WRITE 4
 # define FD_READ 5
 # define FD_AP_READ 6
-# define ERROR 7
+# define ERROR 8
 // read macros
 # define READ_BUFFER_SIZE 1024 // 1KB
 
@@ -58,7 +61,6 @@ typedef struct s_key_value
 	char *key;
 	void *value;
 } kv;
-
 
 //line format
 typedef struct s_line
@@ -75,13 +77,27 @@ typedef struct s_line
 	int		*pip_in;		// pipe from which every command reads (stdin is redirected here)
 	int		*pip_out;		// pipe to which every command writes (including pipe_in if needed)
 	char	is_appending;
+	t_list *func_dict;
+	t_list *env;
+	t_list *shell;
 	t_list	*cmds;
 }	t_line;
 
+char	process_input(t_line *line);
 char	ft_switch(t_line *line);
 
+// inits
+void	init_struct(t_line *line);
+void	clear_struct(t_line *line);
+void	func_dict_init(t_list **func_dict);
+
+// pipe_in controller
+void	cat_to_pipe_in(t_line *line);
+char	open_pipe_in(t_line *line, char mode);
+
 // Redirects file output to a chosen file
-void	redirect_output(t_line *line, char *mode);
+void	redirect_output(t_line *line, char mode);
+void	redirect_input(t_line *line, char mode);
 
 // utils
 int		ft_cat(int fd, char **str_ptr);
@@ -89,13 +105,17 @@ int		ft_strcmp(char *str1, char *str2);
 void	free_array(char **array);
 
 // implemented built-in's
-char	execute_file(char *command, char **arguments);
-char	execute_pwd(void);
-char	execute_cd(char *path);
-char	execute_echo(char **args);
-void	execute_env(t_list *env);
-void	execute_export(t_list **env, t_list **shell, char* key);
-char	execute_cat(t_line *line);
+char	execute_file(char **arguments);
+char	*execute_pwd(t_line *line);
+char	*execute_cd(t_line *line);
+char	*execute_echo(t_line	*line);
+char	*execute_env(t_line *line);
+char	*execute_export(t_line *line);
+typedef struct s_func
+{
+	char *(*foo)(t_line *);
+} func;
+
 
 // parse to struct
 int		parse_line_to_struct(t_line *line, char **exec_line);
@@ -110,9 +130,9 @@ char	*ft_strj(char *s1, char *s2);
 int count(char *arr, char s);
 
 //dict
-char *dict_get(t_list **lst, char* key);
+void *dict_get(t_list **lst, char* key);
 void dict_set(t_list **lst, char* key, void* value);
-void dict_del(t_list **lst, char* key);
+void dict_del(t_list **lst, char* key/*, void (*del)(void *)*/);
 
 //env
 char *get_env(t_list **env, char* key);

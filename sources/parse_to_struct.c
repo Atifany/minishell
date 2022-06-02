@@ -24,15 +24,18 @@ char	is_arrow(char *str){
 }
 
 static char	identify(char **exec_line, int i){
+	// first elem rule
 	if (i == 0){
 		if (!is_arrow(exec_line[i])){
 			return (ARG);
 		}
 		return (ARROW);
 	}
+	// argument rule
 	if (!is_arrow(exec_line[i]) && !is_arrow(exec_line[i - 1])){
 		return (ARG);
 	}
+	// redirects rule
 	if (!is_arrow(exec_line[i]) && is_arrow(exec_line[i - 1])){
 		if (!ft_strcmp(exec_line[i - 1], ">")){
 			return (FD_WRITE);
