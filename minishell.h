@@ -25,6 +25,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/wait.h>
+# include "sources/get_next_line.h"
 
 // general macros
 # define READ 0 	// never touch it
@@ -62,6 +63,18 @@ typedef struct s_key_value
 	void *value;
 } kv;
 
+typedef struct s_basic_methods
+{
+	void *init;
+	void *add;
+}	t_methods;
+
+typedef struct s_input_queue
+{
+	char	*arg;
+	char	mode;
+}	t_inqu;
+
 //line format
 typedef struct s_line
 {
@@ -70,8 +83,9 @@ typedef struct s_line
 	char	**args;
 	char	**fd_to_write;
 	char	**fd_to_appwrite;
-	char	**fd_to_read;
-	char	**fd_to_appread;
+	//char	**fd_to_read;
+	//char	**fd_to_appread;
+	t_inqu	**redir_input;
 	char	is_redirecting;	// turns on/off redirector for every cmd
 	char	is_piping;		// tells writer to write all output to pipe_in also;
 	int		*pip_in;		// pipe from which every command reads (stdin is redirected here)
@@ -99,9 +113,17 @@ char	open_pipe_in(t_line *line, char mode);
 void	redirect_output(t_line *line, char mode);
 void	redirect_input(t_line *line, char mode);
 
+// Class methods
+void	init_charpp(int size, void *arr);
+void	add_to_charpp(void *arr, char *str, char mode);
+void	init_structpp(int size, void *arr);
+void	add_to_structpp(void *arr, char *str, char mode);
+
 // utils
+int		ft_to_positive(int n);
 int		ft_cat(int fd, char **str_ptr);
 int		ft_strcmp(char *str1, char *str2);
+void	free_struct_array(t_inqu **array);
 void	free_array(char **array);
 
 // implemented built-in's

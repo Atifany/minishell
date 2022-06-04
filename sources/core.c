@@ -12,14 +12,6 @@
 
 #include "../minishell.h"
 
-static char	*take_input()
-{
-	char	*buf;
-
-	buf = readline("\e[0;36mminishell \e[1;36m>> \e[0m");
-	return (buf);
-}
-
 char	ft_switch(t_line *line)
 {
 	if (!ft_strcmp(line->command, "exit"))

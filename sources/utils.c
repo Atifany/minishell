@@ -40,6 +40,22 @@ void	free_array(char **array)
 	free(array);
 }
 
+void	free_struct_array(t_inqu **array)
+{
+	int	i;
+	if (array == NULL)
+		return ;
+
+	i = 0;
+	while (array[i])
+	{
+		free(array[i]->arg);
+		free(array[i]);
+		i++;
+	}
+	free(array);
+}
+
 int count(char *arr, char s)
 {
 	int c;
@@ -52,4 +68,12 @@ int count(char *arr, char s)
 		arr++;
 	}
 	return c;
+}
+
+int	ft_to_positive(int n)
+{
+	if (n < 0){
+		n = 0;
+	}
+	return (n);
 }

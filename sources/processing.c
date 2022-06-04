@@ -1,4 +1,12 @@
-# include "./minishell.h"
+# include "../minishell.h"
+
+static char	*take_input()
+{
+	char	*buf;
+
+	buf = readline("\e[0;36mminishell \e[1;36m>> \e[0m");
+	return (buf);
+}
 
 static int	pre_handle(t_line *line, char **exec_line){
 	char	is_pipe_in_opened;
@@ -9,7 +17,7 @@ static int	pre_handle(t_line *line, char **exec_line){
 													// right after pipe
 	shift = parse_line_to_struct(line, exec_line);
 	is_pipe_in_opened = open_pipe_in(line, APPEND);	// called on < or <<
-	if (*(line->fd_to_read)){
+	if (*(line->redir_input)){
 		cat_to_pipe_in(line);
 	}
 	if (is_pipe_in_opened){

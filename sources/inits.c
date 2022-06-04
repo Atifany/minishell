@@ -8,8 +8,8 @@ void	clear_struct(t_line *line)
 		free_array(line->args);
 	if (line->fd_to_write)
 		free_array(line->fd_to_write);
-	if (line->fd_to_read)
-		free_array(line->fd_to_read);
+	if (line->redir_input)
+		free_struct_array(line->redir_input);
 }
 
 void	init_struct(t_line *line)
@@ -20,10 +20,9 @@ void	init_struct(t_line *line)
 	line->is_piping = FALSE;
 	line->command = NULL;
 	line->args = NULL;
+	line->redir_input = NULL;
 	line->fd_to_write = NULL;
-	line->fd_to_read = NULL;
 	line->fd_to_appwrite = NULL;
-	line->fd_to_appread = NULL;
 	line->is_appending = FALSE;
 	line->env = NULL;
 	line->shell = NULL;

@@ -8,7 +8,7 @@ static char	write_to_file(char *filename, char mode, char *str, size_t str_len){
 		fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	}
 	else{
-		fd = open(filename, O_WRONLY | O_APPEND | O_CREAT, 0666);
+		fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0666);
 	}
 	// THIS IS AN IMPORTANT TRY-CATCH!!!!
 	// Make sure it works fine
