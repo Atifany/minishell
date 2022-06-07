@@ -1,4 +1,4 @@
-# include "../minishell.h"
+#include "../_headers/minishell.h"
 
 static char	*take_input()
 {

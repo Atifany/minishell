@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../_headers/minishell.h"
 
 void *dict_get(t_list **lst, char* key)
 {

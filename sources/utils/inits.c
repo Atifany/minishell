@@ -1,4 +1,4 @@
-# include "../minishell.h"
+#include "../_headers/minishell.h"
 
 void	clear_struct(t_line *line)
 {

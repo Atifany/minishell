@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../_headers/minishell.h"
 
 static char	write_to_file(char *filename, char mode, char *str, size_t str_len){
 	int	fd;

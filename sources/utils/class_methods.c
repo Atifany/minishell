@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../_headers/minishell.h"
 
 // for char **
 void	init_charpp(int size, void *arr){

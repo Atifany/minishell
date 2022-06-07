@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../_headers/minishell.h"
 
 char	execute_file(char **arguments)
 {

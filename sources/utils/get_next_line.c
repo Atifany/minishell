@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "../_headers/minishell.h"
 
 static void	zero_fill(char **buf, short call_return)
 {

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../_headers/minishell.h"
 
 char	ft_switch(t_line *line)
 {
@@ -23,7 +23,7 @@ char	ft_switch(t_line *line)
 		execute_file(line->args);
 		return (0);
 	}
-	func *f = dict_get(&(line->func_dict), line->args[0]);
+	func *f = dict_get(&(line->func_dict), line->command);
 	if (!f)
 	{
 		printf("%s is not recognised as command\n", line->command);

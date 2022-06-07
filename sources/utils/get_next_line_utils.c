@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "../_headers/minishell.h"
 
 size_t	gnl_ft_strlen(char *s)
 {

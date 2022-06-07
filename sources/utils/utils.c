@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../_headers/minishell.h"
 
 int	ft_strcmp(char *str1, char *str2){
 	int	i;

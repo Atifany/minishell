@@ -1,4 +1,4 @@
-# include "../minishell.h"
+#include "../_headers/minishell.h"
 
 int	ft_cat(int fd, char **str_ptr){
 	int		ret;

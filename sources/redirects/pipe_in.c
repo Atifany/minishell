@@ -1,4 +1,4 @@
-# include "../minishell.h"
+#include "../_headers/minishell.h"
 
 char	open_pipe_in(t_line *line, char mode){
 	static char	is_pipe_in_opened = FALSE;

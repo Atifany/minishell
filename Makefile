@@ -2,15 +2,32 @@
 NAME = minishell
 
 # sources
-_SRC =	core.c utils.c commands.c parse_to_struct.c redirects.c \
-		environment.c dictionary.c cat.c inits.c pipe_in.c processing.c \
-		class_methods.c get_next_line.c get_next_line_utils.c
+_SRC =	builtins/commands.c			\
+		core/core.c					\
+		core/processing.c			\
+		envs/environment.c			\
+		parse/parse_to_struct.c		\
+		parse/parse_utils.c			\
+		parse/parse.c				\
+		redirects/pipe_in.c			\
+		redirects/redirects.c		\
+		utils/cat.c					\
+		utils/class_methods.c		\
+		utils/dictionary.c			\
+		utils/get_next_line_utils.c	\
+		utils/get_next_line.c		\
+		utils/inits.c				\
+		utils/utils.c				\
+		
 SRC_DIR = sources
 SRC = $(_SRC:%=$(SRC_DIR)/%)
 # tmp files
 OBJ_DIR = tmp_files
-OBJ = $(_SRC:%.c=$(OBJ_DIR)/%.o)
-DPS = $(_SRC:%.c=$(OBJ_DIR)/%.d)
+#_OBJ = $(shell basename $(_SRC))
+#OBJ = $(_OBJ:%.c=$(OBJ_DIR)/%.o)
+OBJ = $(SRC:%.c=%.o)
+#DPS = $(_OBJ:%.c=$(OBJ_DIR)/%.d)
+DPS = $(SRC:%.c=%.d)
 
 # libraries
 LIBFT_DIR = libs/libft/
@@ -23,7 +40,7 @@ C_FLAGS = -O2 -Wall -Wextra #-Werror
 RM = rm -f
 
 # rules
-all: compile_libs create_dirs compile_libs log_compile_start $(NAME)
+all: compile_libs create_dirs compile_libs log_compile_start $(NAME) move_tmps
 
 compile_libs:
 	@printf "\n>> compile libft\n"
@@ -37,12 +54,17 @@ compile_libs:
 
 -include $(DPS)
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+%.o: %.c
 	$(CC) $(C_FLAGS) -c $< -o $@
-	$(CC) -MM $(C_FLAGS) $< > $(OBJ_DIR)/$*.d
+#	$(CC) -MM $(C_FLAGS) $< > $(OBJ_DIR)/$*.d
+	$(CC) -MM $(C_FLAGS) $< > $*.d
 
 $(NAME): $(OBJ)
 	$(CC) $(OBJ) $(LIBS) -lreadline -o $@
+
+move_tmps:
+	$(shell cp sources/*/*.o $(OBJ_DIR))
+	$(shell cp sources/*/*.d $(OBJ_DIR))
 
 clean:
 	@printf "\n>> clean tmp files\n"

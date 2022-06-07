@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../_headers/minishell.h"
 
 // tmp func. Delete it later.
 void	temp_print_struct(t_line *line){
@@ -45,61 +45,11 @@ void	temp_print_struct(t_line *line){
 	printf("\n");
 }
 
-static void	refresh_pip_out(t_line *line){
-	if (line->pip_out){
-		free(line->pip_out);
-		line->pip_out = NULL;
-	}
-	line->pip_out = malloc(sizeof(int) * 2);
-	pipe(line->pip_out);
-}
-
-static char	is_arrow(char *str){
-	if (!ft_strcmp(str, ">") ||
-		!ft_strcmp(str, ">>") ||
-		!ft_strcmp(str, "<") ||
-		!ft_strcmp(str, "<<"))
-	{
-		return (TRUE);
-	}
-	return (FALSE);
-}
-
-static char	identify(char **exec_line, int i){
-	// first elem rule
-	if (i == 0){
-		if (!is_arrow(exec_line[i])){
-			return (ARG);
-		}
-		return (ARROW);
-	}
-	// argument rule
-	if (!is_arrow(exec_line[i]) && !is_arrow(exec_line[i - 1])){
-		return (ARG);
-	}
-	// redirects rule
-	if (!is_arrow(exec_line[i]) && is_arrow(exec_line[i - 1])){
-		if (!ft_strcmp(exec_line[i - 1], ">")){
-			return (FD_WRITE);
-		}
-		if (!ft_strcmp(exec_line[i - 1], ">>")){
-			return (FD_AP_WRITE);
-		}
-		if (!ft_strcmp(exec_line[i - 1], "<")){
-			return (FD_READ);
-		}
-		if (!ft_strcmp(exec_line[i - 1], "<<")){
-			return (FD_READ);
-		}
-	}
-	return (ERROR);
-}
-
 static int	iterate_line(char **exec_line, void *arr, char to_search, char mode,
 	void (*add)(void *, char *, char)){
 	char	ret_identify;
-	int	ret = 0;
-	int i = 0;
+	int		ret = 0;
+	int		i = 0;
 
 	while (exec_line[i]){
 		if (!ft_strcmp(exec_line[i], "|")){
@@ -128,11 +78,10 @@ static int	parse(char **exec_line, void *arr, t_methods meths, char to_search){
 	return (ret);
 }
 
-int	parse_line_to_struct(t_line *line, char **exec_line)
+static int	fill_struct(t_line *line, char **exec_line)
 {
-	int	total_shift;
+	int total_shift;
 
-	refresh_pip_out(line);
 	total_shift = parse(exec_line, &(line->args),
 		(t_methods){&init_charpp, &add_to_charpp}, ARG);
 	line->command = ft_strdup(line->args[0]);
@@ -143,7 +92,15 @@ int	parse_line_to_struct(t_line *line, char **exec_line)
 		(t_methods){&init_charpp, &add_to_charpp}, FD_AP_WRITE);
 	total_shift += 2 * parse(exec_line, &(line->redir_input),
 		(t_methods){&init_structpp, &add_to_structpp}, FD_READ);
+	return (total_shift);
+}
 
+int	parse_line_to_struct(t_line *line, char **exec_line)
+{
+	int	total_shift;
+
+	refresh_pip_out(line);
+	total_shift = fill_struct(line, exec_line);
 	line->is_redirecting = FALSE;
 	line->is_piping = FALSE;
 	if (*(exec_line + total_shift) != NULL){ // That means find_* funcs stoped at pipe, not a EOL
@@ -156,68 +113,4 @@ int	parse_line_to_struct(t_line *line, char **exec_line)
 	}
 	temp_print_struct(line);
 	return (total_shift);
-}
-
-void len_arr_inc(void *len_arr, int i, char str)
-{
-	str = 0;
-	((int *)(len_arr))[i]++;
-}
-
-void copy_symbol(void *arr, int i, char str)
-{
-	*(((char **)(arr))[i]) = str;
-	((char **)arr)[i]++;
-}
-
-int helper(char *input_str, void f(void *, int, char), void *arr)
-{
-	int		i = 0;
-	int		j = 0;
-
-	while (input_str[j] != 0)
-	{
-		while (input_str[j] == ' ')
-			j++;
-		while (input_str[j] != ' ' && input_str[j] != 0)
-		{	
-			if (input_str[j] == '"')
-			{
-				j++;
-				while (input_str[j] != '"')//catch error of unclosed quotes here
-					f(arr, i, input_str[j++]);
-				j++;
-			}
-			else if (input_str[j] == '\'')
-			{
-				j++;
-				while (input_str[j] != '\'')//catch error of unclosed quotes here
-					f(arr, i, input_str[j++]);
-				j++;
-			}
-			else
-				f(arr, i, input_str[j++]);
-		}
-		i++; 
-		if (input_str[j] != 0)
-			j++;
-	}
-	return i;
-}
-
-char	**parse_to_array(char *input_str)
-{
-	char	**arr;
-	int		*len_arr = ft_calloc(count(input_str, ' ') + 1, 8);
-
-	int i = helper(input_str, *len_arr_inc, len_arr);	
-	arr = malloc(8 * (i + 1));	
-	arr[i] = NULL;
-	while (--i >= 0)
-		arr[i] = ft_calloc(len_arr[i] + 1, 1);	
-	i = helper(input_str, *copy_symbol, arr);	
-	while (--i >= 0)
-		arr[i] = arr[i]-len_arr[i];
-	free(len_arr);
-	return (arr);
 }
