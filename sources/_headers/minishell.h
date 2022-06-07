@@ -57,16 +57,22 @@
 //global
 int child_pid;
 
+typedef	struct s_transfer
+{
+	char	to_search;
+	char	mode;
+}	t_transfer;
+
 typedef struct s_key_value
 {
 	char *key;
 	void *value;
-} kv;
+}	kv;
 
 typedef struct s_basic_methods
 {
-	void *init;
-	void *add;
+	void (*init)(int, void *);
+	void (*add)(void *, char *, char);
 }	t_methods;
 
 typedef struct s_input_queue
@@ -135,10 +141,11 @@ char	*execute_cd(t_line *line);
 char	*execute_echo(t_line	*line);
 char	*execute_env(t_line *line);
 char	*execute_export(t_line *line);
+char	*execute_cat(t_line *line);
 typedef struct s_func
 {
 	char *(*foo)(t_line *);
-} func;
+}	func;
 
 
 // parse to struct

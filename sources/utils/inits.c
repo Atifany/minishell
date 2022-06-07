@@ -8,8 +8,14 @@ void	clear_struct(t_line *line)
 		free_array(line->args);
 	if (line->fd_to_write)
 		free_array(line->fd_to_write);
+	if (line->fd_to_appwrite)
+		free_array(line->fd_to_appwrite);
 	if (line->redir_input)
 		free_struct_array(line->redir_input);
+	if (line->pip_in)
+		free(line->pip_in);
+	if (line->pip_out)
+		free(line->pip_out);
 }
 
 void	init_struct(t_line *line)
@@ -56,4 +62,9 @@ void	func_dict_init(t_list **func_dict)
 	export = malloc(sizeof(func));
 	export->foo = execute_export;
 	dict_set(func_dict, "export", export);
+
+	func *cat;
+	cat = malloc(sizeof(func));
+	cat->foo = execute_cat;
+	dict_set(func_dict, "cat", cat);
 }

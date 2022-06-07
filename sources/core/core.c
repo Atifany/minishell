@@ -44,7 +44,6 @@ void	sighandler(int sig)
 	sig = 0;
 }
 
-// move everything out of main!!!!
 int	main()
 {
 	char	rotate;
@@ -59,6 +58,7 @@ int	main()
 	act.sa_handler = sighandler;
 	sigaction(SIGINT, &act, NULL);
 
+	init_struct(&line);
 	rotate = 0;
 	while (!rotate)
 	{

@@ -24,6 +24,10 @@ void	read_file_to_pipe(t_line *line, char *filename){
 	char	*str;
 
 	fd = open(filename, O_CREAT | O_RDWR, 0666);
+	if (fd < 0){
+		printf("Error: cannot open/create file %s\n", filename);
+		return ;
+	}
 	while (ft_cat(fd, &str) > 0){
 		write(line->pip_in[WRITE], str, ft_strlen(str));
 		free(str);
@@ -50,10 +54,8 @@ void read_term_to_pipe(t_line *line, char *delimiter){
 }
 
 void	cat_to_pipe_in(t_line *line){
-	
 	int		i = 0;
 	
-
 	while (line->redir_input[i]){
 		if (line->redir_input[i]->mode == 0){
 			read_file_to_pipe(line, line->redir_input[i]->arg);

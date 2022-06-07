@@ -8,7 +8,8 @@ static char	*take_input()
 	return (buf);
 }
 
-static int	pre_handle(t_line *line, char **exec_line){
+static int	pre_handle(t_line *line, char **exec_line)
+{
 	char	is_pipe_in_opened;
 	int		shift;
 
@@ -26,7 +27,8 @@ static int	pre_handle(t_line *line, char **exec_line){
 	return (shift);
 }
 
-static char	iterate_exec_line(char **exec_line, t_line *line){
+static char	iterate_exec_line(char **exec_line, t_line *line)
+{
 	char	ret;
 	int		total_shift;	// represents total shift on exec_line
 	int		shift;			// represents current cmd shift on exec_line
@@ -52,11 +54,13 @@ static char	iterate_exec_line(char **exec_line, t_line *line){
 	return (0);
 }
 
-char	process_input(t_line *line){
+char	process_input(t_line *line)
+{
 	char	**exec_line;
 	char	*input_str = NULL;
 	char	rotate;
 
+	clear_struct(line);
 	init_struct(line); // I guess it leaks, so add free() inside this func
 	redirect_input(line, INIT);
 	input_str = take_input();
