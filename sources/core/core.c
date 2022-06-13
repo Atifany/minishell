@@ -65,5 +65,6 @@ int	main()
 	{
 		rotate = process_input(&line);
 	}
+	rl_clear_history();
 	return (0);
 }

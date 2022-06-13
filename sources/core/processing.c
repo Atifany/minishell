@@ -5,6 +5,8 @@ static char	*take_input()
 	char	*buf;
 
 	buf = readline("\e[0;36mminishell \e[1;36m>> \e[0m");
+	if (buf && *buf)
+		add_history(buf);
 	return (buf);
 }
 
