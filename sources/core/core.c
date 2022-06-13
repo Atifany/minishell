@@ -27,7 +27,7 @@ char	ft_switch(t_line *line)
 	if (!f)
 	{
 		printf("%s is not recognised as command\n", line->command);
-		return 0;
+		return (0);
 	}
 	printf("%s", f->foo(line));
 	return (0);
