@@ -1,4 +1,4 @@
-#include "./minishell.h"
+#include "sources/_headers/minishell.h"
 
 static void	init_charpp(int size, void *arr){
 	char ***arr_cpy = arr;

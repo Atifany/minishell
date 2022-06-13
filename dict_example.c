@@ -1,7 +1,6 @@
 # include <stdio.h>
 # include <unistd.h>
-# include <readline/readline.h>
-# include "minishell.h"
+# include "sources/_headers/minishell.h"
 # include "libs/libft/libft.h"
 
 typedef struct s_func1

@@ -2,6 +2,7 @@
 
 void len_arr_inc(void *len_arr, int i, char str)
 {
+	(void)str;
 	str = 0;
 	((int *)(len_arr))[i]++;
 }

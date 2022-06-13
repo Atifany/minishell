@@ -118,6 +118,6 @@ int	parse_line_to_struct(t_line *line, char **exec_line)
 	}
 	if (*(line->fd_to_write) || *(line->fd_to_appwrite))
 		line->is_redirecting = TRUE;
+	//temp_print_struct(line);
 	return (total_shift);
 }
-//temp_print_struct(line);

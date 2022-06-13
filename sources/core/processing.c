@@ -36,6 +36,7 @@ static char	iterate_exec_line(char **exec_line, t_line *line)
 	shift = 0;
 	total_shift = 0;
 	while (*exec_line){		// iterates each command in current line
+		
 		shift = pre_handle(line, exec_line);
 		total_shift += shift;
 		exec_line += shift;

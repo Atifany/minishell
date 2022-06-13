@@ -55,7 +55,10 @@
 # define READ_BUFFER_SIZE 1024 // 1KB
 
 //global
-int child_pid;
+# ifndef GLOBAL
+#  define GLOBAL
+int	child_pid;
+# endif
 
 typedef	struct s_transfer
 {
@@ -186,6 +189,5 @@ char *get_env(t_list **env, char* key);
 # define WHT "\e[0;37m"
 # define BWHT "\e[1;37m"
 # define NC "\e[0m"
-
 
 #endif

@@ -4,8 +4,8 @@ char	open_pipe_in(t_line *line, char mode){
 	static char	is_pipe_in_opened = FALSE;
 
 	if (!is_pipe_in_opened){
-		if ((line->is_piping && mode == OPEN) ||
-			(*(line->redir_input) && mode == APPEND)){
+		if ((mode == OPEN && line->is_piping) ||
+			(mode == APPEND && *(line->redir_input))){
 			is_pipe_in_opened = TRUE;
 			redirect_input(line, OPEN);
 		}

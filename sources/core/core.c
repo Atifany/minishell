@@ -42,6 +42,7 @@ void	sighandler(int sig)
 		write(1, "\n", 1);
 	}
 	sig = 0;
+	(void)sig;
 }
 
 int	main()
