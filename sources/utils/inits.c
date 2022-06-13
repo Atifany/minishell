@@ -18,6 +18,26 @@ void	clear_struct(t_line *line)
 		free(line->pip_out);
 }
 
+void init_env(t_list **env)
+{
+	int i =0;
+	char *names[] = {"SHELL", "SESSION_MANAGER", "QT_ACCESSIBILITY", "COLORTERM", "GNOME_DESKTOP_SESSION_ID", 
+	"LANGUAGE", "LC_ADDRESS", "LC_NAME", "SSH_AUTH_SOCK", "CINNAMON_VERSION", "LC_MONETARY", 
+	"SSH_AGENT_PID", "CINNAMON_SLOWDOWN_FACTOR", "GTK_MODULES", "PWD", "LOGNAME", "QT_QPA_PLATFORMTHEME", 
+	"XDG_SESSION_TYPE", "GPG_AGENT_INFO", "PULSE_SCRIPT", "GJS_DEBUG_TOPICS", "HOME", "LC_PAPER", "LANG", 
+	"LS_COLORS", "XDG_CURRENT_DESKTOP", "VTE_VERSION", "XRDP_SOCKET_PATH", "XRDP_PULSE_SOURCE_SOCKET", 
+	"GNOME_TERMINAL_SCREEN", "GJS_DEBUG_OUTPUT", "LESSCLOSE", "XDG_SESSION_CLASS", "TERM", 
+	"LC_IDENTIFICATION", "GTK_OVERLAY_SCROLLING", "LESSOPEN", "USER", "CINNAMON_SOFTWARE_RENDERING", 
+	"GNOME_TERMINAL_SERVICE", "XRDP_SESSION", "DISPLAY", "XRDP_PULSE_SINK_SOCKET", "SHLVL", "LC_TELEPHONE", 
+	"LC_MEASUREMENT", "XDG_SESSION_ID", "XDG_RUNTIME_DIR", "LC_TIME", "XDG_DATA_DIRS", 
+	"PATH", "DBUS_SESSION_BUS_ADDRESS", "UID", "LC_NUMERIC", "_", NULL};
+	while (names[i])
+	{
+		dict_set(env, names[i], getenv(names[i]));
+		i++;
+	}
+}
+
 void	init_struct(t_line *line)
 {
 	line->pip_in = NULL;
@@ -30,8 +50,7 @@ void	init_struct(t_line *line)
 	line->fd_to_write = NULL;
 	line->fd_to_appwrite = NULL;
 	line->is_appending = FALSE;
-	line->env = NULL;
-	line->shell = NULL;
+	init_env(&(line->env));
 }
 
 void	func_dict_init(t_list **func_dict)
@@ -68,3 +87,4 @@ void	func_dict_init(t_list **func_dict)
 	cat->foo = execute_cat;
 	dict_set(func_dict, "cat", cat);
 }
+

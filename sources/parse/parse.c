@@ -4,7 +4,8 @@ void len_arr_inc(void *len_arr, int i, char str)
 {
 	(void)str;
 	str = 0;
-	((int *)(len_arr))[i]++;
+	if (str != '\'')
+		((int *)(len_arr))[i]++;
 }
 
 void copy_symbol(void *arr, int i, char str)
@@ -33,7 +34,7 @@ int helper(char *input_str, void f(void *, int, char), void *arr)
 			}
 			else if (input_str[j] == '\'')
 			{
-				j++;
+				f(arr, i, input_str[j++]);
 				while (input_str[j] != '\'')//catch error of unclosed quotes here
 					f(arr, i, input_str[j++]);
 				j++;

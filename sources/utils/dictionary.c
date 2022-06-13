@@ -5,7 +5,7 @@ void *dict_get(t_list **lst, char* key)
 	t_list *start;
 
 	start = *lst;
-	while (start)
+	while (start != NULL)
 	{
 		if (!ft_strcmp(((kv *)(start)->content)->key, key))
 			return ((kv *)(start)->content)->value;

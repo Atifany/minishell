@@ -101,6 +101,24 @@ static int	fill_struct(t_line *line, char **exec_line)
 	return (total_shift);
 }
 
+void quote_handler(char **args)
+{
+	int i;
+	char *t;
+
+	i = 0;
+	while (args[i])
+	{
+		if (args[i][0] == "\'")
+		{
+			t = ft_substr(args[i], 1, ft_strlen(args[i]) - 1);
+			free(args[i]);
+			args[i] = t;
+		}
+		i++;
+	}
+}
+
 // Second if means find_* funcs stoped at pipe, not a EOL
 int	parse_line_to_struct(t_line *line, char **exec_line)
 {
@@ -108,6 +126,8 @@ int	parse_line_to_struct(t_line *line, char **exec_line)
 
 	refresh_pip_out(line);
 	total_shift = fill_struct(line, exec_line);
+	variable_handler(line->args, &(line->env));
+	quote_handler(line->args);
 	line->is_redirecting = FALSE;
 	line->is_piping = FALSE;
 	if (*(exec_line + total_shift) != NULL)

@@ -41,6 +41,8 @@ char	*execute_cd(t_line *line)
 	int dir;
 	char *path = line->args[1];
 	
+	if (path == NULL)
+		path = (char *)dict_get(&(line->env), "HOME");
 	if (line->args[1] && line->args[2])
 		return ("cd: too many arguments\n");
 	dir = chdir(path);
@@ -75,10 +77,14 @@ char	*execute_env(t_line	*line)
 {
 	t_list *env;
 
+
+	if (line->args[1])
+		return "env: too many arguments\n";
 	env = line->env; 
 	while (env)
 	{
-		printf("%s=%s\n", (char *)((kv *)env->content)->key, (char *)((kv *)env->content)->value);
+		if ((char *)((kv *)env->content)->key != "?")
+			printf("%s=%s\n", (char *)((kv *)env->content)->key, (char *)((kv *)env->content)->value);
 		env = env->next;
 	}
 	return (STR_EMPTY);
@@ -86,9 +92,20 @@ char	*execute_env(t_line	*line)
 
 char	*execute_export(t_line *line)
 {
-	char *key = line->args[1];
-	dict_set(&(line->env), key, dict_get(&(line->shell), key));
-	dict_del(&(line->shell), key);
+	int dir;
+	char **t;
+
+	if (line->args[1] && line->args[2])
+		return ("env: too many arguments\n");
+	if (line->args[1] == NULL)
+		return ("env: not enough arguments\n");
+	printf("%s\n", line->args[1]);
+	t = ft_split(line->args[1], '=');
+	printf("%s %s",t[0], t[1]);
+	if (t[1] == NULL)
+		return ("env: incorrect argument\n");
+	dict_set(&(line->env), ft_strdup(t[0]), ft_strdup(t[1]));
+	free_array(t);
 	return (STR_EMPTY);
 }
 

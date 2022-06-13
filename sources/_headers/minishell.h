@@ -100,7 +100,6 @@ typedef struct s_line
 	char	is_appending;
 	t_list *func_dict;
 	t_list *env;
-	t_list *shell;
 	t_list	*cmds;
 }	t_line;
 
