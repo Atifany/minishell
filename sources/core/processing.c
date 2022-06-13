@@ -5,6 +5,12 @@ static char	*take_input()
 	char	*buf;
 
 	buf = readline("\e[0;36mminishell \e[1;36m>> \e[0m");
+	if (!buf){
+		printf("\n");
+		return (NULL);
+	}
+	if (*buf)
+		add_history(buf);
 	return (buf);
 }
 
@@ -62,9 +68,11 @@ char	process_input(t_line *line)
 	char	rotate;
 
 	clear_struct(line);
-	init_struct(line); // I guess it leaks, so add free() inside this func
+	init_struct(line);
 	redirect_input(line, INIT);
 	input_str = take_input();
+	if (!input_str)
+		return (1);
 	exec_line = parse_to_array(input_str);
 	free(input_str);
 	input_str = NULL;

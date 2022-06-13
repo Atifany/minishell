@@ -27,7 +27,7 @@ char	ft_switch(t_line *line)
 	if (!f)
 	{
 		printf("%s is not recognised as command\n", line->command);
-		return 0;
+		return (0);
 	}
 	printf("%s", f->foo(line));
 	return (0);
@@ -35,14 +35,19 @@ char	ft_switch(t_line *line)
 
 void	sighandler(int sig)
 {
+	(void)sig;
 	if (child_pid != 0)
 	{
-		printf("kill child\n");
 		kill(child_pid, SIGINT);
 		write(1, "\n", 1);
 	}
-	sig = 0;
-	(void)sig;
+	else
+	{
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		printf("\n");
+		rl_redisplay();
+	}
 }
 
 int	main()
@@ -51,13 +56,11 @@ int	main()
 	t_line	line;
 	//t_list *env;
 	//t_list *shell;
-	
-	struct sigaction	act;
+
 	func_dict_init(&(line.func_dict));
 	child_pid = 0;
-	act.sa_flags = 0;
-	act.sa_handler = sighandler;
-	sigaction(SIGINT, &act, NULL);
+	signal(SIGINT, &sighandler);
+	signal(SIGQUIT, SIG_IGN);
 
 	init_struct(&line);
 	rotate = 0;
@@ -65,5 +68,6 @@ int	main()
 	{
 		rotate = process_input(&line);
 	}
+	rl_clear_history();
 	return (0);
 }
