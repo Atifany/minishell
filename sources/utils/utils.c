@@ -25,6 +25,16 @@ int	ft_strcmp(char *str1, char *str2){
 	return (str1[i] - str2[i]);
 }
 
+int arr_len(void **array)
+{
+	int	i;
+
+	i = 0;
+	while (array[i])
+		i++;
+	return i;
+}
+
 void	free_array(char **array)
 {
 	int	i;

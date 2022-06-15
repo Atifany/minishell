@@ -128,6 +128,7 @@ void	add_to_structpp(void *arr, char *str, char mode);
 // parse utils
 void	refresh_pip_out(t_line *line);
 char	identify(char **exec_line, int i);
+int		arr_len(void **array);
 
 // utils
 int		ft_to_positive(int n);
