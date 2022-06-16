@@ -25,9 +25,10 @@ char	execute_file(char **arguments)
 char	*execute_pwd(t_line *line)
 {
 	char	*buf;
-
-	if (line->args[1])
-		return "pwd: too many arguments\n";
+	
+	if (line->args[1]){
+		return ("pwd: too many arguments\n");
+	}
 	buf = getcwd(NULL, 0);
 	if (!buf)
 		return ("Error: getcwd() failed\n");
@@ -58,25 +59,26 @@ char	*execute_echo(t_line *line)
 
 	nl_flag = '\n';
 	if (!*args){
-		printf("\n");
+		write(1, "\n", 1);
 		return (STR_EMPTY);
 	}
 	if (!ft_strcmp(args[0], "-n")){
 		args++;
 		nl_flag = '\0';
 	}
-	while (*args){
-		printf("%s ", *args);
+	while (*(args) && *(args + 1)){
+		write(1, *args, ft_strlen(*args));
+		write(1, " ", 1);
 		args++;
 	}
-	printf("%c", nl_flag);
+	write(1, *args, ft_strlen(*args));
+	write(1, &nl_flag, 1);
 	return (STR_EMPTY);
 }
 
 char	*execute_env(t_line	*line)
 {
 	t_list *env;
-
 
 	if (line->args[1])
 		return "env: too many arguments\n";
@@ -95,14 +97,11 @@ char	*execute_export(t_line *line)
 	int dir;
 	char **t;
 
-	if (line->args[1] && line->args[2])
-		return ("env: too many arguments\n");
-	if (line->args[1] == NULL)
-		return ("env: not enough arguments\n");
-	printf("%s\n", line->args[1]);
+	if ((line->args[1] && line->args[2])
+		|| line->args[1] == NULL)
+		return ("env: incorrect argument\n");
 	t = ft_split(line->args[1], '=');
-	printf("%s %s",t[0], t[1]);
-	if (t[1] == NULL)
+	if (t[0] == NULL || t[1] == NULL)
 		return ("env: incorrect argument\n");
 	dict_set(&(line->env), ft_strdup(t[0]), ft_strdup(t[1]));
 	free_array(t);

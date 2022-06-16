@@ -45,6 +45,8 @@ int helper(char *input_str, void f(void *, int, char), void *arr)
 		i++; 
 		if (input_str[j] != 0)
 			j++;
+		while (input_str[j] == ' ')
+			j++;
 	}
 	return i;
 }
