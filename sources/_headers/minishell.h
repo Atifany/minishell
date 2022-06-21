@@ -136,7 +136,7 @@ int		ft_cat(int fd, char **str_ptr);
 int		ft_strcmp(char *str1, char *str2);
 void	free_struct_array(t_inqu **array);
 void	free_array(char **array);
-int	print_error(int error);
+int		print_error(int error);
 
 
 // implemented built-in's

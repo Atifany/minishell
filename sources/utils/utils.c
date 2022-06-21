@@ -25,7 +25,7 @@ int print_error(int error)
 	if (error < 0)
 		printf("%s\n", errors[-error]);
 	else if (error >= 0)
-		printf("Programm exited with code%s\n", errors[error]);
+		printf("Programm exited with code%s\n", error);
 	
 }
 
