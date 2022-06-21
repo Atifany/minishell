@@ -136,6 +136,7 @@ int		ft_cat(int fd, char **str_ptr);
 int		ft_strcmp(char *str1, char *str2);
 void	free_struct_array(t_inqu **array);
 void	free_array(char **array);
+int	print_error(int error);
 
 
 // implemented built-in's
@@ -146,9 +147,10 @@ void	execute_echo(t_line	*line);
 void	execute_env(t_line *line);
 void	execute_export(t_line *line);
 void	execute_cat(t_line *line);
+
 typedef struct s_func
 {
-	char *(*foo)(t_line *);
+	void (*foo)(t_line *);
 }	func;
 
 
@@ -171,6 +173,7 @@ void dict_del(t_list **lst, char* key/*, void (*del)(void *)*/);
 
 //env
 char *get_env(t_list **env, char* key);
+void variable_handler(char **args, t_list **env);
 
 //colors
 # define BLK "\e[0;30m"

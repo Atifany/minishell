@@ -16,19 +16,25 @@ char	ft_switch(t_line *line)
 {
 	if (!ft_strcmp(line->command, "exit"))
 	{
+		dict_set(&(line->env), "?", ft_strdup("0"));
 		clear_struct(line);
 		return (1);
 	}
+	if (!line->command[0])
+		return 0; 
+	
 	if (!ft_strncmp(line->command, "./", 2) || *(line->command) == '/'){
-		execute_file(line->args);
+		execute_file(line);
 		return (0);
 	}
 	func *f = dict_get(&(line->func_dict), line->command);
 	if (!f)
 	{
-		dict_set(&line, '_', "7");
+		printf("'%s'\n", line->command);
+		dict_set(&(line->env), "?", ft_strdup("-7"));
 		return (0);
 	}
+	f->foo(line);
 	return (0);
 }
 

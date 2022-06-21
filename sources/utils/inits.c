@@ -33,9 +33,10 @@ void init_env(t_list **env)
 	"PATH", "DBUS_SESSION_BUS_ADDRESS", "UID", "LC_NUMERIC", "_", NULL};
 	while (names[i])
 	{
-		dict_set(env, names[i], getenv(names[i]));
+		dict_add(env, names[i], getenv(names[i]));
 		i++;
 	}
+	dict_add(env, "?", ft_strdup("0"));
 }
 
 void	init_struct(t_line *line)

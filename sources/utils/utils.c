@@ -12,6 +12,23 @@
 
 #include "../_headers/minishell.h"
 
+int print_error(int error)
+{
+	char *errors[] = {"", "pwd: too many arguments",
+	"Error: getcwd() failed",
+	"cd: too many arguments",
+	"Error: %s does not exist or there is not enough memory",
+	"export: incorrect argument",
+	"env: too many arguments",
+	"command is not recognized"};
+
+	if (error < 0)
+		printf("%s\n", errors[-error]);
+	else if (error >= 0)
+		printf("Programm exited with code%s\n", errors[error]);
+	
+}
+
 int	ft_strcmp(char *str1, char *str2){
 	int	i;
 
