@@ -7,17 +7,18 @@ void	execute_file(t_line *line)
 
 	error = 0;
 	child_pid = fork();
-	if (child_pid == -1)
-		return ;
-	//child
 	if (child_pid == 0)
-		if ((error = execve(line->args[0], line->args, NULL)) < 0)
-			exit(1);
-	//parent
-	else{
-		wait(&error);
+	{
+		if (execve(line->args[0], line->args, NULL) < 0)
+			exit(127);
 	}
+	else
+		wait(&error);
+	
 	child_pid = 0;
+
+	if (WIFSIGNALED(error))
+		return dict_set(&(line->env), "?", ft_itoa(error));
 	return dict_set(&(line->env), "?", ft_itoa(WEXITSTATUS(error)));
 }
 

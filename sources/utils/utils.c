@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnickole <hnickole@student.42.fr>          +#+  +:+       +#+        */
+/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 16:16:41 by atifany           #+#    #+#             */
-/*   Updated: 2022/05/02 17:32:53 by hnickole         ###   ########.fr       */
+/*   Updated: 2022/06/21 21:44:03 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,15 @@ int print_error(int error)
 	"Error: %s does not exist or there is not enough memory",
 	"export: incorrect argument",
 	"env: too many arguments",
-	"command is not recognized"};
+	"command is not recognized",
+	"no such file or directory"};
 
 	if (error < 0)
 		printf("%s\n", errors[-error]);
+	else if (error == 127)
+		printf("%s\n", errors[8]);	
 	else if (error >= 0)
-		printf("Programm exited with code%s\n", error);
+		printf("Programm exited with code: %d\n", error);
 	
 }
 
