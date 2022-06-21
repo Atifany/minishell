@@ -32,6 +32,10 @@ int print_error(int error)
 int	ft_strcmp(char *str1, char *str2){
 	int	i;
 
+	if (!str1)
+		str1 = STR_EMPTY;
+	if (!str2)
+		str2 = STR_EMPTY;
 	i = 0;
 	while (str1[i] && str2[i]){
 		if (str1[i] != str2[i]){

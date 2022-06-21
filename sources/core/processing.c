@@ -53,11 +53,8 @@ static char	iterate_exec_line(char **exec_line, t_line *line)
 		if (line->is_redirecting){
 			redirect_output(line, CLOSE);
 		}
-<<<<<<< HEAD
 		if (((char *)(dict_get(&(line->env), "?")))[0] != '0')
 			print_error(ft_atoi(dict_get(&(line->env), "?")));			
-=======
->>>>>>> 9f3406e36da6b364cf267af578a3015e00935f4f
 		if (ret) // switch returned exit code.
 			return (1);
 	}

@@ -170,6 +170,7 @@ int count(char *arr, char s);
 void *dict_get(t_list **lst, char* key);
 void dict_set(t_list **lst, char* key, void* value);
 void dict_del(t_list **lst, char* key/*, void (*del)(void *)*/);
+void dict_add(t_list **lst, char* key, void* value);
 
 //env
 char *get_env(t_list **env, char* key);

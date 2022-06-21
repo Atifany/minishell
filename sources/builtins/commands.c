@@ -24,9 +24,7 @@ void	execute_file(t_line *line)
 void	execute_pwd(t_line *line)
 {
 	char	*buf;
-	
-	if (line->args[1])
-		return dict_set(&(line->env), "?", ft_strdup("-1"));
+
 	buf = getcwd(NULL, 0);
 	if (!buf)
 		return dict_set(&(line->env), "?", ft_strdup("-2"));
@@ -47,7 +45,7 @@ void	execute_cd(t_line *line)
 	if (!prev_path)
 		prev_path = getcwd(NULL, 0);
 	if (!line->args[1])
-		path = (char *)dict_get(&(line->env), "HOME");
+		path = ft_strdup((char *)dict_get(&(line->env), "HOME"));
 	else
 	{
 		if (*(line->args[1]) == '~'){
