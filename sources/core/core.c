@@ -26,10 +26,9 @@ char	ft_switch(t_line *line)
 	func *f = dict_get(&(line->func_dict), line->command);
 	if (!f)
 	{
-		printf("%s is not recognised as command\n", line->command);
+		dict_set(&line, '_', "7");
 		return (0);
 	}
-	printf("%s", f->foo(line));
 	return (0);
 }
 

@@ -138,13 +138,13 @@ void	free_struct_array(t_inqu **array);
 void	free_array(char **array);
 
 // implemented built-in's
-char	execute_file(char **arguments);
-char	*execute_pwd(t_line *line);
-char	*execute_cd(t_line *line);
-char	*execute_echo(t_line	*line);
-char	*execute_env(t_line *line);
-char	*execute_export(t_line *line);
-char	*execute_cat(t_line *line);
+void	execute_file(t_line *line);
+void	execute_pwd(t_line *line);
+void	execute_cd(t_line *line);
+void	execute_echo(t_line	*line);
+void	execute_env(t_line *line);
+void	execute_export(t_line *line);
+void	execute_cat(t_line *line);
 typedef struct s_func
 {
 	char *(*foo)(t_line *);

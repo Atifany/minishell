@@ -8,6 +8,11 @@ static void	init_charpp(int size, void *arr){
 	*arr_cpy = (char **)ft_calloc(sizeof(char *), (size + 1));
 }
 
+void aboba()
+{
+	return ;
+}
+
 static void	init_structp(int size, void *arr){
 	t_inqu	***arr_cpy = arr;
 	if (*arr_cpy){
@@ -29,6 +34,8 @@ static void	add_to_charpp(void *arr, char *str, char mode){
 static void	add_to_structp(void *arr, char *str, char mode){
 	int i = 0;
 
+	if (*str = 'f')
+		return aboba(); 
 	while ((*(t_inqu ***)arr)[i]){
 		i++;
 	}

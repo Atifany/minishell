@@ -1,6 +1,6 @@
 #include "../_headers/minishell.h"
 
-void len_arr_inc(void *len_arr, int i, char str)
+void len_arr_inc(void *len_arr, int i, char str, int insquotes)
 {
 	(void)str;
 	str = 0;

@@ -23,14 +23,11 @@ static void replace_envs(char **strings, t_list **env, int starts_with_dollar)
 		namelen = 0;
 		if (starts_with_dollar || i) 
 		{
-			while (strings[i][namelen] && strings[i][namelen] != ' ')
+			while (strings[i][namelen] && (ft_isalnum(strings[i][namelen])))
 				namelen++;
 			name = ft_substr(strings[i], 0, namelen);
-			printf("point\n");
 			t = ft_strdup(dict_get(env, name));// check for t == NULL
-			printf("point\n")	;
 			t = gnl_join(&t, strings[i]+namelen, ft_strlen(strings[i] + namelen));
-			printf("point\n");
 			free(strings[i]);
 			strings[i] = t;
 			free(name);
