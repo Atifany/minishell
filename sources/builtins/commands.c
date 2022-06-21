@@ -8,7 +8,7 @@ char	execute_file(char **arguments)
 	//child
 	if (child_pid == 0)
 	{
-		if (execve(arguments[0], arguments + 1, NULL) < 0)
+		if (execve(arguments[0], arguments, NULL) < 0)
 		{
 			printf("Error: invalid filename\n");
 			exit(1);
@@ -25,10 +25,7 @@ char	execute_file(char **arguments)
 char	*execute_pwd(t_line *line)
 {
 	char	*buf;
-	
-	if (line->args[1]){
-		return ("pwd: too many arguments\n");
-	}
+
 	buf = getcwd(NULL, 0);
 	if (!buf)
 		return ("Error: getcwd() failed\n");
@@ -39,14 +36,35 @@ char	*execute_pwd(t_line *line)
 
 char	*execute_cd(t_line *line)
 {
-	int dir;
-	char *path = line->args[1];
+	static char *prev_path = NULL;
+	int			dir;
+	char		*path;
+	char		*buf;
 	
-	if (path == NULL)
-		path = (char *)dict_get(&(line->env), "HOME");
 	if (line->args[1] && line->args[2])
 		return ("cd: too many arguments\n");
+	if (!prev_path)
+		prev_path = getcwd(NULL, 0);
+	if (!line->args[1])
+		path = (char *)dict_get(&(line->env), "HOME");
+	else
+	{
+		if (*(line->args[1]) == '~'){
+			buf = ft_strdup((char *)dict_get(&(line->env), "HOME"));
+			path = gnl_join(&buf, ft_strdup(line->args[1] + 1),
+				ft_strlen(line->args[1] + 1));
+		}
+		else
+			path = ft_strdup(line->args[1]);
+	}
+	if (!ft_strcmp(line->args[1], "-"))
+		path = ft_strdup(prev_path);
+	free(prev_path);
+	prev_path = getcwd(NULL, 0);
 	dir = chdir(path);
+	if (!ft_strcmp(line->args[1], "-"))
+		execute_pwd(line);
+	free(path);
 	if (dir == -1)
 		return ("Error: %s does not exist or there is not enough memory\n");
 	return (STR_EMPTY);

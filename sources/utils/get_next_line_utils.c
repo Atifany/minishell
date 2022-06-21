@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atifany <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 16:01:53 by atifany           #+#    #+#             */
-/*   Updated: 2021/11/11 16:01:57 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/21 17:45:58 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ static void	*free_origin(char **ans)
 	}
 	return (NULL);
 }
+
+# include <stdio.h>
 
 char	*gnl_join(char **ans, char *buf, size_t count)
 {
