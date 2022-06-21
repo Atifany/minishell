@@ -7,18 +7,23 @@ void	execute_file(t_line *line)
 
 	error = 0;
 	child_pid = fork();
-	if (child_pid == -1)
-		return ;
-	//child
 	if (child_pid == 0)
-		if ((error = execve(line->args[0], line->args, NULL)) < 0)
-			exit(1);
-	//parent
-	else{
-		wait(&error);
+	{
+		if (execve(line->args[0], line->args, NULL) < 0)
+			exit(25);
 	}
+	else
+		wait(&error);
+	
 	child_pid = 0;
-	return dict_set(&(line->env), "?", ft_itoa(WEXITSTATUS(error)));
+	if (WIFSIGNALED(error))
+		return dict_set(&(line->env), "?", ft_itoa(error));
+	else if (WIFEXITED(error)){
+		printf("%d\n", error);
+		return dict_set(&(line->env), "?", ft_itoa(WEXITSTATUS(error)));
+	}
+	else
+		return dict_set(&(line->env), "?", ft_itoa(-8));
 }
 
 void	execute_pwd(t_line *line)
