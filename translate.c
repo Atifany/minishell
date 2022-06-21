@@ -13,5 +13,5 @@ int main(int argc, char **argv){
 		printf("%s", buf);
 		ret = read(0, &buf, 1);
 	}
-	return (5);
+	return (4);
 }

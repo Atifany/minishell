@@ -24,7 +24,7 @@ void	execute_file(t_line *line)
 	return dict_set(&line, '_', ft_itoa(WEXITSTATUS(error)));
 }
 
-void execute_pwd(t_line *line)
+void	execute_pwd(t_line *line)
 {
 	char	*buf;
 	

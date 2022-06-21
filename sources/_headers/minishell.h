@@ -137,6 +137,7 @@ int		ft_strcmp(char *str1, char *str2);
 void	free_struct_array(t_inqu **array);
 void	free_array(char **array);
 
+
 // implemented built-in's
 void	execute_file(t_line *line);
 void	execute_pwd(t_line *line);
