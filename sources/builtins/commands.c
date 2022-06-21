@@ -37,14 +37,35 @@ void	execute_pwd(t_line *line)
 
 void	execute_cd(t_line *line)
 {
-	int dir;
-	char *path = line->args[1];
+	static char *prev_path = NULL;
+	int			dir;
+	char		*path;
+	char		*buf;
 	
-	if (path == NULL)
-		path = (char *)dict_get(&(line->env), "HOME");
 	if (line->args[1] && line->args[2])
 		return dict_set(&(line->env), "?", ft_strdup("-3"));
+	if (!prev_path)
+		prev_path = getcwd(NULL, 0);
+	if (!line->args[1])
+		path = (char *)dict_get(&(line->env), "HOME");
+	else
+	{
+		if (*(line->args[1]) == '~'){
+			buf = ft_strdup((char *)dict_get(&(line->env), "HOME"));
+			path = gnl_join(&buf, ft_strdup(line->args[1] + 1),
+				ft_strlen(line->args[1] + 1));
+		}
+		else
+			path = ft_strdup(line->args[1]);
+	}
+	if (!ft_strcmp(line->args[1], "-"))
+		path = ft_strdup(prev_path);
+	free(prev_path);
+	prev_path = getcwd(NULL, 0);
 	dir = chdir(path);
+	if (!ft_strcmp(line->args[1], "-"))
+		execute_pwd(line);
+	free(path);
 	if (dir == -1)
 		return dict_set(&(line->env), "?", ft_strdup("-4"));
 	return dict_set(&(line->env), "?", ft_strdup("0"));
