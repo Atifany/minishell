@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:34:14 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/22 13:55:31 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/22 13:57:18 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ int	main()
 	{
 		rotate = process_input(&line);
 	}
-	clear_struct(&line);
 	rl_clear_history();
 	clear_struct(&line);
 	return (0);
