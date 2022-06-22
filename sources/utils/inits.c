@@ -33,10 +33,10 @@ void init_env(t_list **env)
 	"PATH", "DBUS_SESSION_BUS_ADDRESS", "UID", "LC_NUMERIC", NULL};
 	while (names[i])
 	{
-		dict_add(env, names[i], getenv(names[i]));
+		dict_add(env, ft_strdup(names[i]), ft_strdup(getenv(names[i])));
 		i++;
 	}
-	dict_add(env, "?", ft_strdup("0"));
+	dict_add(env, ft_strdup("?"), ft_strdup("0"));
 }
 
 void	init_struct(t_line *line)
@@ -51,7 +51,6 @@ void	init_struct(t_line *line)
 	line->fd_to_write = NULL;
 	line->fd_to_appwrite = NULL;
 	line->is_appending = FALSE;
-	init_env(&(line->env));
 }
 
 void	func_dict_init(t_list **func_dict)
@@ -61,31 +60,31 @@ void	func_dict_init(t_list **func_dict)
 	func *pwd;
 	pwd = malloc(sizeof(func));
 	pwd->foo = execute_pwd;
-	dict_set(func_dict, "pwd", pwd);
+	dict_add(func_dict, ft_strdup("pwd"), pwd);
 
 	func *cd;
 	cd = malloc(sizeof(func));
 	cd->foo = execute_cd;
-	dict_set(func_dict, "cd", cd);
+	dict_add(func_dict, ft_strdup("cd"), cd);
 
 	func *echo;
 	echo = malloc(sizeof(func));
 	echo->foo = execute_echo;
-	dict_set(func_dict, "echo", echo);
+	dict_add(func_dict, ft_strdup("echo"), echo);
 
 	func *env;
 	env = malloc(sizeof(func));
 	env->foo = execute_env;
-	dict_set(func_dict, "env", env);
+	dict_add(func_dict, ft_strdup("env"), env);
 
 	func *export;
 	export = malloc(sizeof(func));
 	export->foo = execute_export;
-	dict_set(func_dict, "export", export);
+	dict_add(func_dict, ft_strdup("export"), export);
 
 	func *cat;
 	cat = malloc(sizeof(func));
 	cat->foo = execute_cat;
-	dict_set(func_dict, "cat", cat);
+	dict_add(func_dict, ft_strdup("cat"), cat);
 }
 

@@ -58,24 +58,19 @@ void dict_set(t_list **lst, char* key, void* value)
 	dict_add(lst, key, value);
 }
 
-void dict_del(t_list **lst, char* key/*, void (*del)(void *)*/)
+void dict_del(t_list **lst)
 {
 	t_list *start;
-	t_list *lstnext;
+	t_list *next;
 
 	start  = *lst;
 	while (*lst)
 	{
-		if ((*lst) && (*lst)->next && ((kv *)(*lst)->next->content)->key == key)
-		{
-			lstnext = (*lst)->next;
-			(*lst)->next = NULL;
-			ft_lstadd_back(lst, lstnext->next);		
-			//del(lstnext);
-			*lst = start;
-			return ;
-		}
-		*lst = (*lst)->next;
+		next = (*lst)->next;
+		free(((kv *)(*lst)->content)->value);
+		free(((kv *)(*lst)->content)->key);
+		free((*lst)->content);
+		free((*lst));
+		*lst = next;
 	}
-	*lst = start;
 }

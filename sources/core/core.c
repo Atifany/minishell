@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:34:14 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/22 13:28:20 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/22 13:53:09 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ char	ft_switch(t_line *line)
 {
 	if (!ft_strcmp(line->command, "exit"))
 	{
-		dict_set(&(line->env), "?", ft_strdup("0"));
+		dict_set(&(line->env), ft_strdup("?"), ft_strdup("0"));
+		dict_del(&(line->env));
 		return (1);
 	}
 	if (!line->command[0])
@@ -30,7 +31,7 @@ char	ft_switch(t_line *line)
 	if (!f)
 	{
 		printf("'%s'\n", line->command);
-		dict_set(&(line->env), "?", ft_strdup("-7"));
+		dict_set(&(line->env), ft_strdup("?"), ft_strdup("-7"));
 		return (0);
 	}
 	f->foo(line);
@@ -61,6 +62,7 @@ int	main()
 	//t_list *env;
 	//t_list *shell;
 
+	init_env(&(line.env));
 	func_dict_init(&(line.func_dict));
 	child_pid = 0;
 	signal(SIGINT, &sighandler);
