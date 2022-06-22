@@ -48,7 +48,9 @@ void dict_set(t_list **lst, char* key, void* value)
 		if (!ft_strcmp(((kv *)(*lst)->content)->key, key))
 		{
 			free(((kv *)(*lst)->content)->value);
+			free(((kv *)(*lst)->content)->key);
 			((kv *)(*lst)->content)->value = value;
+			((kv *)(*lst)->content)->key = key;
 			*lst = start;
 			return ;
 		}
