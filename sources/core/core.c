@@ -16,9 +16,8 @@ char	ft_switch(t_line *line)
 {
 	if (!ft_strcmp(line->command, "exit"))
 	{
-		dict_set(&(line->env), ft_strdup("?"), ft_strdup("0"));
 		dict_del(&(line->env));
-		clear_struct(line);
+		//dict_del(&(line->cmds));
 		return (1);
 	}
 	if (!line->command[0])
@@ -77,5 +76,6 @@ int	main()
 		rotate = process_input(&line);
 	}
 	rl_clear_history();
+	clear_struct(&line);
 	return (0);
 }

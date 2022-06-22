@@ -66,22 +66,11 @@ void dict_del(t_list **lst)
 	start  = *lst;
 	while (*lst)
 	{
-		printf("free proces started\n");
-		if (!ft_strcmp(((kv *)(*lst)->content)->key, "?"))
-		{
-			printf("AMONGUS\n");
-		}
 		next = (*lst)->next;
-		printf("%s\n", ((kv *)(*lst)->content)->value);
 		free(((kv *)(*lst)->content)->value);
-		printf("value has been freed\n");
 		free(((kv *)(*lst)->content)->key);
-		printf("key has been freed\n");
 		free((*lst)->content);
-		printf("content has been freed\n");
 		free((*lst));
-		printf("element has been freed\n");
 		*lst = next;
 	}
-	printf("free succeed\n");
 }

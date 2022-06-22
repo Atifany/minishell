@@ -33,7 +33,7 @@ void init_env(t_list **env)
 	"PATH", "DBUS_SESSION_BUS_ADDRESS", "UID", "LC_NUMERIC", NULL};
 	while (names[i])
 	{
-		dict_add(env, ft_strdup(names[i]), getenv(names[i]));
+		dict_add(env, ft_strdup(names[i]), ft_strdup(getenv(names[i])));
 		i++;
 	}
 	dict_add(env, ft_strdup("?"), ft_strdup("0"));
