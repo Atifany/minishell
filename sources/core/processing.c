@@ -53,10 +53,11 @@ static char	iterate_exec_line(char **exec_line, t_line *line)
 		if (line->is_redirecting){
 			redirect_output(line, CLOSE);
 		}
-		if (((char *)(dict_get(&(line->env), "?")))[0] != '0')
-			print_error(ft_atoi(dict_get(&(line->env), "?")));			
 		if (ret) // switch returned exit code.
 			return (1);
+		if (((char *)(dict_get(&(line->env), "?")))[0] != '0')
+			print_error(ft_atoi(dict_get(&(line->env), "?")));			
+		
 	}
 	exec_line -= total_shift;
 	open_pipe_in(line, CLOSE);

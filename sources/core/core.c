@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:34:14 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/22 13:53:09 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/22 13:55:31 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ char	ft_switch(t_line *line)
 {
 	if (!ft_strcmp(line->command, "exit"))
 	{
-		dict_set(&(line->env), ft_strdup("?"), ft_strdup("0"));
 		dict_del(&(line->env));
 		return (1);
 	}
@@ -76,5 +75,6 @@ int	main()
 	}
 	clear_struct(&line);
 	rl_clear_history();
+	clear_struct(&line);
 	return (0);
 }
