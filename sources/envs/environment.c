@@ -31,9 +31,9 @@ static void replace_envs(char **strings, t_list **env, int starts_with_dollar)
 			name = ft_substr(strings[i], 0, namelen);
 			t = ft_strdup(dict_get(env, name));// check for t == NULL
 			t = gnl_join(&t, strings[i]+namelen, ft_strlen(strings[i] + namelen));
+			free(name);
 			free(strings[i]);
 			strings[i] = t;
-			free(name);
 		}
 	}
 }
@@ -55,7 +55,7 @@ static void replace_arg(char** strings, char **arg)
 	i = 0;
 	while (n_of_strings > i)
 	{
-		ft_strlcat(result, ft_strdup(strings[i]), total_len+1);	
+		ft_strlcat(result, strings[i], total_len+1);	
 		i++;
 	}
 	free(*arg);
