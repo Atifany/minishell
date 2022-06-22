@@ -23,7 +23,6 @@ static void replace_envs(char **strings, t_list **env, int starts_with_dollar)
 		namelen = 0;
 		if (starts_with_dollar || i) 
 		{
-
 			if (strings[i][namelen] == '?')
 				namelen++;
 			else

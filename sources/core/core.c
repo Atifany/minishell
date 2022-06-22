@@ -17,10 +17,7 @@ char	ft_switch(t_line *line)
 	if (!ft_strcmp(line->command, "exit"))
 	{
 		dict_del(&(line->env));
-<<<<<<< HEAD
 		dict_del(&(line->func_dict));
-=======
->>>>>>> d9b79aa731056d7c60a52e3488055412e11c4fed
 		return (1);
 	}
 	if (!line->command[0])
