@@ -16,7 +16,8 @@ char	ft_switch(t_line *line)
 {
 	if (!ft_strcmp(line->command, "exit"))
 	{
-		dict_set(&(line->env), "?", ft_strdup("0"));
+		dict_set(&(line->env), ft_strdup("?"), ft_strdup("0"));
+		dict_del(&(line->env));
 		clear_struct(line);
 		return (1);
 	}
@@ -31,7 +32,7 @@ char	ft_switch(t_line *line)
 	if (!f)
 	{
 		printf("'%s'\n", line->command);
-		dict_set(&(line->env), "?", ft_strdup("-7"));
+		dict_set(&(line->env), ft_strdup("?"), ft_strdup("-7"));
 		return (0);
 	}
 	f->foo(line);
@@ -55,35 +56,6 @@ void	sighandler(int sig)
 	}
 }
 
-char **_init_env()
-{
-	char *save;
-	int i =0;
-	char *names[] = {"SHELL", "SESSION_MANAGER", "QT_ACCESSIBILITY", "COLORTERM", "GNOME_DESKTOP_SESSION_ID", 
-	"LANGUAGE", "LC_ADDRESS", "LC_NAME", "SSH_AUTH_SOCK", "CINNAMON_VERSION", "LC_MONETARY", 
-	"SSH_AGENT_PID", "CINNAMON_SLOWDOWN_FACTOR", "GTK_MODULES", "PWD", "LOGNAME", "QT_QPA_PLATFORMTHEME", 
-	"XDG_SESSION_TYPE", "GPG_AGENT_INFO", "PULSE_SCRIPT", "GJS_DEBUG_TOPICS", "HOME", "LC_PAPER", "LANG", 
-	"LS_COLORS", "XDG_CURRENT_DESKTOP", "VTE_VERSION", "XRDP_SOCKET_PATH", "XRDP_PULSE_SOURCE_SOCKET", 
-	"GNOME_TERMINAL_SCREEN", "GJS_DEBUG_OUTPUT", "LESSCLOSE", "XDG_SESSION_CLASS", "TERM", 
-	"LC_IDENTIFICATION", "GTK_OVERLAY_SCROLLING", "LESSOPEN", "USER", "CINNAMON_SOFTWARE_RENDERING", 
-	"GNOME_TERMINAL_SERVICE", "XRDP_SESSION", "DISPLAY", "XRDP_PULSE_SINK_SOCKET", "SHLVL", "LC_TELEPHONE", 
-	"LC_MEASUREMENT", "XDG_SESSION_ID", "XDG_RUNTIME_DIR", "LC_TIME", "XDG_DATA_DIRS", 
-	"PATH", "DBUS_SESSION_BUS_ADDRESS", "UID", "LC_NUMERIC", "_", NULL};
-	while (names[i])
-	{
-		names[i] = ft_strdup(names[i]);
-		save = ft_strdup(names[i]);
-		names[i] = gnl_join(&(names[i]), "=", 1);
-		names[i] = gnl_join(&(names[i]),
-			getenv(save), ft_strlen(getenv(save)));
-		printf("%s\n", names[i]);
-		//write(1, getenv(names[i]), ft_strlen(getenv(names[i])));
-		//write(1, "\n", 1);
-		i++;
-	}
-	return (names);
-}
-
 int	main()
 {
 	char	rotate;
@@ -92,6 +64,7 @@ int	main()
 	//t_list *shell;
 	//char **names = _init_env();
 
+	init_env(&(line.env));
 	func_dict_init(&(line.func_dict));
 	child_pid = 0;
 	signal(SIGINT, &sighandler);

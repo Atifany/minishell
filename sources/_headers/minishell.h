@@ -110,6 +110,7 @@ char	ft_switch(t_line *line);
 void	init_struct(t_line *line);
 void	clear_struct(t_line *line);
 void	func_dict_init(t_list **func_dict);
+void	init_env(t_list **env);
 
 // pipe_in controller
 void	cat_to_pipe_in(t_line *line);
@@ -169,7 +170,7 @@ int count(char *arr, char s);
 //dict
 void *dict_get(t_list **lst, char* key);
 void dict_set(t_list **lst, char* key, void* value);
-void dict_del(t_list **lst, char* key/*, void (*del)(void *)*/);
+void dict_del(t_list **lst);
 void dict_add(t_list **lst, char* key, void* value);
 
 //env

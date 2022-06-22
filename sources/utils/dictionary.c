@@ -58,24 +58,30 @@ void dict_set(t_list **lst, char* key, void* value)
 	dict_add(lst, key, value);
 }
 
-void dict_del(t_list **lst, char* key/*, void (*del)(void *)*/)
+void dict_del(t_list **lst)
 {
 	t_list *start;
-	t_list *lstnext;
+	t_list *next;
 
 	start  = *lst;
 	while (*lst)
 	{
-		if ((*lst) && (*lst)->next && ((kv *)(*lst)->next->content)->key == key)
+		printf("free proces started\n");
+		if (!ft_strcmp(((kv *)(*lst)->content)->key, "?"))
 		{
-			lstnext = (*lst)->next;
-			(*lst)->next = NULL;
-			ft_lstadd_back(lst, lstnext->next);		
-			//del(lstnext);
-			*lst = start;
-			return ;
+			printf("AMONGUS\n");
 		}
-		*lst = (*lst)->next;
+		next = (*lst)->next;
+		printf("%s\n", ((kv *)(*lst)->content)->value);
+		free(((kv *)(*lst)->content)->value);
+		printf("value has been freed\n");
+		free(((kv *)(*lst)->content)->key);
+		printf("key has been freed\n");
+		free((*lst)->content);
+		printf("content has been freed\n");
+		free((*lst));
+		printf("element has been freed\n");
+		*lst = next;
 	}
-	*lst = start;
+	printf("free succeed\n");
 }

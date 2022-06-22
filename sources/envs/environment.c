@@ -1,12 +1,12 @@
 #include "../_headers/minishell.h"
 
-char *get_env(t_list **env, char* key)
-{
-	char	*value;
-
-	value = getenv(key);	
-	dict_set(env, key, value);	
-}
+// char *get_env(t_list **env, char* key)
+// {
+// 	char	*value;
+//
+// 	value = getenv(key);	
+// 	dict_set(env, key, value);	
+// }
 
 
 static void replace_envs(char **strings, t_list **env, int starts_with_dollar)
