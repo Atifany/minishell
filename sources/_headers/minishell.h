@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:47:55 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/22 13:25:09 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/22 14:25:09 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 # define OPEN 3
 # define CLOSE 4
 # define APPEND 5
+# define DEINIT 6
 # define TRUE 1
 # define FALSE 0
 # define INT_MAX 2147483647

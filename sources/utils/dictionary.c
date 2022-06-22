@@ -64,18 +64,13 @@ void dict_del(t_list **lst)
 	t_list *next;
 
 	start  = *lst;
-		printf("free proces started\n");
 	while (*lst)
 	{
 		next = (*lst)->next;
 		free(((kv *)(*lst)->content)->value);
-		printf("value has been freed\n");
 		free(((kv *)(*lst)->content)->key);
-		printf("key has been freed\n");
 		free((*lst)->content);
-		printf("content has been freed\n");
 		free((*lst));
 		*lst = next;
 	}
-	printf("free succeed\n");
 }

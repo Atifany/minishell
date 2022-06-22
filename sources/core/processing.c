@@ -53,8 +53,10 @@ static char	iterate_exec_line(char **exec_line, t_line *line)
 		if (line->is_redirecting){
 			redirect_output(line, CLOSE);
 		}
-		if (ret) // switch returned exit code.
+		if (ret){	// switch returned exit code.
+			open_pipe_in(line, CLOSE);
 			return (1);
+		}
 		if (((char *)(dict_get(&(line->env), "?")))[0] != '0')
 			print_error(ft_atoi(dict_get(&(line->env), "?")));			
 		
@@ -72,18 +74,15 @@ char	process_input(t_line *line)
 
 	clear_struct(line);
 	init_struct(line);
-	redirect_input(line, INIT);
 	input_str = take_input();
 	if (!input_str)
 		return (1);
+	redirect_input(line, INIT);
 	exec_line = parse_to_array(input_str);
 	free(input_str);
 	input_str = NULL;
-	if (!exec_line){
-		printf("Error: not enough memory\n");
-		return (1);
-	}
 	rotate = iterate_exec_line(exec_line, line);
 	free_array(exec_line);
+	redirect_input(line, DEINIT);
 	return (rotate);
 }

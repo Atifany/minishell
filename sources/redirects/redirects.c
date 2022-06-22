@@ -72,10 +72,12 @@ void	redirect_input(t_line *line, char mode){
 	else if (mode == OPEN){
 		dup2(line->pip_in[READ], STDIN_FILENO);
 	}
-	else if (mode == CLOSE && line->pip_in){
+	else if (mode == CLOSE){
 		close(line->pip_in[READ]);
 		close(line->pip_in[WRITE]);
 		dup2(save_in_stream, STDIN_FILENO);
+	}
+	else if (mode == DEINIT){
 		free(line->pip_in);
 		line->pip_in = NULL;
 	}
