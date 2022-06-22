@@ -54,11 +54,12 @@ void	execute_cd(t_line *line)
 			path = gnl_join(&buf, ft_strdup(line->args[1] + 1),
 				ft_strlen(line->args[1] + 1));
 		}
+		
+		else if (!ft_strcmp(line->args[1], "-"))
+			path = ft_strdup(prev_path);
 		else
 			path = ft_strdup(line->args[1]);
 	}
-	if (!ft_strcmp(line->args[1], "-"))
-		path = ft_strdup(prev_path);
 	free(prev_path);
 	prev_path = getcwd(NULL, 0);
 	dir = chdir(path);
