@@ -98,8 +98,8 @@ typedef struct s_line
 	int		*pip_in;		// pipe from which every command reads (stdin is redirected here)
 	int		*pip_out;		// pipe to which every command writes (including pipe_in if needed)
 	char	is_appending;
-	t_list *func_dict;
-	t_list *env;
+	t_list	*func_dict;
+	t_list	*env;
 	t_list	*cmds;
 }	t_line;
 
