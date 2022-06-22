@@ -42,14 +42,13 @@ compile_libs:
 	@printf "\n>> compile libft\n"
 	@make -C $(LIBFT_DIR) bonus
 
--include $(DPS)
-
-%.o: %.c
-	$(CC) $(C_FLAGS) -c $< -o $@
-	$(CC) -MM $(C_FLAGS) $< > $*.d
-
 $(NAME): $(OBJ)
 	$(CC) $(OBJ) $(LIBS) -lreadline -o $@
+
+%.o: %.c Makefile
+	$(CC) $(C_FLAGS) -MMD -MP -c $< -o $@
+
+-include $(DPS)
 
 clean:
 	@printf "\n>> clean tmp files\n"

@@ -7,3 +7,10 @@ V 1) ^C: киляет процесс
 V 2) $?: сохраняет его экзит код
 V 3) шел ждет процесс
 V 4) если дать неправильный путь -> еррор
+
+QOUTES:
+1) echo "ANIME"                     -> ANIME
+1) echo "ANIME"MUST DIE             -> ANIMEMUST DIE
+1) echo "$HOME"
+1) echo "ANIME"
+1) echo "ANIME"

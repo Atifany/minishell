@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   core.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnickole <hnickole@student.42.fr>          +#+  +:+       +#+        */
+/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:34:14 by atifany           #+#    #+#             */
-/*   Updated: 2022/05/27 17:40:40 by hnickole         ###   ########.fr       */
+/*   Updated: 2022/06/22 13:57:18 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@ char	ft_switch(t_line *line)
 	if (!ft_strcmp(line->command, "exit"))
 	{
 		dict_del(&(line->env));
+<<<<<<< HEAD
 		dict_del(&(line->func_dict));
+=======
+>>>>>>> d9b79aa731056d7c60a52e3488055412e11c4fed
 		return (1);
 	}
 	if (!line->command[0])
@@ -61,7 +64,6 @@ int	main()
 	t_line	line;
 	//t_list *env;
 	//t_list *shell;
-	//char **names = _init_env();
 
 	init_env(&(line.env));
 	func_dict_init(&(line.func_dict));
