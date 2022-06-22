@@ -66,6 +66,10 @@ void dict_del(t_list **lst)
 	t_list *next;
 
 	start  = *lst;
+	// printf("|%p|\n", ((kv *)(*lst)));
+	// printf("|%p|\n", ((kv *)(*lst)->content));
+	// printf("|%p|\n", ((kv *)(*lst)->content)->value);
+	// return ;
 	while (*lst)
 	{
 		next = (*lst)->next;

@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:47:55 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/22 14:25:09 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/22 16:02:10 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,8 +110,8 @@ char	ft_switch(t_line *line);
 // inits
 void	init_struct(t_line *line);
 void	clear_struct(t_line *line);
-void	func_dict_init(t_list **func_dict);
-void	init_env(t_list **env);
+void	func_dict_init(t_line *line);
+void	init_env(t_line *line);
 
 // pipe_in controller
 void	cat_to_pipe_in(t_line *line);

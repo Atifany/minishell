@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:34:14 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/22 14:30:27 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/22 15:30:53 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@ char	ft_switch(t_line *line)
 {
 	if (!ft_strcmp(line->command, "exit"))
 	{
-		dict_del(&(line->env));
-		dict_del(&(line->func_dict));
 		return (1);
 	}
 	if (!line->command[0])
@@ -55,26 +53,31 @@ void	sighandler(int sig)
 	}
 }
 
+static void clear_dicts(t_line *line)
+{
+	dict_del(&(line->env));
+	dict_del(&(line->func_dict));
+}
+
 int	main()
 {
 	char	rotate;
 	t_line	line;
-	//t_list *env;
-	//t_list *shell;
 
-	init_env(&(line.env));
-	func_dict_init(&(line.func_dict));
+	init_env(&line);
+	func_dict_init(&line);
+	init_struct(&line);
 	child_pid = 0;
 	signal(SIGINT, &sighandler);
 	signal(SIGQUIT, SIG_IGN);
 
-	init_struct(&line);
 	rotate = 0;
 	while (!rotate)
 	{
 		rotate = process_input(&line);
 	}
 	rl_clear_history();
+	clear_dicts(&line);
 	clear_struct(&line);
 	return (0);
 }
