@@ -30,14 +30,14 @@ int helper(char *input_str, void f(void *, int, char, int), void *arr)
 			if (input_str[j] == '"')
 			{
 				j++;
-				while (input_str[j] != '"')//catch error of unclosed quotes here
+				while (input_str[j] && input_str[j] != '"')//catch error of unclosed quotes here
 					f(arr, i, input_str[j++], 0);
 				j++;
 			}
 			else if (input_str[j] == '\'')
 			{
 				j++;
-				while (input_str[j] != '\'')//catch error of unclosed quotes here
+				while (input_str[j] && input_str[j] != '\'')//catch error of unclosed quotes here
 					f(arr, i, input_str[j++], 1);
 				j++;
 			}
