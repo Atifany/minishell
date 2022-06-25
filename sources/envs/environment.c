@@ -65,35 +65,19 @@ static void replace_arg(char** strings, char **arg)
 
 void variable_handler(char **args, t_list **env)
 {
-	int var_len;
 	char **splitted;
 	int i;
-	int j;
 	
 	i = 0;
-	var_len = 0;
 	while (args[i])
 	{
 		if (args[i] && count(args[i], -50))
-		{	
-			j = -1;
+		{
 			splitted = ft_split(args[i], -50);
 			replace_envs(splitted, env, args[i][0] == -50);		
 			replace_arg(splitted, args+i);
 			free_array(splitted);
 		}
 		i++;
-	}
-}
-
-void add_vars(char **vars, t_list **env)
-{
-	char **t;
-	while (*vars)
-	{
-		t = ft_split(*vars, '=');
-		dict_set(env, t[0], t[1]);
-		free_array(t);
-		*vars++;
 	}
 }

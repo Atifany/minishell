@@ -4,7 +4,7 @@ static char	*take_input()
 {
 	char	*buf;
 
-	buf = readline("\e[0;36mminishell \e[1;36m>> \e[0m");
+	buf = readline("minishell >> ");
 	if (!buf){
 		printf("\n");
 		return (NULL);
@@ -57,8 +57,7 @@ static char	iterate_exec_line(char **exec_line, t_line *line)
 			return (1);
 		}
 		if (((char *)(dict_get(&(line->env), "?")))[0] != '0')
-			print_error(ft_atoi(dict_get(&(line->env), "?")));			
-		
+			print_error(line);			
 	}
 	exec_line -= total_shift;
 	open_pipe_in(line, CLOSE);

@@ -3,7 +3,7 @@
 # include <unistd.h>
 # include <fcntl.h>
 
-int main(int argc, char **argv){
+int	main(int argc, char **argv){
 	char buf[2];
 	buf[0] = 0;
 	buf[1] = 0;
@@ -13,5 +13,5 @@ int main(int argc, char **argv){
 		printf("%s", buf);
 		ret = read(0, &buf, 1);
 	}
-	return (-1);
+	return (134);
 }

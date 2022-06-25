@@ -32,7 +32,7 @@ LIBS = $(LIBFT:%=$(LIBFT_DIR)%)
 
 # Make commands
 CC = gcc
-C_FLAGS = -O2 #-Wall -Wextra -Werror
+C_FLAGS = -O2 -Wall -Wextra -Werror -Wno-unused-result
 RM = rm -f
 
 # rules

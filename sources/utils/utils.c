@@ -6,15 +6,16 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 16:16:41 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/21 21:44:03 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/25 13:54:11 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../_headers/minishell.h"
 
-int print_error(int error)
+void	print_error(t_line *line)
 {
-	char *errors[] = {"", "pwd: too many arguments",
+	int	error;
+	char	*errors[] = {"", "pwd: too many arguments",
 	"Error: getcwd() failed",
 	"cd: too many arguments",
 	"Error: %s does not exist or there is not enough memory",
@@ -23,13 +24,13 @@ int print_error(int error)
 	"command is not recognized",
 	"no such file or directory"};
 
+	error = ft_atoi(dict_get(&(line->env), "?"));
 	if (error < 0)
 		printf("%s\n", errors[-error]);
-	else if (error == 127)
-		printf("%s\n", errors[8]);	
-	else if (error >= 0)
-		printf("Programm exited with code: %d\n", error);
-	
+	else if (WIFSIGNALED(error))
+		printf("Program killed by signal: %d\n", WTERMSIG(error));
+	else
+		dict_set(&(line->env), ft_strdup("?"), ft_itoa(WEXITSTATUS(error)));
 }
 
 int	ft_strcmp(char *str1, char *str2){

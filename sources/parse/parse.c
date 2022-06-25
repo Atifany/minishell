@@ -3,7 +3,7 @@
 void len_arr_inc(void *len_arr, int i, char str, int insquotes)
 {
 	(void)str;
-	str = 0;
+	(void)insquotes;
 	((int *)(len_arr))[i]++;
 }
 

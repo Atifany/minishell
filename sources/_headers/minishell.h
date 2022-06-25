@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:47:55 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/22 16:02:10 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/25 12:54:08 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,7 @@ int		ft_cat(int fd, char **str_ptr);
 int		ft_strcmp(char *str1, char *str2);
 void	free_struct_array(t_inqu **array);
 void	free_array(char **array);
-int		print_error(int error);
+void	print_error(t_line *line);
 
 
 // implemented built-in's

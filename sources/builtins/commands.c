@@ -3,23 +3,30 @@
 
 void	execute_file(t_line *line)
 {
-	int error;
+	char	buf[2];
+	int		error;
+	int		pip[2];
 
 	error = 0;
+	pipe(pip);
 	child_pid = fork();
 	if (child_pid == 0)
 	{
-		if (execve(line->args[0], line->args, NULL) < 0)
-			exit(127);
+		if (execve(line->args[0], line->args, NULL) < 0)	
+			exit(write(pip[WRITE], "1", 1));
 	}
 	else
+	{
 		wait(&error);
-	
+		write(pip[WRITE], "\0", 1);
+	}
 	child_pid = 0;
-
-	if (WIFSIGNALED(error))
-		return dict_set(&(line->env), ft_strdup("?"), ft_itoa(error));
-	return dict_set(&(line->env), ft_strdup("?"), ft_itoa(WEXITSTATUS(error)));
+	read(pip[READ], &buf, 2);
+	close(pip[READ]);
+	close(pip[WRITE]);
+	if (*buf)
+		return dict_set(&(line->env), ft_strdup("?"), ft_strdup("-8"));
+	return dict_set(&(line->env), ft_strdup("?"), ft_itoa(error));
 }
 
 void	execute_pwd(t_line *line)
@@ -113,9 +120,8 @@ void	execute_env(t_line	*line)
 
 void	execute_export(t_line *line)// dobavit oshibku soderjit v imeni zapreshennie v rf simvoli
 {
-	int dir;
-	char **t;
-	int i;
+	char	**t;
+	int		i;
 
 	i = 0;	
 	if ((line->args[1] && line->args[2])
