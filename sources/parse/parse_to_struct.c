@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 20:01:59 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/26 19:15:10 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/26 19:51:05 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 // // tmp func. Delete it later.
 // void	temp_print_struct(t_line *line){
 // 	int i;
-//
+
 // 	printf("command: %s\n", line->command);
 // 	printf("args: ");
 // 	i = 0;

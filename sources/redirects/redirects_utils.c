@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/26 15:48:02 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/26 19:32:54 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/26 19:53:58 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,11 @@ static void	fill_fds(int **fds, t_inqu **files)
 	i = 0;
 	while (files[i])
 	{
-		if (is_duplicated(files, i++))
+		if (is_duplicated(files, i))
+		{
+			(*fds)[i++] = -1;
 			continue ;
+		}	
 		if (files[i]->mode == FD_WRITE)
 			(*fds)[i] = open(files[i]->arg,
 					O_WRONLY | O_CREAT | O_TRUNC, 0666);
