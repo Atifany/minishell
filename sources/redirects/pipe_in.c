@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/26 14:12:32 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/26 15:50:18 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/26 19:12:19 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	cat_to_pipe_in(t_line *line)
 	i = 0;
 	while (line->redir_input[i])
 	{
-		if (line->redir_input[i]->mode == 0)
+		if (line->redir_input[i]->mode == FD_READ)
 			read_file_to_pipe(line, line->redir_input[i]->arg);
 		else
 			read_term_to_pipe(line, line->redir_input[i]->arg);

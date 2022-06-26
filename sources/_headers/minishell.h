@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:47:55 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/26 18:02:21 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/26 19:09:42 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,10 @@
 # define CMD 0
 # define ARROW 1
 # define ARG 2
-# define FD_WRITE 3
-# define FD_AP_WRITE 4
-# define FD_READ 5
-# define FD_AP_READ 6
+# define FD_WRITE '>'
+# define FD_APWRITE '>' + 1
+# define FD_READ '<'
+# define FD_APREAD '<' + 1
 # define ERROR 8
 // read macros
 # define READ_BUFFER_SIZE 1024 // 1KB
@@ -144,6 +144,7 @@ void	add_to_structpp(void *arr, char *str, char mode);
 // parse utils
 void	refresh_pip_out(t_line *line);
 char	identify(char **exec_line, int i);
+char	identify_arrow(char *arrow);
 int		arr_len(void **array);
 
 // utils

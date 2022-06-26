@@ -6,11 +6,33 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/26 15:48:02 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/26 18:13:22 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/26 19:32:54 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../_headers/minishell.h"
+
+static char	is_duplicated(t_inqu **files, int cur)
+{
+	static char	is_first_time = TRUE;
+	int	i;
+
+	i = 0;
+	while (i < cur)
+	{
+		if (!ft_strcmp(files[cur]->arg, files[i]->arg))
+		{
+			if (is_first_time)
+			{
+				is_first_time = FALSE;
+				printf("Warning: duplicated file names ignored\n");
+			}
+			return (TRUE);
+		}
+		i++;
+	}
+	return (FALSE);
+}
 
 static void	fill_fds(int **fds, t_inqu **files)
 {
@@ -19,7 +41,9 @@ static void	fill_fds(int **fds, t_inqu **files)
 	i = 0;
 	while (files[i])
 	{
-		if (files[i]->mode == 0)
+		if (is_duplicated(files, i++))
+			continue ;
+		if (files[i]->mode == FD_WRITE)
 			(*fds)[i] = open(files[i]->arg,
 					O_WRONLY | O_CREAT | O_TRUNC, 0666);
 		else

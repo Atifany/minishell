@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 13:14:16 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/26 18:06:14 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/26 19:12:55 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,16 @@ char	identify(char **exec_line, int i)
 			return (FD_READ);
 	}
 	return (ERROR);
+}
+
+char	identify_arrow(char *arrow)
+{
+	if (!ft_strcmp(arrow, ">"))
+		return (FD_WRITE);
+	if (!ft_strcmp(arrow, ">>"))
+		return (FD_APWRITE);
+	if (!ft_strcmp(arrow, "<"))
+		return (FD_READ);
+	else
+		return (FD_APREAD);
 }
