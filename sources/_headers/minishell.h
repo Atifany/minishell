@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:47:55 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/26 16:07:16 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/26 18:02:21 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,47 +62,54 @@
 int	g_child_pid;
 # endif
 
+// utility struct for parser needs
 typedef struct s_transfer
 {
 	char	to_search;
 	char	mode;
 }	t_transfer;
 
+// dictionary stowage
 typedef struct s_key_value
 {
 	char	*key;
 	void	*value;
 }	t_kv;
 
+// utility struct for parser needs
 typedef struct s_basic_methods
 {
 	void	(*init)(int, void *);
 	void	(*add)(void *, char *, char);
 }	t_methods;
 
+// used to store input and output filenames
 typedef struct s_input_queue
 {
 	char	*arg;
 	char	mode;
 }	t_inqu;
 
-//line format
+// Global struct
+// is_redirecting turns on/off redirector for every cmd
+// is_piping tells writer to write all output to pipe_in also;
+// pip_in is a pipe
+//  from which every command reads (stdin is redirected here)
+// pip_out is a pipe
+//  to which every command writes (including pipe_in if needed)
 typedef struct s_line
 {
 	// better sort it with "union"
 	char	*command;
 	char	**args;
-	char	**fd_to_write;
-	char	**fd_to_appwrite;
+	//char	**fd_to_write;
+	//char	**fd_to_appwrite;
+	t_inqu	**redir_output;
 	t_inqu	**redir_input;
-	// turns on/off redirector for every cmd
-	char	is_redirecting;	
-	// tells writer to write all output to pipe_in also;
-	char	is_piping;		
-	// pipe from which every command reads (stdin is redirected here)
-	int		*pip_in;		
-	// pipe to which every command writes (including pipe_in if needed)
-	int		*pip_out;		
+	char	is_redirecting;
+	char	is_piping;
+	int		*pip_in;
+	int		*pip_out;
 	char	is_appending;
 	t_list	*func_dict;
 	t_list	*env;

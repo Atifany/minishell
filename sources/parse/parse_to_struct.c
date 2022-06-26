@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 20:01:59 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/22 16:05:17 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/26 18:16:25 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,15 @@ static int	iterate_line(char **exec_line, void *arr, t_transfer mods,
 			if (mods.mode == COUNT)
 				ret++;
 			if (mods.mode == COLLECT)
-				add(arr, exec_line[i],
-					ft_strcmp(exec_line[ft_to_positive(i - 1)], "<"));
+			{
+				if (mods.to_search == FD_READ)
+					add(arr, exec_line[i], ft_strcmp
+						(exec_line[ft_to_positive(i - 1)], "<"));
+				else
+					add(arr, exec_line[i], ft_strcmp
+						(exec_line[ft_to_positive(i - 1)], ">"));
+			}
+				
 		}
 		i++;
 	}
@@ -94,10 +101,12 @@ static int	fill_struct(t_line *line, char **exec_line)
 	if (line->command)
 		free(line->command);
 	line->command = ft_strdup(line->args[0]);
-	total_shift += 2 * parse(exec_line, &(line->fd_to_write),
-			(t_methods){&init_charpp, &add_to_charpp}, FD_WRITE);
-	total_shift += 2 * parse(exec_line, &(line->fd_to_appwrite),
-			(t_methods){&init_charpp, &add_to_charpp}, FD_AP_WRITE);
+	// total_shift += 2 * parse(exec_line, &(line->fd_to_write),
+	// 		(t_methods){&init_charpp, &add_to_charpp}, FD_WRITE);
+	// total_shift += 2 * parse(exec_line, &(line->fd_to_appwrite),
+	// 		(t_methods){&init_charpp, &add_to_charpp}, FD_AP_WRITE);
+	total_shift += 2 * parse(exec_line, &(line->redir_output),
+			(t_methods){&init_structpp, &add_to_structpp}, FD_WRITE);
 	total_shift += 2 * parse(exec_line, &(line->redir_input),
 			(t_methods){&init_structpp, &add_to_structpp}, FD_READ);
 	return (total_shift);
@@ -138,7 +147,7 @@ int	parse_line_to_struct(t_line *line, char **exec_line)
 		line->is_redirecting = TRUE;
 		total_shift++;
 	}
-	if (*(line->fd_to_write) || *(line->fd_to_appwrite))
+	if (*(line->redir_output))
 		line->is_redirecting = TRUE;
 	//temp_print_struct(line);
 	return (total_shift);

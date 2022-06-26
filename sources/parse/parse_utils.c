@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atifany <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 13:14:16 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/07 13:14:17 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/26 18:06:14 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,9 @@ char	identify(char **exec_line, int i)
 		return (ARG);
 	if (!is_arrow(exec_line[i]) && is_arrow(exec_line[i - 1]))
 	{
-		if (!ft_strcmp(exec_line[i - 1], ">"))
+		if (!ft_strcmp(exec_line[i - 1], ">")
+			|| !ft_strcmp(exec_line[i - 1], ">>"))
 			return (FD_WRITE);
-		if (!ft_strcmp(exec_line[i - 1], ">>"))
-			return (FD_AP_WRITE);
 		if (!ft_strcmp(exec_line[i - 1], "<")
 			|| !ft_strcmp(exec_line[i - 1], "<<"))
 			return (FD_READ);
