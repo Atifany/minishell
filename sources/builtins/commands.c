@@ -1,6 +1,5 @@
 #include "../_headers/minishell.h"
 
-
 void	execute_file(t_line *line)
 {
 	char	buf[2];

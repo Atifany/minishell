@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:47:55 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/25 12:54:08 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/26 15:48:59 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,8 @@ char	open_pipe_in(t_line *line, char mode);
 // Redirects file output to a chosen file
 void	redirect_output(t_line *line, char mode);
 void	redirect_input(t_line *line, char mode);
+void	open_files(t_line *line, int **fds);
+void	close_files(int *fds);
 
 // Class methods
 void	init_charpp(int size, void *arr);
