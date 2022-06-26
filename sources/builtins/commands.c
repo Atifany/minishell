@@ -6,15 +6,12 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/26 14:46:54 by alex              #+#    #+#             */
-/*   Updated: 2022/06/26 14:59:35 by alex             ###   ########.fr       */
+/*   Updated: 2022/06/26 20:21:25 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-<<<<<<< HEAD
 #include "../_headers/minishell.h"
 
-=======
->>>>>>> e400b7d0008af7e8f86dcfaba9025e3a2a2c5e28
 void	execute_file(t_line *line)
 {
 	char	buf[2];
