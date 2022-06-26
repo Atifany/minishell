@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atifany <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 18:13:52 by atifany           #+#    #+#             */
-/*   Updated: 2021/10/05 18:13:53 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/26 14:06:04 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,5 @@ char	*ft_strchr(const char *s, int c)
 			return (&((char *)(s))[i]);
 		i++;
 	}
-	//if (s[i] == (unsigned char)c)
-	//	return (&((char *)(s))[i]);
 	return ((void *)0);
 }

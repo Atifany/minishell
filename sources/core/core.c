@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   core.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:34:14 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/22 15:30:53 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/26 14:18:00 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	ft_switch(t_line *line)
 		execute_file(line);
 		return (0);
 	}
-	func *f = dict_get(&(line->func_dict), line->command);
+	t_func *f = dict_get(&(line->func_dict), line->command);
 	if (!f)
 	{
 		printf("'%s'\n", line->command);
@@ -39,9 +39,9 @@ char	ft_switch(t_line *line)
 void	sighandler(int sig)
 {
 	(void)sig;
-	if (child_pid != 0)
+	if (g_child_pid != 0)
 	{
-		kill(child_pid, SIGINT);
+		kill(g_child_pid, SIGINT);
 		write(1, "\n", 1);
 	}
 	else
@@ -67,7 +67,7 @@ int	main()
 	init_env(&line);
 	func_dict_init(&line);
 	init_struct(&line);
-	child_pid = 0;
+	g_child_pid = 0;
 	signal(SIGINT, &sighandler);
 	signal(SIGQUIT, SIG_IGN);
 

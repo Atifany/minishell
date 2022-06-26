@@ -58,33 +58,33 @@ void	func_dict_init(t_line *line)
 {
 	line->func_dict = NULL;
 
-	func *pwd;
-	pwd = malloc(sizeof(func));
+	t_func *pwd;
+	pwd = malloc(sizeof(t_func));
 	pwd->foo = execute_pwd;
 	dict_add(&(line->func_dict), ft_strdup("pwd"), pwd);
 
-	func *cd;
-	cd = malloc(sizeof(func));
+	t_func *cd;
+	cd = malloc(sizeof(t_func));
 	cd->foo = execute_cd;
 	dict_add(&(line->func_dict), ft_strdup("cd"), cd);
 
-	func *echo;
-	echo = malloc(sizeof(func));
+	t_func *echo;
+	echo = malloc(sizeof(t_func));
 	echo->foo = execute_echo;
 	dict_add(&(line->func_dict), ft_strdup("echo"), echo);
 
-	func *env;
-	env = malloc(sizeof(func));
+	t_func *env;
+	env = malloc(sizeof(t_func));
 	env->foo = execute_env;
 	dict_add(&(line->func_dict), ft_strdup("env"), env);
 
-	func *export;
-	export = malloc(sizeof(func));
+	t_func *export;
+	export = malloc(sizeof(t_func));
 	export->foo = execute_export;
 	dict_add(&(line->func_dict), ft_strdup("export"), export);
 
-	func *cat;
-	cat = malloc(sizeof(func));
+	t_func *cat;
+	cat = malloc(sizeof(t_func));
 	cat->foo = execute_cat;
 	dict_add(&(line->func_dict), ft_strdup("cat"), cat);
 }

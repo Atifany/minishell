@@ -8,8 +8,8 @@ void	execute_file(t_line *line)
 
 	error = 0;
 	pipe(pip);
-	child_pid = fork();
-	if (child_pid == 0)
+	g_child_pid = fork();
+	if (g_child_pid == 0)
 	{
 		if (execve(line->args[0], line->args, NULL) < 0)	
 			exit(write(pip[WRITE], "1", 1));
@@ -19,7 +19,7 @@ void	execute_file(t_line *line)
 		wait(&error);
 		write(pip[WRITE], "\0", 1);
 	}
-	child_pid = 0;
+	g_child_pid = 0;
 	read(pip[READ], &buf, 2);
 	close(pip[READ]);
 	close(pip[WRITE]);
@@ -110,8 +110,8 @@ void	execute_env(t_line	*line)
 	env = line->env; 
 	while (env)
 	{
-		if (ft_strcmp((char *)((kv *)env->content)->key, "?"))
-			printf("%s=%s\n", (char *)((kv *)env->content)->key, (char *)((kv *)env->content)->value);
+		if (ft_strcmp((char *)((t_kv *)env->content)->key, "?"))
+			printf("%s=%s\n", (char *)((t_kv *)env->content)->key, (char *)((t_kv *)env->content)->value);
 		env = env->next;
 	}
 	return dict_set(&(line->env), ft_strdup("?"), ft_strdup("0"));
