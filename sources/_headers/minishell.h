@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:47:55 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/26 14:18:38 by alex             ###   ########.fr       */
+/*   Updated: 2022/06/26 19:05:05 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ typedef struct s_func
 
 // parse to struct
 int		parse_line_to_struct(t_line *line, char **exec_line);
-char	**parse_to_array(char *input_str);
+char	**parse_to_array(char *input_str, t_list **env);
 
 // parse utils
 int		arrlen(char **arr);
@@ -178,8 +178,8 @@ void	dict_del(t_list **lst);
 void	dict_add(t_list **lst, char *key, void *value);
 
 //env
-char	*get_env(t_list **env, char *key);
-void	variable_handler(char **args, t_list **env);
+//char	*get_env(t_list **env, char *key);
+void	variable_handler(char **arr, t_list **env);
 
 //colors
 # define BLK "\e[0;30m"

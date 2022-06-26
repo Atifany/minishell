@@ -1,83 +1,76 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   environment.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/26 14:39:57 by alex              #+#    #+#             */
+/*   Updated: 2022/06/26 19:09:39 by alex             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../_headers/minishell.h"
 
-// char *get_env(t_list **env, char* key)
-// {
-// 	char	*value;
-//
-// 	value = getenv(key);	
-// 	dict_set(env, key, value);	
-// }
-
-
-static void replace_envs(char **strings, t_list **env, int starts_with_dollar)
+static void	replace_envs(char **strs, t_list **env, int starts_with_dollar)
 {
-	char *t; 
-	int i;
-	int namelen;
-	char* name;
+	char	*t;
+	int		i;
+	int		namelen;
+	char	*name;
 
-	namelen = 0;
 	i = -1;
-	while (strings[++i])
+	while (strs[++i])
 	{
 		namelen = 0;
-		if (starts_with_dollar || i) 
+		if (starts_with_dollar || i)
 		{
-			if (strings[i][namelen] == '?')
+			if (strs[i][namelen] == '?')
 				namelen++;
 			else
-				while (strings[i][namelen] && (ft_isalnum(strings[i][namelen])))
+				while (strs[i][namelen] && (ft_isalnum(strs[i][namelen])))
 					namelen++;
-			name = ft_substr(strings[i], 0, namelen);
-			t = ft_strdup(dict_get(env, name));// check for t == NULL
-			t = gnl_join(&t, strings[i]+namelen, ft_strlen(strings[i] + namelen));
+			name = ft_substr(strs[i], 0, namelen);
+			t = ft_strdup(dict_get(env, name));
+			t = gnl_join(&t, strs[i] + namelen, ft_strlen(strs[i] + namelen));
 			free(name);
-			free(strings[i]);
-			strings[i] = t;
+			free(strs[i]);
+			strs[i] = t;
 		}
 	}
 }
 
-
-static void replace_arg(char** strings, char **arg)
+static void	replace_arg(char **strings, char **arr)
 {
-	int n_of_strings;
-	int total_len;
-	int i;
-	char *result;
+	int		n_of_strings;
+	int		total_len;
+	int		i;
+	char	*result;
 
 	total_len = 0;
 	i = -1;
 	while (strings[++i])
 		total_len += ft_strlen(strings[i]);
-	result = ft_calloc(total_len+1, 1);
+	result = ft_calloc(total_len + 1, 1);
 	n_of_strings = i;
 	i = 0;
 	while (n_of_strings > i)
 	{
-		ft_strlcat(result, strings[i], total_len+1);	
+		ft_strlcat(result, strings[i], total_len + 1);
 		i++;
 	}
-	free(*arg);
-	*arg = result;
-	
+	free(*arr);
+	*arr = result;
 }
 
-void variable_handler(char **args, t_list **env)
+void	variable_handler(char **arr, t_list **env)
 {
-	char **splitted;
-	int i;
-	
-	i = 0;
-	while (args[i])
+	char	**splitted;
+	if (*arr && count(*arr, -50))
 	{
-		if (args[i] && count(args[i], -50))
-		{
-			splitted = ft_split(args[i], -50);
-			replace_envs(splitted, env, args[i][0] == -50);		
-			replace_arg(splitted, args+i);
-			free_array(splitted);
-		}
-		i++;
+		splitted = ft_split(*arr, -50);
+		replace_envs(splitted, env, (*arr)[0] == -50);
+		replace_arg(splitted, arr);
+		free_array(splitted);
 	}
 }

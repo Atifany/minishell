@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_to_struct.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 20:01:59 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/22 16:05:17 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/26 16:26:32 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,6 @@ int	parse_line_to_struct(t_line *line, char **exec_line)
 
 	refresh_pip_out(line);
 	total_shift = fill_struct(line, exec_line);
-	variable_handler(line->args, &(line->env));
 	quote_handler(line->args);
 	line->is_redirecting = FALSE;
 	line->is_piping = FALSE;
