@@ -1,5 +1,16 @@
-#include "../_headers/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   commands.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/26 14:46:54 by alex              #+#    #+#             */
+/*   Updated: 2022/06/26 14:59:35 by alex             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "../_headers/minishell.h"
 
 void	execute_file(t_line *line)
 {
@@ -10,23 +21,21 @@ void	execute_file(t_line *line)
 	error = 0;
 	pipe(pip);
 	g_child_pid = fork();
+	write(pip[WRITE], "\0", 1);
 	if (g_child_pid == 0)
 	{
-		if (execve(line->args[0], line->args, NULL) < 0)	
+		if (execve(line->args[0], line->args, NULL) < 0)
 			exit(write(pip[WRITE], "1", 1));
 	}
 	else
-	{
 		wait(&error);
-		write(pip[WRITE], "\0", 1);
-	}
 	g_child_pid = 0;
-	read(pip[READ], &buf, 2);
+	read(pip[READ], &buf, 1);
 	close(pip[READ]);
 	close(pip[WRITE]);
 	if (*buf)
-		return dict_set(&(line->env), ft_strdup("?"), ft_strdup("-8"));
-	return dict_set(&(line->env), ft_strdup("?"), ft_itoa(error));
+		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-8")));
+	return (dict_set(&(line->env), ft_strdup("?"), ft_itoa(error)));
 }
 
 void	execute_pwd(t_line *line)
@@ -35,33 +44,33 @@ void	execute_pwd(t_line *line)
 
 	buf = getcwd(NULL, 0);
 	if (!buf)
-		return dict_set(&(line->env), ft_strdup("?"), ft_strdup("-2"));
+		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-2")));
 	printf("%s\n", buf);
 	free(buf);
-	return dict_set(&(line->env), ft_strdup("?"), ft_strdup("0"));
+	return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("0")));
 }
 
 void	execute_cd(t_line *line)
 {
-	static char *prev_path = NULL;
+	static char	*prev_path = NULL;
 	int			dir;
 	char		*path;
 	char		*buf;
-	
+
 	if (line->args[1] && line->args[2])
-		return dict_set(&(line->env), ft_strdup("?"), ft_strdup("-3"));
+		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-3")));
 	if (!prev_path)
 		prev_path = getcwd(NULL, 0);
 	if (!line->args[1])
 		path = ft_strdup((char *)dict_get(&(line->env), "HOME"));
 	else
 	{
-		if (*(line->args[1]) == '~'){
+		if (*(line->args[1]) == '~')
+		{
 			buf = ft_strdup((char *)dict_get(&(line->env), "HOME"));
 			path = gnl_join(&buf, ft_strdup(line->args[1] + 1),
-				ft_strlen(line->args[1] + 1));
+					ft_strlen(line->args[1] + 1));
 		}
-		
 		else if (!ft_strcmp(line->args[1], "-"))
 			path = ft_strdup(prev_path);
 		else
@@ -74,48 +83,53 @@ void	execute_cd(t_line *line)
 		execute_pwd(line);
 	free(path);
 	if (dir == -1)
-		return dict_set(&(line->env), ft_strdup("?"), ft_strdup("-4"));
-	return dict_set(&(line->env), ft_strdup("?"), ft_strdup("0"));
+		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-4")));
+	return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("0")));
 }
 
 void	execute_echo(t_line *line)
 {
-	char nl_flag;
-	char **args = line->args + 1;
+	char	nl_flag;
+	char	**args;
 
+	args = line->args + 1;
 	nl_flag = '\n';
-	if (!*args){
+	if (!*args)
+	{
 		write(1, "\n", 1);
-		return dict_set(&(line->env), ft_strdup("?"), ft_strdup("0"));
+		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("0")));
 	}
-	if (!ft_strcmp(args[0], "-n")){
+	if (!ft_strcmp(args[0], "-n"))
+	{
 		args++;
 		nl_flag = '\0';
 	}
-	while (*(args) && *(args + 1)){
+	while (*(args) && *(args + 1))
+	{
 		write(1, *args, ft_strlen(*args));
 		write(1, " ", 1);
 		args++;
 	}
 	write(1, *args, ft_strlen(*args));
 	write(1, &nl_flag, 1);
-	return dict_set(&(line->env), ft_strdup("?"), ft_strdup("0"));
+	return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("0")));
 }
 
 void	execute_env(t_line	*line)
 {
-	t_list *env;
+	t_list	*env;
 
 	if (line->args[1])
-		return dict_set(&(line->env), ft_strdup("?"), ft_strdup("-6"));
-	env = line->env; 
+		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-6")));
+	env = line->env;
 	while (env)
 	{
 		if (ft_strcmp((char *)((t_kv *)env->content)->key, "?"))
-			printf("%s=%s\n", (char *)((t_kv *)env->content)->key, (char *)((t_kv *)env->content)->value);
+			printf("%s=%s\n", (char *)((t_kv *)env->content)->key,
+				(char *)((t_kv *)env->content)->value);
 		env = env->next;
 	}
-	return dict_set(&(line->env), ft_strdup("?"), ft_strdup("0"));
+	return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("0")));
 }
 
 void	execute_export(t_line *line)// dobavit oshibku soderjit v imeni zapreshennie v rf simvoli
@@ -126,33 +140,34 @@ void	execute_export(t_line *line)// dobavit oshibku soderjit v imeni zapreshenni
 	i = 0;	
 	if ((line->args[1] && line->args[2])
 		|| line->args[1] == NULL)
-		return dict_set(&(line->env), ft_strdup("?"), ft_strdup("-5"));
+		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-5")));
 	t = ft_split(line->args[1], '=');
 	if (t[0] == NULL || t[1] == NULL)
-		return dict_set(&(line->env), ft_strdup("?"), ft_strdup("-5"));
+		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-5")));
 	while (line->args[1][i])
 		if (!ft_isalnum(line->args[1][i]))
-			return dict_set(&(line->env), ft_strdup("?"), ft_strdup("-5"));
+			return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-5")));
 	dict_set(&(line->env), ft_strdup(t[0]), ft_strdup(t[1]));
 	free_array(t);
-	return dict_set(&(line->env), ft_strdup("?"), ft_strdup("0"));
+	return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("0")));
 }
 
 void	execute_cat(t_line *line) // ADD ERROR AMANAGMENT
 {
-	int		i = 1;
+	int		i;
 	char	*str;
 	int		fd;
 
-	if (!line->args[0] || !line->args[1]){
-		return dict_set(&(line->env), ft_strdup("?"), ft_strdup("0"));
-	}
-	while (line->args[i]){
+	i = 1;
+	if (!line->args[0] || !line->args[1])
+		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("0")));
+	while (line->args[i])
+	{
 		fd = open(line->args[i], O_CREAT | O_RDWR, 0666);
-		if (fd < 0){
-			return dict_set(&(line->env), ft_strdup("?"), ft_strdup("0"));
-		}
-		while (ft_cat(fd, &str) > 0){
+		if (fd < 0)
+			return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("0")));
+		while (ft_cat(fd, &str) > 0)
+		{
 			write(1, str, ft_strlen(str));
 			free(str);
 			str = NULL;
@@ -160,5 +175,5 @@ void	execute_cat(t_line *line) // ADD ERROR AMANAGMENT
 		close(fd);
 		i++;
 	}
-	return dict_set(&(line->env), ft_strdup("?"), ft_strdup("0"));
+	return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("0")));
 }

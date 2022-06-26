@@ -1,11 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   processing.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/26 14:27:29 by alex              #+#    #+#             */
+/*   Updated: 2022/06/26 16:19:38 by alex             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../_headers/minishell.h"
 
-static char	*take_input()
+static char	*take_input(void)
 {
 	char	*buf;
 
 	buf = readline("minishell >> ");
-	if (!buf){
+	if (!buf)
+	{
 		printf("\n");
 		return (NULL);
 	}
@@ -19,40 +32,36 @@ static int	pre_handle(t_line *line, char **exec_line)
 	char	is_pipe_in_opened;
 	int		shift;
 
-	is_pipe_in_opened = open_pipe_in(line, OPEN);	// called on
-													// the SECOND time
-													// right after pipe
+	is_pipe_in_opened = open_pipe_in(line, OPEN);
 	shift = parse_line_to_struct(line, exec_line);
-	is_pipe_in_opened = open_pipe_in(line, APPEND);	// called on < or <<
-	if (*(line->redir_input)){
+	is_pipe_in_opened = open_pipe_in(line, APPEND);
+	if (*(line->redir_input))
 		cat_to_pipe_in(line);
-	}
-	if (is_pipe_in_opened){
+	if (is_pipe_in_opened)
 		write(line->pip_in[WRITE], "\0", 1);
-	}
 	return (shift);
 }
 
 static char	iterate_exec_line(char **exec_line, t_line *line)
 {
 	char	ret;
-	int		total_shift;	// represents total shift on exec_line
-	int		shift;			// represents current cmd shift on exec_line
+	int		total_shift;
+	int		shift;
 
 	shift = 0;
 	total_shift = 0;
-	while (*exec_line){		// iterates each command in current line
+	while (*exec_line)
+	{
 		shift = pre_handle(line, exec_line);
 		total_shift += shift;
 		exec_line += shift;
-		if (line->is_redirecting){
+		if (line->is_redirecting)
 			redirect_output(line, OPEN);
-		}
 		ret = ft_switch(line);
-		if (line->is_redirecting){
+		if (line->is_redirecting)
 			redirect_output(line, CLOSE);
-		}
-		if (ret){	// switch returned exit code.
+		if (ret)
+		{
 			open_pipe_in(line, CLOSE);
 			return (1);
 		}
@@ -67,16 +76,17 @@ static char	iterate_exec_line(char **exec_line, t_line *line)
 char	process_input(t_line *line)
 {
 	char	**exec_line;
-	char	*input_str = NULL;
+	char	*input_str;
 	char	rotate;
 
+	input_str = NULL;
 	clear_struct(line);
 	init_struct(line);
 	input_str = take_input();
 	if (!input_str)
 		return (1);
 	redirect_input(line, INIT);
-	exec_line = parse_to_array(input_str);
+	exec_line = parse_to_array(input_str, &(line->env));
 	free(input_str);
 	input_str = NULL;
 	rotate = iterate_exec_line(exec_line, line);

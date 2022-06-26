@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:34:14 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/26 14:18:00 by alex             ###   ########.fr       */
+/*   Updated: 2022/06/26 14:26:32 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,18 @@
 
 char	ft_switch(t_line *line)
 {
+	t_func	*f;
+
 	if (!ft_strcmp(line->command, "exit"))
-	{
 		return (1);
-	}
 	if (!line->command[0])
-		return 0; 
-	
-	if (!ft_strncmp(line->command, "./", 2) || *(line->command) == '/'){
+		return (0);
+	if (!ft_strncmp(line->command, "./", 2) || *(line->command) == '/')
+	{
 		execute_file(line);
 		return (0);
 	}
-	t_func *f = dict_get(&(line->func_dict), line->command);
+	f = (t_func *)dict_get(&(line->func_dict), line->command);
 	if (!f)
 	{
 		printf("'%s'\n", line->command);
@@ -53,13 +53,13 @@ void	sighandler(int sig)
 	}
 }
 
-static void clear_dicts(t_line *line)
+static void	clear_dicts(t_line *line)
 {
 	dict_del(&(line->env));
 	dict_del(&(line->func_dict));
 }
 
-int	main()
+int	main(void)
 {
 	char	rotate;
 	t_line	line;
@@ -70,12 +70,9 @@ int	main()
 	g_child_pid = 0;
 	signal(SIGINT, &sighandler);
 	signal(SIGQUIT, SIG_IGN);
-
 	rotate = 0;
 	while (!rotate)
-	{
 		rotate = process_input(&line);
-	}
 	rl_clear_history();
 	clear_dicts(&line);
 	clear_struct(&line);
