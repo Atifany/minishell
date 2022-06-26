@@ -11,6 +11,7 @@ _SRC =	builtins/commands.c			\
 		parse/parse.c				\
 		redirects/pipe_in.c			\
 		redirects/redirects.c		\
+		redirects/redirects_utils.c	\
 		utils/cat.c					\
 		utils/class_methods.c		\
 		utils/dictionary.c			\

@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:47:55 by atifany           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2022/06/26 19:05:05 by alex             ###   ########.fr       */
+=======
+/*   Updated: 2022/06/26 19:09:42 by atifany          ###   ########.fr       */
+>>>>>>> e400b7d0008af7e8f86dcfaba9025e3a2a2c5e28
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +51,10 @@
 # define CMD 0
 # define ARROW 1
 # define ARG 2
-# define FD_WRITE 3
-# define FD_AP_WRITE 4
-# define FD_READ 5
-# define FD_AP_READ 6
+# define FD_WRITE '>'
+# define FD_APWRITE '>' + 1
+# define FD_READ '<'
+# define FD_APREAD '<' + 1
 # define ERROR 8
 // read macros
 # define READ_BUFFER_SIZE 1024 // 1KB
@@ -62,47 +66,54 @@
 int	g_child_pid;
 # endif
 
+// utility struct for parser needs
 typedef struct s_transfer
 {
 	char	to_search;
 	char	mode;
 }	t_transfer;
 
+// dictionary stowage
 typedef struct s_key_value
 {
 	char	*key;
 	void	*value;
 }	t_kv;
 
+// utility struct for parser needs
 typedef struct s_basic_methods
 {
 	void	(*init)(int, void *);
 	void	(*add)(void *, char *, char);
 }	t_methods;
 
+// used to store input and output filenames
 typedef struct s_input_queue
 {
 	char	*arg;
 	char	mode;
 }	t_inqu;
 
-//line format
+// Global struct
+// is_redirecting turns on/off redirector for every cmd
+// is_piping tells writer to write all output to pipe_in also;
+// pip_in is a pipe
+//  from which every command reads (stdin is redirected here)
+// pip_out is a pipe
+//  to which every command writes (including pipe_in if needed)
 typedef struct s_line
 {
 	// better sort it with "union"
 	char	*command;
 	char	**args;
-	char	**fd_to_write;
-	char	**fd_to_appwrite;
+	//char	**fd_to_write;
+	//char	**fd_to_appwrite;
+	t_inqu	**redir_output;
 	t_inqu	**redir_input;
-	// turns on/off redirector for every cmd
-	char	is_redirecting;	
-	// tells writer to write all output to pipe_in also;
-	char	is_piping;		
-	// pipe from which every command reads (stdin is redirected here)
-	int		*pip_in;		
-	// pipe to which every command writes (including pipe_in if needed)
-	int		*pip_out;		
+	char	is_redirecting;
+	char	is_piping;
+	int		*pip_in;
+	int		*pip_out;
 	char	is_appending;
 	t_list	*func_dict;
 	t_list	*env;
@@ -125,6 +136,8 @@ char	open_pipe_in(t_line *line, char mode);
 // Redirects file output to a chosen file
 void	redirect_output(t_line *line, char mode);
 void	redirect_input(t_line *line, char mode);
+void	open_files(t_line *line, int **fds);
+void	close_files(int *fds);
 
 // Class methods
 void	init_charpp(int size, void *arr);
@@ -135,6 +148,7 @@ void	add_to_structpp(void *arr, char *str, char mode);
 // parse utils
 void	refresh_pip_out(t_line *line);
 char	identify(char **exec_line, int i);
+char	identify_arrow(char *arrow);
 int		arr_len(void **array);
 
 // utils

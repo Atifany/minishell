@@ -6,10 +6,8 @@ void	clear_struct(t_line *line)
 		free(line->command);
 	if (line->args)
 		free_array(line->args);
-	if (line->fd_to_write)
-		free_array(line->fd_to_write);
-	if (line->fd_to_appwrite)
-		free_array(line->fd_to_appwrite);
+	if (line->redir_output)
+		free_struct_array(line->redir_output);
 	if (line->redir_input)
 		free_struct_array(line->redir_input);
 	if (line->pip_in)
@@ -18,12 +16,16 @@ void	clear_struct(t_line *line)
 		free(line->pip_out);
 }
 
-
 void init_env(t_line *line)
 {
+<<<<<<< HEAD
 	int i;
 
 	i = 0;
+=======
+	int i = 0;
+
+>>>>>>> e400b7d0008af7e8f86dcfaba9025e3a2a2c5e28
 	line->env = NULL;
 	char *names[] = {"SHELL", "SESSION_MANAGER", "QT_ACCESSIBILITY", "COLORTERM", "GNOME_DESKTOP_SESSION_ID", 
 	"LANGUAGE", "LC_ADDRESS", "LC_NAME", "SSH_AUTH_SOCK", "CINNAMON_VERSION", "LC_MONETARY", 
@@ -52,8 +54,7 @@ void	init_struct(t_line *line)
 	line->command = NULL;
 	line->args = NULL;
 	line->redir_input = NULL;
-	line->fd_to_write = NULL;
-	line->fd_to_appwrite = NULL;
+	line->redir_output = NULL;
 	line->is_appending = FALSE;
 }
 

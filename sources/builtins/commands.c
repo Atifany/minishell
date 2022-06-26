@@ -10,8 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+<<<<<<< HEAD
 #include "../_headers/minishell.h"
 
+=======
+>>>>>>> e400b7d0008af7e8f86dcfaba9025e3a2a2c5e28
 void	execute_file(t_line *line)
 {
 	char	buf[2];
