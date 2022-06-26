@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:47:55 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/25 12:54:08 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/26 14:18:38 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,11 @@
 //global
 # ifndef GLOBAL
 #  define GLOBAL
-int	child_pid;
+
+int	g_child_pid;
 # endif
 
-typedef	struct s_transfer
+typedef struct s_transfer
 {
 	char	to_search;
 	char	mode;
@@ -69,14 +70,14 @@ typedef	struct s_transfer
 
 typedef struct s_key_value
 {
-	char *key;
-	void *value;
-}	kv;
+	char	*key;
+	void	*value;
+}	t_kv;
 
 typedef struct s_basic_methods
 {
-	void (*init)(int, void *);
-	void (*add)(void *, char *, char);
+	void	(*init)(int, void *);
+	void	(*add)(void *, char *, char);
 }	t_methods;
 
 typedef struct s_input_queue
@@ -94,10 +95,14 @@ typedef struct s_line
 	char	**fd_to_write;
 	char	**fd_to_appwrite;
 	t_inqu	**redir_input;
-	char	is_redirecting;	// turns on/off redirector for every cmd
-	char	is_piping;		// tells writer to write all output to pipe_in also;
-	int		*pip_in;		// pipe from which every command reads (stdin is redirected here)
-	int		*pip_out;		// pipe to which every command writes (including pipe_in if needed)
+	// turns on/off redirector for every cmd
+	char	is_redirecting;	
+	// tells writer to write all output to pipe_in also;
+	char	is_piping;		
+	// pipe from which every command reads (stdin is redirected here)
+	int		*pip_in;		
+	// pipe to which every command writes (including pipe_in if needed)
+	int		*pip_out;		
 	char	is_appending;
 	t_list	*func_dict;
 	t_list	*env;
@@ -140,7 +145,6 @@ void	free_struct_array(t_inqu **array);
 void	free_array(char **array);
 void	print_error(t_line *line);
 
-
 // implemented built-in's
 void	execute_file(t_line *line);
 void	execute_pwd(t_line *line);
@@ -152,31 +156,30 @@ void	execute_cat(t_line *line);
 
 typedef struct s_func
 {
-	void (*foo)(t_line *);
-}	func;
-
+	void	(*foo)(t_line *);
+}	t_func;
 
 // parse to struct
 int		parse_line_to_struct(t_line *line, char **exec_line);
 char	**parse_to_array(char *input_str);
 
 // parse utils
-int	arrlen(char **arr);
-int contains(char *arr);
-char **dropnulls(char **arr, int len);
-void dropquotes(char **arr);
+int		arrlen(char **arr);
+int		contains(char *arr);
+char	**dropnulls(char **arr, int len);
+void	dropquotes(char **arr);
 char	*ft_strj(char *s1, char *s2);
-int count(char *arr, char s);
+int		count(char *arr, char s);
 
 //dict
-void *dict_get(t_list **lst, char* key);
-void dict_set(t_list **lst, char* key, void* value);
-void dict_del(t_list **lst);
-void dict_add(t_list **lst, char* key, void* value);
+void	*dict_get(t_list **lst, char *key);
+void	dict_set(t_list **lst, char *key, void *value);
+void	dict_del(t_list **lst);
+void	dict_add(t_list **lst, char *key, void *value);
 
 //env
-char *get_env(t_list **env, char* key);
-void variable_handler(char **args, t_list **env);
+char	*get_env(t_list **env, char *key);
+void	variable_handler(char **args, t_list **env);
 
 //colors
 # define BLK "\e[0;30m"
