@@ -18,14 +18,9 @@ void	clear_struct(t_line *line)
 
 void init_env(t_line *line)
 {
-<<<<<<< HEAD
 	int i;
 
 	i = 0;
-=======
-	int i = 0;
-
->>>>>>> e400b7d0008af7e8f86dcfaba9025e3a2a2c5e28
 	line->env = NULL;
 	char *names[] = {"SHELL", "SESSION_MANAGER", "QT_ACCESSIBILITY", "COLORTERM", "GNOME_DESKTOP_SESSION_ID", 
 	"LANGUAGE", "LC_ADDRESS", "LC_NAME", "SSH_AUTH_SOCK", "CINNAMON_VERSION", "LC_MONETARY", 

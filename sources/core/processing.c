@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/26 14:27:29 by alex              #+#    #+#             */
-/*   Updated: 2022/06/26 16:19:38 by alex             ###   ########.fr       */
+/*   Updated: 2022/06/26 21:18:02 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ static int	pre_handle(t_line *line, char **exec_line)
 
 	is_pipe_in_opened = open_pipe_in(line, OPEN);
 	shift = parse_line_to_struct(line, exec_line);
+	variable_handler((line->args), &(line->env));
 	is_pipe_in_opened = open_pipe_in(line, APPEND);
 	if (*(line->redir_input))
 		cat_to_pipe_in(line);
@@ -86,7 +87,7 @@ char	process_input(t_line *line)
 	if (!input_str)
 		return (1);
 	redirect_input(line, INIT);
-	exec_line = parse_to_array(input_str, &(line->env));
+	exec_line = parse_to_array(input_str);
 	free(input_str);
 	input_str = NULL;
 	rotate = iterate_exec_line(exec_line, line);

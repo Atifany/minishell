@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:47:55 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/26 20:21:45 by alex             ###   ########.fr       */
+/*   Updated: 2022/06/26 20:25:39 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,7 @@ typedef struct s_func
 
 // parse to struct
 int		parse_line_to_struct(t_line *line, char **exec_line);
-char	**parse_to_array(char *input_str, t_list **env);
+char	**parse_to_array(char *input_str);
 
 // parse utils
 int		arrlen(char **arr);

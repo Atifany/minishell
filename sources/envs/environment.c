@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/26 14:39:57 by alex              #+#    #+#             */
-/*   Updated: 2022/06/26 20:20:38 by alex             ###   ########.fr       */
+/*   Updated: 2022/06/27 13:31:13 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,11 @@ static void	replace_envs(char **strs, t_list **env, int starts_with_dollar)
 		namelen = 0;
 		if (starts_with_dollar || i)
 		{
-			if (strs[i][namelen] == '?')
+			while (strs[i][namelen] && (strs[i][namelen] < 0))
 				namelen++;
-			else
-				while (strs[i][namelen] && (strs[i][namelen] < 0))
-					namelen++;
 			name = ft_substr(strs[i], 0, namelen);
 			decode(&name);
+
 			t = ft_strdup(dict_get(env, name));
 			t = gnl_join(&t, strs[i] + namelen, ft_strlen(strs[i] + namelen));
 			free(name);
@@ -80,14 +78,14 @@ void	variable_handler(char **args, t_list **env)
 {
 	char	**splitted;
 	int		i;
-
+		
 	i = 0;
 	while (args[i])
 	{
-		if (args[i] && count(args[i], -50))
+		if (args[i] && count(args[i], -37))
 		{
-			splitted = ft_split(args[i], -50);
-			replace_envs(splitted, env, args[i][0] == -50);
+			splitted = ft_split(args[i], -37);
+			replace_envs(splitted, env, args[i][0] == -37);
 			replace_arg(splitted, args + i);
 			free_array(splitted);
 		}
