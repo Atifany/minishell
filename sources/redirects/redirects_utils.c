@@ -6,15 +6,14 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/26 15:48:02 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/26 19:53:58 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/27 12:50:29 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../_headers/minishell.h"
 
-static char	is_duplicated(t_inqu **files, int cur)
+static char	is_duplicated(t_line *line, t_inqu **files, int cur)
 {
-	static char	is_first_time = TRUE;
 	int	i;
 
 	i = 0;
@@ -22,9 +21,9 @@ static char	is_duplicated(t_inqu **files, int cur)
 	{
 		if (!ft_strcmp(files[cur]->arg, files[i]->arg))
 		{
-			if (is_first_time)
+			if (line->is_newline)
 			{
-				is_first_time = FALSE;
+				line->is_newline = FALSE;
 				printf("Warning: duplicated file names ignored\n");
 			}
 			return (TRUE);
@@ -34,14 +33,14 @@ static char	is_duplicated(t_inqu **files, int cur)
 	return (FALSE);
 }
 
-static void	fill_fds(int **fds, t_inqu **files)
+static void	fill_fds(t_line *line, int **fds, t_inqu **files)
 {
 	int	i;
 
 	i = 0;
 	while (files[i])
 	{
-		if (is_duplicated(files, i))
+		if (is_duplicated(line, files, i))
 		{
 			(*fds)[i++] = -1;
 			continue ;
@@ -67,7 +66,7 @@ void	open_files(t_line *line, int **fds)
 	while (line->redir_output[size])
 		size++;
 	*fds = (int *)ft_calloc(size + 1, sizeof(int));
-	fill_fds(fds, line->redir_output);
+	fill_fds(line, fds, line->redir_output);
 }
 
 void	close_files(int *fds)

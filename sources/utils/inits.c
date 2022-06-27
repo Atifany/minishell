@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   inits.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/27 13:01:28 by atifany           #+#    #+#             */
+/*   Updated: 2022/06/27 13:04:53 by atifany          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../_headers/minishell.h"
 
 void	clear_struct(t_line *line)
@@ -16,10 +28,11 @@ void	clear_struct(t_line *line)
 		free(line->pip_out);
 }
 
-void init_env(t_line *line)
+void	init_env(t_line *line)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	line->env = NULL;
 	char *names[] = {"SHELL", "SESSION_MANAGER", "QT_ACCESSIBILITY", "COLORTERM", "GNOME_DESKTOP_SESSION_ID", 
 	"LANGUAGE", "LC_ADDRESS", "LC_NAME", "SSH_AUTH_SOCK", "CINNAMON_VERSION", "LC_MONETARY", 
@@ -45,11 +58,11 @@ void	init_struct(t_line *line)
 	line->pip_out = NULL;
 	line->is_redirecting = FALSE;
 	line->is_piping = FALSE;
+	line->is_newline = TRUE;
 	line->command = NULL;
 	line->args = NULL;
 	line->redir_input = NULL;
 	line->redir_output = NULL;
-	line->is_appending = FALSE;
 }
 
 void	func_dict_init(t_line *line)

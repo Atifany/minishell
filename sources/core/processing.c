@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   processing.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/27 12:46:28 by atifany           #+#    #+#             */
+/*   Updated: 2022/06/27 12:48:57 by atifany          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../_headers/minishell.h"
 
 static char	*take_input()
@@ -79,6 +91,7 @@ char	process_input(t_line *line)
 	exec_line = parse_to_array(input_str);
 	free(input_str);
 	input_str = NULL;
+	line->is_newline = TRUE;
 	rotate = iterate_exec_line(exec_line, line);
 	free_array(exec_line);
 	redirect_input(line, DEINIT);
