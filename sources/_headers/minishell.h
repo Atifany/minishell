@@ -6,7 +6,11 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:47:55 by atifany           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2022/06/26 20:25:39 by alex             ###   ########.fr       */
+=======
+/*   Updated: 2022/06/27 12:56:31 by atifany          ###   ########.fr       */
+>>>>>>> 2639cc4bbce6163dfcd34cacaaa8f4d2a44c8ec7
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,20 +101,19 @@ typedef struct s_input_queue
 //  from which every command reads (stdin is redirected here)
 // pip_out is a pipe
 //  to which every command writes (including pipe_in if needed)
+// is_newline is set to TRUE each readline.
 typedef struct s_line
 {
 	// better sort it with "union"
 	char	*command;
 	char	**args;
-	//char	**fd_to_write;
-	//char	**fd_to_appwrite;
 	t_inqu	**redir_output;
 	t_inqu	**redir_input;
 	char	is_redirecting;
 	char	is_piping;
+	char	is_newline;
 	int		*pip_in;
 	int		*pip_out;
-	char	is_appending;
 	t_list	*func_dict;
 	t_list	*env;
 	t_list	*cmds;

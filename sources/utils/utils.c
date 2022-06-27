@@ -6,7 +6,11 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 16:16:41 by atifany           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2022/06/26 21:11:16 by alex             ###   ########.fr       */
+=======
+/*   Updated: 2022/06/27 13:08:52 by atifany          ###   ########.fr       */
+>>>>>>> 2639cc4bbce6163dfcd34cacaaa8f4d2a44c8ec7
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +18,7 @@
 
 void	print_error(t_line *line)
 {
-	int	error;
+	int		error;
 	char	*errors[] = {"", "pwd: too many arguments",
 	"Error: getcwd() failed",
 	"cd: too many arguments",
@@ -33,7 +37,8 @@ void	print_error(t_line *line)
 		dict_set(&(line->env), ft_strdup("?"), ft_itoa(WEXITSTATUS(error)));
 }
 
-int	ft_strcmp(char *str1, char *str2){
+int	ft_strcmp(char *str1, char *str2)
+{
 	int	i;
 
 	if (!str1)
@@ -50,22 +55,22 @@ int	ft_strcmp(char *str1, char *str2){
 	return (str1[i] - str2[i]);
 }
 
-int arr_len(void **array)
+int	arr_len(void **array)
 {
 	int	i;
 
 	i = 0;
 	while (array[i])
 		i++;
-	return i;
+	return (i);
 }
 
 void	free_array(char **array)
 {
 	int	i;
+
 	if (array == NULL)
 		return ;
-
 	i = 0;
 	while (array[i])
 	{
@@ -78,9 +83,9 @@ void	free_array(char **array)
 void	free_struct_array(t_inqu **array)
 {
 	int	i;
+
 	if (array == NULL)
 		return ;
-
 	i = 0;
 	while (array[i])
 	{
@@ -91,9 +96,14 @@ void	free_struct_array(t_inqu **array)
 	free(array);
 }
 
-int count(char *arr, char s)
+int	count(char *arr, char s)
 {
+<<<<<<< HEAD
 	int c;
+=======
+	int	c;
+
+>>>>>>> 2639cc4bbce6163dfcd34cacaaa8f4d2a44c8ec7
 	c = 0;
 	while (*arr)
 	{
@@ -101,13 +111,12 @@ int count(char *arr, char s)
 			c++;
 		arr++;
 	}
-	return c;
+	return (c);
 }
 
 int	ft_to_positive(int n)
 {
-	if (n < 0){
+	if (n < 0)
 		n = 0;
-	}
 	return (n);
 }

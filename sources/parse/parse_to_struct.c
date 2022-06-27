@@ -6,7 +6,11 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 20:01:59 by atifany           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2022/06/26 20:23:24 by alex             ###   ########.fr       */
+=======
+/*   Updated: 2022/06/27 12:54:00 by atifany          ###   ########.fr       */
+>>>>>>> 2639cc4bbce6163dfcd34cacaaa8f4d2a44c8ec7
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +19,7 @@
 // // tmp func. Delete it later.
 // void	temp_print_struct(t_line *line){
 // 	int i;
-//
+
 // 	printf("command: %s\n", line->command);
 // 	printf("args: ");
 // 	i = 0;
@@ -60,7 +64,7 @@ static int	iterate_line(char **exec_line, void *arr, t_transfer mods,
 				ret++;
 			if (mods.mode == COLLECT)
 				add(arr, exec_line[i],
-				identify_arrow(exec_line[ft_to_positive(i - 1)]));
+					identify_arrow(exec_line[ft_to_positive(i - 1)]));
 		}
 		i++;
 	}
@@ -97,10 +101,10 @@ static int	fill_struct(t_line *line, char **exec_line)
 	return (total_shift);
 }
 
-void quote_handler(char **args)
+void	quote_handler(char **args)
 {
-	int i;
-	char *t;
+	int		i;
+	char	*t;
 
 	i = 0;
 	while (args[i])
@@ -115,7 +119,8 @@ void quote_handler(char **args)
 	}
 }
 
-// Second if means find_* funcs stoped at pipe, not a EOL
+// Second if clause means find_* funcs stoped at pipe, not a EOL
+// use to debug: temp_print_struct(line);
 int	parse_line_to_struct(t_line *line, char **exec_line)
 {
 	int	total_shift;
@@ -133,6 +138,5 @@ int	parse_line_to_struct(t_line *line, char **exec_line)
 	}
 	if (*(line->redir_output))
 		line->is_redirecting = TRUE;
-	//temp_print_struct(line);
 	return (total_shift);
 }
