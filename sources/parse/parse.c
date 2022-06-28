@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/26 15:01:28 by alex              #+#    #+#             */
-/*   Updated: 2022/06/28 13:13:58 by alex             ###   ########.fr       */
+/*   Updated: 2022/06/28 13:28:53 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ static void	copy_symbol(char **arr, int *j, char *str, int insquotes)
 		**arr = -37;
 		(*arr)++;
 		(*j)++;
-		while (ft_isalnum(str[*j]) || str[*j] == '_')
+		while (ft_isalnum(str[*j]) || str[*j] == '_' || str[*j] == '?')
 		{
-			**arr = -str[*j];	
+			**arr = -str[*j];
 			(*j)++;
 			(*arr)++;
 		}
@@ -30,9 +30,16 @@ static void	copy_symbol(char **arr, int *j, char *str, int insquotes)
 	else
 	{
 		**(arr) = str[*j];
-		(*arr)++;	
+		(*arr)++;
 	}
 }
+
+static void skip_spaces(char *input_str, int *j)
+{
+	while (input_str[*j] == ' ')
+		(*j)++;
+}
+
 static int	writer(char *input_str,	char **arr)
 {
 	int		i;
@@ -43,8 +50,7 @@ static int	writer(char *input_str,	char **arr)
 	j = 0;
 	while (input_str[j] != 0)
 	{
-		while (input_str[j] == ' ')
-			j++;
+		skip_spaces(input_str, &j);
 		while (input_str[j] != ' ' && input_str[j] != 0)
 		{	
 			if (input_str[j] == '"' || input_str[j] == '\'')
@@ -52,19 +58,15 @@ static int	writer(char *input_str,	char **arr)
 				c = input_str[j];
 				while (++j && input_str[j] && input_str[j] != c)
 					copy_symbol(&(arr[i]), &j, input_str, c == '\'');
-				j++;
 			}
 			else
-			{
 				copy_symbol(&(arr[i]), &j, input_str, 0);
-				j++;
-			}
-		}
-		while (input_str[j] == ' ')
 			j++;
+		}
+		skip_spaces(input_str, &j);
 		i++;
 	}
-	return i;
+	return (i);
 }
 
 static int	size_counter(char *input_str, int *arr)
@@ -77,8 +79,7 @@ static int	size_counter(char *input_str, int *arr)
 	j = 0;
 	while (input_str[j] != 0)
 	{
-		while (input_str[j] == ' ')
-			j++;
+		skip_spaces(input_str, &j);
 		while (input_str[j] != ' ' && input_str[j] != 0)
 		{	
 			if (input_str[j] == '"' || input_str[j] == '\'')
@@ -86,18 +87,15 @@ static int	size_counter(char *input_str, int *arr)
 				c = input_str[j];
 				while (++j && input_str[j] && input_str[j] != c)
 					((int *)(arr))[i]++;
-				j++;
 			}
-			else{
+			else
 				((int *)(arr))[i]++;
-				j++;
-			}
-		}
-		while (input_str[j] == ' ')
 			j++;
+		}
+		skip_spaces(input_str, &j);
 		i++; 
 	}
-	return i;
+	return (i);
 }
 
 char	**parse_to_array(char *input_str)
