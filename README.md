@@ -10,10 +10,9 @@ Built-in functions such as:
  - env
  - export
  - unset
- - (non mandatory) cat (only reads given files)
- It is still possible to use /bin/cat
-Connect several commands with a pipe
- Example: "simple command | simple command | ..."
+ - (non mandatory) cat (only reads given files)\n
+It is still possible to use /bin/cat\n
+Connect several commands with a pipe.
+Example: "simple command | simple command | ...".
 It will transfer output of the command to the left of the pipe
-as the input of the command to right of the pipe.
- - 
+as the input of the command to right of the pipe.\n
