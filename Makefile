@@ -3,6 +3,7 @@ NAME = minishell
 
 # sources
 _SRC =	builtins/commands.c			\
+		builtins/commands_1.c		\
 		core/core.c					\
 		core/processing.c			\
 		envs/environment.c			\
