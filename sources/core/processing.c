@@ -22,6 +22,12 @@ static int	pre_handle(t_line *line, char **exec_line)
 
 	is_pipe_in_opened = open_pipe_in(line, OPEN);
 	shift = parse_line_to_struct(line, exec_line);
+	if (shift < 0)
+	{
+		printf("Error: invalid parse instruction\n");
+		dict_set(&(line->env), ft_strdup("?"), ft_strdup("-12"));
+		return (shift);
+	}
 	is_pipe_in_opened = open_pipe_in(line, APPEND);
 	if (*(line->redir_input))
 		cat_to_pipe_in(line);
@@ -52,6 +58,8 @@ static char	iterate_exec_line(char **exec_line, t_line *line)
 	while (*exec_line)
 	{
 		shift = pre_handle(line, exec_line);
+		if (shift < 0)
+			break ;
 		total_shift += shift;
 		exec_line += shift;
 		if (execute_it(line))

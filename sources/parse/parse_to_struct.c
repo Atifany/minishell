@@ -1,33 +1,33 @@
 #include "../_headers/minishell.h"
 
-// // tmp func. Delete it later.
-// void	temp_print_struct(t_line *line){
-// 	int i;
+// tmp func. Delete it later.
+void	temp_print_struct(t_line *line){
+	int i;
 
-// 	printf("command: %s\n", line->command);
-// 	printf("args: ");
-// 	i = 0;
-// 	while (line->args[i]){
-// 		printf("%s ", line->args[i++]);
-// 	}
-// 	printf("\n");
-// 	printf("writes: ");
-// 	i = 0;
-// 	while (line->redir_output[i]){
-// 		printf(" |%s:", line->redir_output[i]->arg);
-// 		printf("%d|", line->redir_output[i]->mode);
-// 		i++;
-// 	}
-// 	printf("\n");
-// 	printf("reads:");
-// 	i = 0;
-// 	while (line->redir_input[i]){
-// 		printf(" |%s:", line->redir_input[i]->arg);
-// 		printf("%d|", line->redir_input[i]->mode);
-// 		i++;
-// 	}
-// 	printf("\n");
-// }
+	printf("command: %s\n", line->command);
+	printf("args: ");
+	i = 0;
+	while (line->args[i]){
+		printf("%s ", line->args[i++]);
+	}
+	printf("\n");
+	printf("writes: ");
+	i = 0;
+	while (line->redir_output[i]){
+		printf(" |%s:", line->redir_output[i]->arg);
+		printf("%d|", line->redir_output[i]->mode);
+		i++;
+	}
+	printf("\n");
+	printf("reads:");
+	i = 0;
+	while (line->redir_input[i]){
+		printf(" |%s:", line->redir_input[i]->arg);
+		printf("%d|", line->redir_input[i]->mode);
+		i++;
+	}
+	printf("\n");
+}
 
 static int	iterate_line(char **exec_line, void *arr, t_transfer mods,
 	void (*add)(void *, char *, char)){
@@ -68,11 +68,31 @@ static int	parse(char **exec_line, void *arr,
 	return (ret);
 }
 
+static int	check_parse_error(char **exec_line)
+{
+	char	ret_identify;
+	int		i;
+
+	i = 0;
+	while (exec_line[i])
+	{
+		if (!ft_strcmp(exec_line[i], "|"))
+			break ;
+		ret_identify = identify(exec_line, i);
+		if (ret_identify == ARROW)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 // multyplied total_shift by two because "> keks.txt" (arrow present)
 static int	fill_struct(t_line *line, char **exec_line)
 {
 	int	total_shift;
 
+	if (check_parse_error(exec_line))
+		return (-1);
 	total_shift = parse(exec_line, &(line->args),
 			(t_methods){&init_charpp, &add_to_charpp}, ARG);
 	variable_handler((line->args), &(line->env));
@@ -112,6 +132,8 @@ int	parse_line_to_struct(t_line *line, char **exec_line)
 
 	refresh_pip_out(line);
 	total_shift = fill_struct(line, exec_line);
+	if (total_shift < 0)
+		return (total_shift);
 	quote_handler(line->args);
 	line->is_redirecting = FALSE;
 	line->is_piping = FALSE;
@@ -123,5 +145,6 @@ int	parse_line_to_struct(t_line *line, char **exec_line)
 	}
 	if (*(line->redir_output))
 		line->is_redirecting = TRUE;
+	temp_print_struct(line);
 	return (total_shift);
 }

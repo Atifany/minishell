@@ -24,6 +24,7 @@ char	ft_switch(t_line *line)
 	return (0);
 }
 
+// ^C must end reading from stdin and stop all execution
 void	sighandler(int sig)
 {
 	(void)sig;
@@ -34,9 +35,10 @@ void	sighandler(int sig)
 	}
 	else
 	{
-		rl_on_new_line();
+		write(1, "\0", 1);
 		rl_replace_line("", 0);
-		printf("\n");
+		rl_on_new_line();
+		write(1, "\n", 1);
 		rl_redisplay();
 	}
 }

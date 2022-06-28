@@ -44,6 +44,8 @@ char	identify(char **exec_line, int i)
 			|| !ft_strcmp(exec_line[i - 1], "<<"))
 			return (FD_READ);
 	}
+	if (is_arrow(exec_line[i]) && is_arrow(exec_line[i - 1]))
+		return (ARROW);
 	return (ERROR);
 }
 
