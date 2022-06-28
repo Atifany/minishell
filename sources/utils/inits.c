@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   inits.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 13:01:28 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/27 13:04:53 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/28 13:13:34 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,7 @@ void	clear_struct(t_line *line)
 
 void	init_env(t_line *line)
 {
-<<<<<<< HEAD
-	int i;
-=======
 	int	i;
->>>>>>> 2639cc4bbce6163dfcd34cacaaa8f4d2a44c8ec7
 
 	i = 0;
 	line->env = NULL;

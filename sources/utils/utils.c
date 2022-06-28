@@ -6,11 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 16:16:41 by atifany           #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2022/06/26 21:11:16 by alex             ###   ########.fr       */
-=======
-/*   Updated: 2022/06/27 13:08:52 by atifany          ###   ########.fr       */
->>>>>>> 2639cc4bbce6163dfcd34cacaaa8f4d2a44c8ec7
+/*   Updated: 2022/06/28 13:13:25 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +80,6 @@ void	free_struct_array(t_inqu **array)
 {
 	int	i;
 
-	if (array == NULL)
-		return ;
-	i = 0;
 	while (array[i])
 	{
 		free(array[i]->arg);
@@ -98,12 +91,8 @@ void	free_struct_array(t_inqu **array)
 
 int	count(char *arr, char s)
 {
-<<<<<<< HEAD
-	int c;
-=======
 	int	c;
 
->>>>>>> 2639cc4bbce6163dfcd34cacaaa8f4d2a44c8ec7
 	c = 0;
 	while (*arr)
 	{
