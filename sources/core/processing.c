@@ -1,3 +1,18 @@
+<<<<<<< HEAD
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   processing.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/27 12:46:28 by atifany           #+#    #+#             */
+/*   Updated: 2022/06/28 13:49:12 by alex             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+=======
+>>>>>>> 17f67157d6a51b1e984e2c7eddcaf4473b94660a
 #include "../_headers/minishell.h"
 
 static char	*take_input(void)
@@ -22,7 +37,6 @@ static int	pre_handle(t_line *line, char **exec_line)
 
 	is_pipe_in_opened = open_pipe_in(line, OPEN);
 	shift = parse_line_to_struct(line, exec_line);
-	variable_handler((line->args), &(line->env));
 	is_pipe_in_opened = open_pipe_in(line, APPEND);
 	if (*(line->redir_input))
 		cat_to_pipe_in(line);

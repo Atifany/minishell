@@ -1,3 +1,18 @@
+<<<<<<< HEAD
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_to_struct.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/30 20:01:59 by atifany           #+#    #+#             */
+/*   Updated: 2022/06/28 13:47:37 by alex             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+=======
+>>>>>>> 17f67157d6a51b1e984e2c7eddcaf4473b94660a
 #include "../_headers/minishell.h"
 
 // // tmp func. Delete it later.
@@ -75,6 +90,7 @@ static int	fill_struct(t_line *line, char **exec_line)
 
 	total_shift = parse(exec_line, &(line->args),
 			(t_methods){&init_charpp, &add_to_charpp}, ARG);
+	variable_handler((line->args), &(line->env));
 	if (line->command)
 		free(line->command);
 	line->command = ft_strdup(line->args[0]);

@@ -1,3 +1,18 @@
+<<<<<<< HEAD
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/23 16:16:41 by atifany           #+#    #+#             */
+/*   Updated: 2022/06/28 13:42:25 by alex             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+=======
+>>>>>>> 17f67157d6a51b1e984e2c7eddcaf4473b94660a
 #include "../_headers/minishell.h"
 
 void	print_error(t_line *line)
@@ -66,20 +81,20 @@ void	free_array(char **array)
 	free(array);
 }
 
-void	free_struct_array(t_inqu **array)
+void    free_struct_array(t_inqu **array)
 {
-	int	i;
+    int    i;
 
-	if (array == NULL)
-		return ;
-	i = 0;
-	while (array[i])
-	{
-		free(array[i]->arg);
-		free(array[i]);
-		i++;
-	}
-	free(array);
+    if (array == NULL)
+        return ;
+    i = 0;
+    while (array[i])
+    {
+        free(array[i]->arg);
+        free(array[i]);
+        i++;
+    }
+    free(array);
 }
 
 int	count(char *arr, char s)
