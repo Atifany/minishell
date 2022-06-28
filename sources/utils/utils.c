@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 16:16:41 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/27 13:08:52 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/28 13:25:04 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,9 @@ void	print_error(t_line *line)
 	"export: incorrect argument",
 	"env: too many arguments",
 	"command is not recognized",
-	"no such file or directory"};
+	"Error: no such file or directory",
+	"Warning: can not open file",
+	"cat: no files specified"};
 
 	error = ft_atoi(dict_get(&(line->env), "?"));
 	if (error < 0)

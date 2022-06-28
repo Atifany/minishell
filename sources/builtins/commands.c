@@ -143,15 +143,15 @@ void	execute_cat(t_line *line) // ADD ERROR AMANAGMENT
 	char	*str;
 	int		fd;
 
-	if (!line->args[0] || !line->args[1]){
-		return dict_set(&(line->env), ft_strdup("?"), ft_strdup("0"));
-	}
-	while (line->args[i]){
+	if (!(line->args[1]))
+		return dict_set(&(line->env), ft_strdup("?"), ft_strdup("-10"));
+	while (line->args[i])
+	{
 		fd = open(line->args[i], O_CREAT | O_RDWR, 0666);
-		if (fd < 0){
-			return dict_set(&(line->env), ft_strdup("?"), ft_strdup("0"));
-		}
-		while (ft_cat(fd, &str) > 0){
+		if (fd < 0)
+			return dict_set(&(line->env), ft_strdup("?"), ft_strdup("-9"));
+		while (ft_cat(fd, &str) > 0)
+		{
 			write(1, str, ft_strlen(str));
 			free(str);
 			str = NULL;
