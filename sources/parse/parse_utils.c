@@ -60,3 +60,21 @@ char	identify_arrow(char *arrow)
 	else
 		return (FD_APREAD);
 }
+
+void	quote_handler(char **args)
+{
+	int		i;
+	char	*t;
+
+	i = 0;
+	while (args[i])
+	{
+		if (args[i][0] == '\'')
+		{
+			t = ft_substr(args[i], 1, ft_strlen(args[i]) - 1);
+			free(args[i]);
+			args[i] = t;
+		}
+		i++;
+	}
+}

@@ -24,7 +24,7 @@ char	open_pipe_in(t_line *line, char mode)
 	return (is_pipe_in_opened);
 }
 
-void	read_file_to_pipe(t_line *line, char *filename)
+static void	read_file_to_pipe(t_line *line, char *filename)
 {
 	int		fd;
 	char	*str;
@@ -44,7 +44,7 @@ void	read_file_to_pipe(t_line *line, char *filename)
 	close(fd);
 }
 
-void	read_term_to_pipe(t_line *line, char *delimiter)
+static void	read_term_to_pipe(t_line *line, char *delimiter)
 {
 	char	*str;
 

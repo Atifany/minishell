@@ -1,33 +1,33 @@
 #include "../_headers/minishell.h"
 
-// tmp func. Delete it later.
-void	temp_print_struct(t_line *line){
-	int i;
+// // tmp func. Delete it later.
+// void	temp_print_struct(t_line *line){
+// 	int i;
 
-	printf("command: %s\n", line->command);
-	printf("args: ");
-	i = 0;
-	while (line->args[i]){
-		printf("%s ", line->args[i++]);
-	}
-	printf("\n");
-	printf("writes: ");
-	i = 0;
-	while (line->redir_output[i]){
-		printf(" |%s:", line->redir_output[i]->arg);
-		printf("%d|", line->redir_output[i]->mode);
-		i++;
-	}
-	printf("\n");
-	printf("reads:");
-	i = 0;
-	while (line->redir_input[i]){
-		printf(" |%s:", line->redir_input[i]->arg);
-		printf("%d|", line->redir_input[i]->mode);
-		i++;
-	}
-	printf("\n");
-}
+// 	printf("command: %s\n", line->command);
+// 	printf("args: ");
+// 	i = 0;
+// 	while (line->args[i]){
+// 		printf("%s ", line->args[i++]);
+// 	}
+// 	printf("\n");
+// 	printf("writes: ");
+// 	i = 0;
+// 	while (line->redir_output[i]){
+// 		printf(" |%s:", line->redir_output[i]->arg);
+// 		printf("%d|", line->redir_output[i]->mode);
+// 		i++;
+// 	}
+// 	printf("\n");
+// 	printf("reads:");
+// 	i = 0;
+// 	while (line->redir_input[i]){
+// 		printf(" |%s:", line->redir_input[i]->arg);
+// 		printf("%d|", line->redir_input[i]->mode);
+// 		i++;
+// 	}
+// 	printf("\n");
+// }
 
 static int	iterate_line(char **exec_line, void *arr, t_transfer mods,
 	void (*add)(void *, char *, char)){
@@ -106,24 +106,6 @@ static int	fill_struct(t_line *line, char **exec_line)
 	return (total_shift);
 }
 
-void	quote_handler(char **args)
-{
-	int		i;
-	char	*t;
-
-	i = 0;
-	while (args[i])
-	{
-		if (args[i][0] == '\'')
-		{
-			t = ft_substr(args[i], 1, ft_strlen(args[i]) - 1);
-			free(args[i]);
-			args[i] = t;
-		}
-		i++;
-	}
-}
-
 // Second if clause means find_* funcs stoped at pipe, not a EOL
 // use to debug: temp_print_struct(line);
 int	parse_line_to_struct(t_line *line, char **exec_line)
@@ -145,6 +127,5 @@ int	parse_line_to_struct(t_line *line, char **exec_line)
 	}
 	if (*(line->redir_output))
 		line->is_redirecting = TRUE;
-	temp_print_struct(line);
 	return (total_shift);
 }
