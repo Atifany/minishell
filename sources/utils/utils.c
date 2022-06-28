@@ -6,13 +6,14 @@ void	print_error(t_line *line)
 	char	*errors[] = {"", "pwd: too many arguments",
 	"Error: getcwd() failed",
 	"cd: too many arguments",
-	"Error: %s does not exist or there is not enough memory",
+	"Error: specified path does not exist",
 	"export: incorrect argument",
 	"env: too many arguments",
 	"command is not recognized",
 	"Error: no such file or directory",
 	"Warning: can not open file",
-	"cat: no files specified"};
+	"cat: no files specified",
+	"unset: no files specified"};
 
 	error = ft_atoi(dict_get(&(line->env), "?"));
 	if (error < 0)
@@ -32,10 +33,10 @@ int	ft_strcmp(char *str1, char *str2)
 	if (!str2)
 		str2 = STR_EMPTY;
 	i = 0;
-	while (str1[i] && str2[i]){
-		if (str1[i] != str2[i]){
+	while (str1[i] && str2[i])
+	{
+		if (str1[i] != str2[i])
 			return (str1[i] - str2[i]);
-		}
 		i++;
 	}
 	return (str1[i] - str2[i]);
@@ -49,37 +50,6 @@ int	arr_len(void **array)
 	while (array[i])
 		i++;
 	return (i);
-}
-
-void	free_array(char **array)
-{
-	int	i;
-
-	if (array == NULL)
-		return ;
-	i = 0;
-	while (array[i])
-	{
-		free(array[i]);
-		i++;
-	}
-	free(array);
-}
-
-void    free_struct_array(t_inqu **array)
-{
-    int    i;
-
-    if (array == NULL)
-        return ;
-    i = 0;
-    while (array[i])
-    {
-        free(array[i]->arg);
-        free(array[i]);
-        i++;
-    }
-    free(array);
 }
 
 int	count(char *arr, char s)

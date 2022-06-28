@@ -29,7 +29,8 @@ void	execute_env(t_line *line)
 	return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("0")));
 }
 
-void	execute_export(t_line *line)// dobavit oshibku soderjit v imeni zapreshennie v rf simvoli
+// dobavit oshibku soderjit v imeni zapreshennie v rf simvoli
+void	execute_export(t_line *line)
 {
 	char	**t;
 	int		i;
@@ -66,7 +67,7 @@ void	execute_cat(t_line *line)
 	{
 		fd = open(line->args[i], O_CREAT | O_RDWR, 0666);
 		if (fd < 0)
-			return dict_set(&(line->env), ft_strdup("?"), ft_strdup("-9"));
+			return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-9")));
 		while (ft_cat(fd, &str) > 0)
 		{
 			write(1, str, ft_strlen(str));
@@ -74,6 +75,21 @@ void	execute_cat(t_line *line)
 			str = NULL;
 		}
 		close(fd);
+		i++;
+	}
+	return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("0")));
+}
+
+void	execute_unset(t_line *line)
+{
+	int	i;
+
+	if (!(line->args[1]))
+		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-11")));
+	i = 1;
+	while (line->args[i])
+	{
+		dict_delone(&(line->env), line->args[i]);
 		i++;
 	}
 	return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("0")));

@@ -150,6 +150,7 @@ void	execute_echo(t_line	*line);
 void	execute_env(t_line *line);
 void	execute_export(t_line *line);
 void	execute_cat(t_line *line);
+void	execute_unset(t_line *line);
 
 typedef struct s_func
 {
@@ -171,6 +172,7 @@ int		count(char *arr, char s);
 void	*dict_get(t_list **lst, char *key);
 void	dict_set(t_list **lst, char *key, void *value);
 void	dict_del(t_list **lst);
+void	dict_delone(t_list **lst, char *key);
 void	dict_add(t_list **lst, char *key, void *value);
 
 //env

@@ -26,12 +26,28 @@ void	execute_file(t_line *line)
 	return (dict_set(&(line->env), ft_strdup("?"), ft_itoa(error)));
 }
 
+static void	cd_spec_symbol_handler(t_line *line, char **path,
+	char *prev_path)
+{
+	char	*buf;
+
+	if (*(line->args[1]) == '~')
+	{
+		buf = ft_strdup((char *)dict_get(&(line->env), "HOME"));
+		*path = gnl_join(&buf, ft_strdup(line->args[1] + 1),
+				ft_strlen(line->args[1] + 1));
+	}
+	else if (!ft_strcmp(line->args[1], "-"))
+		*path = ft_strdup(prev_path);
+	else
+		*path = ft_strdup(line->args[1]);
+}
+
 void	execute_cd(t_line *line)
 {
 	static char	*prev_path = NULL;
 	int			dir;
 	char		*path;
-	char		*buf;
 
 	if (line->args[1] && line->args[2])
 		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-3")));
@@ -40,18 +56,7 @@ void	execute_cd(t_line *line)
 	if (!line->args[1])
 		path = ft_strdup((char *)dict_get(&(line->env), "HOME"));
 	else
-	{
-		if (*(line->args[1]) == '~')
-		{
-			buf = ft_strdup((char *)dict_get(&(line->env), "HOME"));
-			path = gnl_join(&buf, ft_strdup(line->args[1] + 1),
-					ft_strlen(line->args[1] + 1));
-		}
-		else if (!ft_strcmp(line->args[1], "-"))
-			path = ft_strdup(prev_path);
-		else
-			path = ft_strdup(line->args[1]);
-	}
+		cd_spec_symbol_handler(line, &path, prev_path);
 	free(prev_path);
 	prev_path = getcwd(NULL, 0);
 	dir = chdir(path);

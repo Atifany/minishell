@@ -20,6 +20,7 @@ _SRC =	builtins/commands.c			\
 		utils/get_next_line.c		\
 		utils/inits.c				\
 		utils/utils.c				\
+		utils/utils_free.c			\
 		
 SRC_DIR = sources
 SRC = $(_SRC:%=$(SRC_DIR)/%)

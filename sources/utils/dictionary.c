@@ -72,7 +72,7 @@ void	dict_delone(t_list **lst, char *key)
 	prev = NULL;
 	del = NULL;
 	next = NULL;
-	while (lst && !ft_strcmp(((t_kv *)(*lst)->content)->key, key))
+	while (lst && ft_strcmp(((t_kv *)(*lst)->content)->key, key))
 	{
 		if ((*lst)->next && !ft_strcmp(((t_kv *)(*lst)->next->content)->key, key))
 			prev = *lst;
@@ -92,5 +92,7 @@ void	dict_delone(t_list **lst, char *key)
 		else
 			start = next;	
 	}	
+	else if (prev)
+		prev->next = NULL;
 	*lst = start;
 }

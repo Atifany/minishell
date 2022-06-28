@@ -34,7 +34,8 @@ void	init_env(t_line *line)
 	"PATH", "DBUS_SESSION_BUS_ADDRESS", "UID", "LC_NUMERIC", NULL};
 	while (names[i])
 	{
-		dict_add(&(line->env), ft_strdup(names[i]), ft_strdup(getenv(names[i])));
+		dict_add(&(line->env),
+			ft_strdup(names[i]), ft_strdup(getenv(names[i])));
 		i++;
 	}
 	dict_add(&(line->env), ft_strdup("?"), ft_strdup("0"));
@@ -56,7 +57,7 @@ void	init_struct(t_line *line)
 void	func_dict_init(t_line *line)
 {
 	line->func_dict = NULL;
-
+	
 	t_func *pwd;
 	pwd = malloc(sizeof(t_func));
 	pwd->foo = execute_pwd;
@@ -86,5 +87,10 @@ void	func_dict_init(t_line *line)
 	cat = malloc(sizeof(t_func));
 	cat->foo = execute_cat;
 	dict_add(&(line->func_dict), ft_strdup("cat"), cat);
+
+	t_func *unset;
+	unset = malloc(sizeof(t_func));
+	unset->foo = execute_unset;
+	dict_add(&(line->func_dict), ft_strdup("unset"), unset);
 }
 
