@@ -22,7 +22,7 @@ static void	copy_symbol(char **arr, int *j, char *str, int insquotes)
 	}
 }
 
-static void skip_spaces(char *input_str, int *j)
+static void	skip_spaces(char *input_str, int *j)
 {
 	while (input_str[*j] == ' ')
 		(*j)++;
@@ -81,7 +81,7 @@ static int	size_counter(char *input_str, int *arr)
 			j++;
 		}
 		skip_spaces(input_str, &j);
-		i++; 
+		i++;
 	}
 	return (i);
 }
@@ -101,6 +101,6 @@ char	**parse_to_array(char *input_str)
 	i = writer(input_str, arr);
 	while (--i >= 0)
 		arr[i] = arr[i] - len_arr[i];
-	free(len_arr);	
+	free(len_arr);
 	return (arr);
 }

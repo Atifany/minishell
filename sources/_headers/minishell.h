@@ -88,7 +88,6 @@ typedef struct s_input_queue
 // is_newline is set to TRUE each readline.
 typedef struct s_line
 {
-	// better sort it with "union"
 	char	*command;
 	char	**args;
 	t_inqu	**redir_output;
@@ -163,7 +162,6 @@ char	**parse_to_array(char *input_str);
 
 // parse utils
 int		arrlen(char **arr);
-int		contains(char *arr);
 char	**dropnulls(char **arr, int len);
 void	dropquotes(char **arr);
 char	*ft_strj(char *s1, char *s2);
@@ -173,6 +171,7 @@ int		count(char *arr, char s);
 void	*dict_get(t_list **lst, char *key);
 void	dict_set(t_list **lst, char *key, void *value);
 void	dict_del(t_list **lst);
+void	dict_delone(t_list **lst, char *key);
 void	dict_add(t_list **lst, char *key, void *value);
 
 //env
