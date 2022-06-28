@@ -30,9 +30,20 @@ static int	pre_handle(t_line *line, char **exec_line)
 	return (shift);
 }
 
+static int	execute_it(t_line *line)
+{
+	int	ret;
+
+	if (line->is_redirecting)
+		redirect_output(line, OPEN);
+	ret = ft_switch(line);
+	if (line->is_redirecting)
+		redirect_output(line, CLOSE);
+	return (ret);
+}
+
 static char	iterate_exec_line(char **exec_line, t_line *line)
 {
-	char	ret;
 	int		total_shift;
 	int		shift;
 
@@ -43,18 +54,13 @@ static char	iterate_exec_line(char **exec_line, t_line *line)
 		shift = pre_handle(line, exec_line);
 		total_shift += shift;
 		exec_line += shift;
-		if (line->is_redirecting)
-			redirect_output(line, OPEN);
-		ret = ft_switch(line);
-		if (line->is_redirecting)
-			redirect_output(line, CLOSE);
-		if (ret)
+		if (execute_it(line))
 		{
 			open_pipe_in(line, CLOSE);
 			return (1);
 		}
 		if (((char *)(dict_get(&(line->env), "?")))[0] != '0')
-			print_error(line);			
+			print_error(line);
 	}
 	exec_line -= total_shift;
 	open_pipe_in(line, CLOSE);

@@ -1,13 +1,13 @@
 #include "../_headers/minishell.h"
 
-static void decode(char **str)
+static void	decode(char **str)
 {
-	int  i;
+	int	i;
 
 	i = 0;
 	while ((*str)[i])
 	{
-		(*str)[i] = -(*str)[i]; 
+		(*str)[i] = -(*str)[i];
 		i++;
 	}
 }
@@ -29,7 +29,6 @@ static void	replace_envs(char **strs, t_list **env, int starts_with_dollar)
 				namelen++;
 			name = ft_substr(strs[i], 0, namelen);
 			decode(&name);
-
 			t = ft_strdup(dict_get(env, name));
 			t = gnl_join(&t, strs[i] + namelen, ft_strlen(strs[i] + namelen));
 			free(name);
@@ -66,7 +65,7 @@ void	variable_handler(char **args, t_list **env)
 {
 	char	**splitted;
 	int		i;
-		
+
 	i = 0;
 	while (args[i])
 	{
