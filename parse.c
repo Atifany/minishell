@@ -6,43 +6,35 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/26 15:01:28 by alex              #+#    #+#             */
-/*   Updated: 2022/06/27 13:31:48 by alex             ###   ########.fr       */
+/*   Updated: 2022/06/26 19:17:54 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../_headers/minishell.h"
 
-static void	copy_symbol(char **arr, int *j, char *str, int insquotes)
+static void	copy_symbol(void *arr, int i, int l, char str, int insquotes)
 {
-	if (!insquotes && str[*j] == '$')
-	{
-		**arr = -37;
-		(*arr)++;
-		(*j)++;
-		while (ft_isalnum(str[*j]) || str[*j] == '_')
-		{
-			**arr = -str[*j];	
-			(*j)++;
-			(*arr)++;
-		}
-		(*j)--;
-	}
+	if (!insquotes && str == '$')
+		(((char **)(arr))[i])[l] = -50;
 	else
-	{
-		**(arr) = str[*j];
-		(*arr)++;	
-	}
+		(((char **)(arr))[i])[l] = str;
+
 }
-static int	writer(char *input_str,	char **arr)
+
+static int	writer(char *input_str,	char **arr, t_list **env)
 {
 	int		i;
 	int		j;
+	int		l;
 	char	c;
+	char	**t;	
 
 	i = 0;
 	j = 0;
+	l = 0;
 	while (input_str[j] != 0)
 	{
+		t = &((char **)arr)[i];
 		while (input_str[j] == ' ')
 			j++;
 		while (input_str[j] != ' ' && input_str[j] != 0)
@@ -51,15 +43,14 @@ static int	writer(char *input_str,	char **arr)
 			{
 				c = input_str[j];
 				while (++j && input_str[j] && input_str[j] != c)
-					copy_symbol(&(arr[i]), &j, input_str, c == '\'');
+					copy_symbol(arr, i, l++, input_str[j], c == '\'');
 				j++;
+				variable_handler(t, env);
 			}
 			else
-			{
-				copy_symbol(&(arr[i]), &j, input_str, 0);
-				j++;
-			}
+				copy_symbol(arr, i, input_str[j++], 0);
 		}
+		variable_handler(t, env);
 		while (input_str[j] == ' ')
 			j++;
 		i++;
@@ -88,10 +79,9 @@ static int	size_counter(char *input_str, int *arr)
 					((int *)(arr))[i]++;
 				j++;
 			}
-			else{
+			else
 				((int *)(arr))[i]++;
-				j++;
-			}
+			j++;
 		}
 		while (input_str[j] == ' ')
 			j++;
@@ -100,7 +90,7 @@ static int	size_counter(char *input_str, int *arr)
 	return i;
 }
 
-char	**parse_to_array(char *input_str)
+char	**parse_to_array(char *input_str, t_list **env)
 {
 	char	**arr;
 	int		*len_arr;
@@ -112,9 +102,11 @@ char	**parse_to_array(char *input_str)
 	arr[i] = NULL;
 	while (--i >= 0)
 		arr[i] = calloc(len_arr[i] + 1, 1);
-	i = writer(input_str, arr);
+	i = writer(input_str, arr, env);
 	while (--i >= 0)
 		arr[i] = arr[i] - len_arr[i];
-	free(len_arr);	
+	free(len_arr);
+
+
 	return (arr);
 }

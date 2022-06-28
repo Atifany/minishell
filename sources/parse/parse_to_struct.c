@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 20:01:59 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/27 12:54:00 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/28 13:34:58 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,6 @@ int	parse_line_to_struct(t_line *line, char **exec_line)
 
 	refresh_pip_out(line);
 	total_shift = fill_struct(line, exec_line);
-	variable_handler(line->args, &(line->env));
 	quote_handler(line->args);
 	line->is_redirecting = FALSE;
 	line->is_piping = FALSE;

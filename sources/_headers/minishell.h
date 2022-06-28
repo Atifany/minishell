@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 15:47:55 by atifany           #+#    #+#             */
-/*   Updated: 2022/06/27 12:56:31 by atifany          ###   ########.fr       */
+/*   Updated: 2022/06/28 13:34:35 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,8 +187,8 @@ void	dict_del(t_list **lst);
 void	dict_add(t_list **lst, char *key, void *value);
 
 //env
-char	*get_env(t_list **env, char *key);
-void	variable_handler(char **args, t_list **env);
+//char	*get_env(t_list **env, char *key);
+void	variable_handler(char **arr, t_list **env);
 
 //colors
 # define BLK "\e[0;30m"
