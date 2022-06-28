@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 16:16:41 by atifany           #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2022/06/28 13:31:19 by alex             ###   ########.fr       */
-=======
-/*   Updated: 2022/06/28 13:32:47 by atifany          ###   ########.fr       */
->>>>>>> ef42ed9a0ddff7ff7766f58dcfd2ca0a20a50317
+/*   Updated: 2022/06/28 13:42:25 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,17 +78,20 @@ void	free_array(char **array)
 	free(array);
 }
 
-void	free_struct_array(t_inqu **array)
+void    free_struct_array(t_inqu **array)
 {
-	int	i;
+    int    i;
 
-	while (array[i])
-	{
-		free(array[i]->arg);
-		free(array[i]);
-		i++;
-	}
-	free(array);
+    if (array == NULL)
+        return ;
+    i = 0;
+    while (array[i])
+    {
+        free(array[i]->arg);
+        free(array[i]);
+        i++;
+    }
+    free(array);
 }
 
 int	count(char *arr, char s)

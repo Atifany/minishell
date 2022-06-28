@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_to_struct.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 20:01:59 by atifany           #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2022/06/28 13:13:49 by alex             ###   ########.fr       */
-=======
-/*   Updated: 2022/06/28 13:34:58 by atifany          ###   ########.fr       */
->>>>>>> ef42ed9a0ddff7ff7766f58dcfd2ca0a20a50317
+/*   Updated: 2022/06/28 13:47:37 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +87,7 @@ static int	fill_struct(t_line *line, char **exec_line)
 
 	total_shift = parse(exec_line, &(line->args),
 			(t_methods){&init_charpp, &add_to_charpp}, ARG);
+	variable_handler((line->args), &(line->env));
 	if (line->command)
 		free(line->command);
 	line->command = ft_strdup(line->args[0]);
