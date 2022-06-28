@@ -34,15 +34,19 @@ void	execute_export(t_line *line)// dobavit oshibku soderjit v imeni zapreshenni
 	char	**t;
 	int		i;
 
-	i = 0;	
 	if ((line->args[1] && line->args[2])
-		|| line->args[1] == NULL)
+		|| line->args[1] == NULL || count(line->args[2], '=') != 1)
 		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-5")));
 	t = ft_split(line->args[1], '=');
 	if (t[0] == NULL || t[1] == NULL)
 		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-5")));
-	while (line->args[1][i])
-		if (!ft_isalnum(line->args[1][i]))
+	i = 0;
+	while (t[1][i])
+		if (!ft_isalnum(t[1][i++]))
+			return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-5")));
+	i = 0;
+	while (t[0][i])
+		if (!ft_isalnum(t[0][i++]))
 			return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-5")));
 	dict_set(&(line->env), ft_strdup(t[0]), ft_strdup(t[1]));
 	free_array(t);
