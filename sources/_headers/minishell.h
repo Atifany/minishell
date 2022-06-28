@@ -150,6 +150,7 @@ void	execute_echo(t_line	*line);
 void	execute_env(t_line *line);
 void	execute_export(t_line *line);
 void	execute_cat(t_line *line);
+void	execute_unset(t_line *line);
 
 typedef struct s_func
 {

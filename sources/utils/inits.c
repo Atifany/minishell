@@ -87,5 +87,10 @@ void	func_dict_init(t_line *line)
 	cat = malloc(sizeof(t_func));
 	cat->foo = execute_cat;
 	dict_add(&(line->func_dict), ft_strdup("cat"), cat);
+
+	t_func *unset;
+	unset = malloc(sizeof(t_func));
+	unset->foo = execute_unset;
+	dict_add(&(line->func_dict), ft_strdup("unset"), unset);
 }
 

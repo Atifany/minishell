@@ -75,3 +75,19 @@ void	execute_cat(t_line *line)
 	}
 	return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("0")));
 }
+
+void	execute_unset(t_line *line)
+{
+	int	i;
+
+	if (!(line->args[1]))
+		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-11")));
+	i = 1;
+	while (line->args[i])
+	{
+		// dict_del (line->args[i])
+		// printf("deleted %s\n", line->args[i]);
+		i++;
+	}
+	return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("0")));
+}
