@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/26 14:46:54 by alex              #+#    #+#             */
-/*   Updated: 2022/06/26 20:21:25 by alex             ###   ########.fr       */
+/*   Updated: 2022/06/28 13:34:04 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,14 +158,14 @@ void	execute_cat(t_line *line) // ADD ERROR AMANAGMENT
 	char	*str;
 	int		fd;
 
+	if (!(line->args[1]))
+		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-10")));
 	i = 1;
-	if (!line->args[0] || !line->args[1])
-		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("0")));
 	while (line->args[i])
 	{
 		fd = open(line->args[i], O_CREAT | O_RDWR, 0666);
 		if (fd < 0)
-			return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("0")));
+			return dict_set(&(line->env), ft_strdup("?"), ft_strdup("-9"));
 		while (ft_cat(fd, &str) > 0)
 		{
 			write(1, str, ft_strlen(str));

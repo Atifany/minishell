@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 16:16:41 by atifany           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2022/06/28 13:31:19 by alex             ###   ########.fr       */
+=======
+/*   Updated: 2022/06/28 13:32:47 by atifany          ###   ########.fr       */
+>>>>>>> ef42ed9a0ddff7ff7766f58dcfd2ca0a20a50317
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +26,9 @@ void	print_error(t_line *line)
 	"export: incorrect argument",
 	"env: too many arguments",
 	"command is not recognized",
-	"no such file or directory"};
+	"Error: no such file or directory",
+	"Warning: can not open file",
+	"cat: no files specified"};
 
 	error = ft_atoi(dict_get(&(line->env), "?"));
 	if (error < 0)
