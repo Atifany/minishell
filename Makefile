@@ -16,11 +16,13 @@ _SRC =	builtins/commands.c			\
 		utils/cat.c					\
 		utils/class_methods.c		\
 		utils/dictionary.c			\
+		utils/dictionary_delete.c	\
 		utils/get_next_line_utils.c	\
 		utils/get_next_line.c		\
 		utils/inits.c				\
 		utils/utils.c				\
 		utils/utils_free.c			\
+		utils/func_dict_init.c		\
 		
 SRC_DIR = sources
 SRC = $(_SRC:%=$(SRC_DIR)/%)

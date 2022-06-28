@@ -3,18 +3,20 @@
 void	print_error(t_line *line)
 {
 	int		error;
-	char	*errors[] = {"", "pwd: too many arguments",
-	"Error: getcwd() failed",
-	"cd: too many arguments",
-	"Error: specified path does not exist",
-	"export: incorrect argument",
-	"env: too many arguments",
-	"command is not recognized",
-	"Error: no such file or directory",
-	"Warning: can not open file",
-	"cat: no files specified",
-	"unset: no files specified"};
+	char	*errors[12];
 
+	errors[0] = "";
+	errors[1] = "pwd: too many arguments";
+	errors[2] = "Error: getcwd() failed";
+	errors[3] = "cd: too many arguments";
+	errors[4] = "Error: specified path does not exist";
+	errors[5] = "export: incorrect argument";
+	errors[6] = "env: too many arguments";
+	errors[7] = "command is not recognized";
+	errors[8] = "Error: no such file or directory";
+	errors[9] = "Warning: can not open file";
+	errors[10] = "cat: no files specified";
+	errors[11] = "unset: no files specified";
 	error = ft_atoi(dict_get(&(line->env), "?"));
 	if (error < 0)
 		printf("%s\n", errors[-error]);

@@ -88,7 +88,6 @@ typedef struct s_input_queue
 // is_newline is set to TRUE each readline.
 typedef struct s_line
 {
-	// better sort it with "union"
 	char	*command;
 	char	**args;
 	t_inqu	**redir_output;

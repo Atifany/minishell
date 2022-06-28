@@ -36,7 +36,7 @@ void	execute_export(t_line *line)
 	int		i;
 
 	if ((line->args[1] && line->args[2])
-		|| line->args[1] == NULL || count(line->args[2], '=') != 1)
+		|| line->args[1] == NULL || count(line->args[1], '=') != 1)
 		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-5")));
 	t = ft_split(line->args[1], '=');
 	if (t[0] == NULL || t[1] == NULL)
@@ -89,7 +89,8 @@ void	execute_unset(t_line *line)
 	i = 1;
 	while (line->args[i])
 	{
-		dict_delone(&(line->env), line->args[i]);
+		if (dict_get(&(line->env), line->args[i]))
+			dict_delone(&(line->env), line->args[i]);
 		i++;
 	}
 	return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("0")));
