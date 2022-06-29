@@ -8,19 +8,14 @@ char	ft_switch(t_line *line)
 		return (1);
 	if (!line->command[0])
 		return (0);
-	if (!ft_strncmp(line->command, "./", 2) || *(line->command) == '/')
+	f = (t_func *)dict_get(&(line->func_dict), line->command);
+	if (!f)
 	{
 		execute_file(line);
 		return (0);
 	}
-	f = (t_func *)dict_get(&(line->func_dict), line->command);
-	if (!f)
-	{
-		printf("'%s'\n", line->command);
-		dict_set(&(line->env), ft_strdup("?"), ft_strdup("-7"));
-		return (0);
-	}
-	f->foo(line);
+	else
+		f->foo(line);
 	return (0);
 }
 

@@ -32,25 +32,31 @@ void	execute_env(t_line *line)
 // dobavit oshibku soderjit v imeni zapreshennie v rf simvoli
 void	execute_export(t_line *line)
 {
-	char	**t;
+	char	*name;
+	char	*value;
 	int		i;
 
+	i = 0;
 	if ((line->args[1] && line->args[2])
-		|| line->args[1] == NULL || count(line->args[1], '=') != 1)
+		|| line->args[1] == NULL || !count(line->args[1], '='))
 		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-5")));
-	t = ft_split(line->args[1], '=');
-	if (t[0] == NULL || t[1] == NULL)
+	value = ft_strchr(line->args[1], '=') + 1;
+	name = ft_substr(line->args[1], 0, ft_strlen(line->args[1]) - ft_strlen(value) - 1);
+	if (value == NULL || name == NULL)
+	{
+		free(name);
 		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-5")));
-	i = 0;
-	while (t[1][i])
-		if (!ft_isalnum(t[1][i++]))
+	}
+	while (name[i])
+	{
+		printf("%s\n", name);
+		if (name[i] != '_' && !ft_isalnum(name[i++]))
+		{
+			free(name);
 			return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-5")));
-	i = 0;
-	while (t[0][i])
-		if (!ft_isalnum(t[0][i++]))
-			return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-5")));
-	dict_set(&(line->env), ft_strdup(t[0]), ft_strdup(t[1]));
-	free_array(t);
+		}
+	}
+	dict_set(&(line->env), name, ft_strdup(value));
 	return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("0")));
 }
 

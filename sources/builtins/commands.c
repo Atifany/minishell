@@ -1,28 +1,55 @@
 #include "../_headers/minishell.h"
 
+static int	public_execution(t_line *line, char	**paths, int pip[2])
+{
+	int		i;
+
+	i = 0;
+	if (execve(line->args[0], line->args, NULL) == 0)
+		return (0);
+	while (paths[i] && line->command[0] != '/')
+	{
+		paths[i] = gnl_join(&(paths[i]), "/", 1);
+		paths[i] = gnl_join(&(paths[i]), line->command,
+				ft_strlen(line->command));
+		if (execve(paths[i], line->args, NULL) == 0)
+			return (0);
+		i++;
+	}
+	printf("'%s'\n", line->command + 1);
+	if (line->command[0] == '/')
+		write(pip[WRITE], "-8", 2);
+	else
+		write(pip[WRITE], "-7", 2);
+	return (1);
+}
+
 void	execute_file(t_line *line)
 {
-	char	buf[2];
+	char	buf[4];
 	int		error;
 	int		pip[2];
+	char	**paths;
 
+	paths = ft_split(dict_get(&(line->env), "PATH"), ':');
 	error = 0;
 	pipe(pip);
 	g_child_pid = fork();
-	write(pip[WRITE], "\0", 1);
 	if (g_child_pid == 0)
 	{
-		if (execve(line->args[0], line->args, NULL) < 0)
-			exit(write(pip[WRITE], "1", 1));
+		if (public_execution(line, paths, pip))
+			exit(1);
 	}
 	else
 		wait(&error);
 	g_child_pid = 0;
-	read(pip[READ], &buf, 1);
+	write(pip[WRITE], "\0\0", 2);
+	read(pip[READ], &buf, 2);
 	close(pip[READ]);
 	close(pip[WRITE]);
+	free_array(paths);
 	if (*buf)
-		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-8")));
+		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup(buf)));
 	return (dict_set(&(line->env), ft_strdup("?"), ft_itoa(error)));
 }
 
