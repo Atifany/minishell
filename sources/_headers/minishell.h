@@ -133,6 +133,7 @@ char	identify(char **exec_line, int i);
 char	identify_arrow(char *arrow);
 int		arr_len(void **array);
 void	quote_handler(char **args);
+char	is_arrow(char *str);
 
 // utils
 int		ft_to_positive(int n);

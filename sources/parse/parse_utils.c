@@ -11,7 +11,7 @@ void	refresh_pip_out(t_line *line)
 	pipe(line->pip_out);
 }
 
-static char	is_arrow(char *str)
+char	is_arrow(char *str)
 {
 	if (!ft_strcmp(str, ">")
 		|| !ft_strcmp(str, ">>")
@@ -31,7 +31,7 @@ char	identify(char **exec_line, int i)
 	{
 		if (!is_arrow(exec_line[i]))
 			return (ARG);
-		return (ERROR);
+		return (ARROW);
 	}
 	if (!is_arrow(exec_line[i]) && !is_arrow(exec_line[i - 1]))
 		return (ARG);

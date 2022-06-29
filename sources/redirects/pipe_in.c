@@ -29,10 +29,10 @@ static void	read_file_to_pipe(t_line *line, char *filename)
 	int		fd;
 	char	*str;
 
-	fd = open(filename, O_CREAT | O_RDWR, 0666);
+	fd = open(filename, O_RDWR, 0666);
 	if (fd < 0)
 	{
-		printf("Error: cannot open/create file %s\n", filename);
+		printf("Warning: cannot open/no such file %s\n", filename);
 		return ;
 	}
 	while (ft_cat(fd, &str) > 0)
