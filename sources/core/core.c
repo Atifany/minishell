@@ -25,7 +25,7 @@ char	ft_switch(t_line *line)
 }
 
 // ^C must end reading from stdin and stop all execution
-void	sighandler(int sig)
+void	sigint_hook(int sig)
 {
 	(void)sig;
 	if (g_child_pid != 0)
@@ -35,7 +35,6 @@ void	sighandler(int sig)
 	}
 	else
 	{
-		write(1, "\0", 1);
 		rl_replace_line("", 0);
 		rl_on_new_line();
 		write(1, "\n", 1);
@@ -58,8 +57,8 @@ int	main(void)
 	func_dict_init(&line);
 	init_struct(&line);
 	g_child_pid = 0;
-	signal(SIGINT, &sighandler);
-	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, &sigint_hook);
+	signal(SIGQUIT, SIG_DFL);
 	rotate = 0;
 	while (!rotate)
 		rotate = process_input(&line);

@@ -23,5 +23,5 @@ V cd - does not show pwd
 V "'text'" -> text' but should be 'text'
 V error if redir arrow does not have an arg
 V warning/error if no command but a redirect is present
-X export leaks on several =
+V export leaks on several =
 V error if wrong file specified for <

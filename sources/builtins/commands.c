@@ -9,7 +9,6 @@ void	execute_file(t_line *line)
 	error = 0;
 	pipe(pip);
 	g_child_pid = fork();
-	write(pip[WRITE], "\0", 1);
 	if (g_child_pid == 0)
 	{
 		if (execve(line->args[0], line->args, NULL) < 0)
@@ -18,6 +17,7 @@ void	execute_file(t_line *line)
 	else
 		wait(&error);
 	g_child_pid = 0;
+	write(pip[WRITE], "\0", 1);
 	read(pip[READ], &buf, 1);
 	close(pip[READ]);
 	close(pip[WRITE]);
