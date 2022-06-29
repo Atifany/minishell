@@ -31,7 +31,7 @@ char	identify(char **exec_line, int i)
 	{
 		if (!is_arrow(exec_line[i]))
 			return (ARG);
-		return (ARROW);
+		return (ERROR);
 	}
 	if (!is_arrow(exec_line[i]) && !is_arrow(exec_line[i - 1]))
 		return (ARG);

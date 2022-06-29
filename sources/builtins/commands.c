@@ -29,13 +29,16 @@ void	execute_file(t_line *line)
 static void	cd_spec_symbol_handler(t_line *line, char **path,
 	char *prev_path)
 {
-	char	*buf;
+	char	*buf1;
+	char	*buf2;
 
 	if (*(line->args[1]) == '~')
 	{
-		buf = ft_strdup((char *)dict_get(&(line->env), "HOME"));
-		*path = gnl_join(&buf, ft_strdup(line->args[1] + 1),
+		buf1 = ft_strdup((char *)dict_get(&(line->env), "HOME"));
+		buf2 = ft_strdup(line->args[1] + 1);
+		*path = gnl_join(&buf1, buf2,
 				ft_strlen(line->args[1] + 1));
+		free(buf2);
 	}
 	else if (!ft_strcmp(line->args[1], "-"))
 		*path = ft_strdup(prev_path);

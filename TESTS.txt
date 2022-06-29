@@ -9,8 +9,13 @@ V 3) шел ждет процесс
 V 4) если дать неправильный путь -> еррор
 
 QOUTES:
-1) echo "ANIME"                     -> ANIME
-1) echo "ANIME"MUST DIE             -> ANIMEMUST DIE
-1) echo "$HOME"
-1) echo "ANIME"
-1) echo "ANIME"
+?
+
+SIGS:
+V 1) ^C отменяет ввод текущей команды и переносит на новую строку.
+V 2) ^D пишет \0 в текущий ввод.
+
+fails:
+V redirect is the first one -> parse error but needed: no error
+X valgrind finds cringe if there is unclosed single qoutes
+V leak in cd

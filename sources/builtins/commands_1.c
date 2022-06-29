@@ -4,6 +4,8 @@ void	execute_pwd(t_line *line)
 {
 	char	*buf;
 
+	if (line->args[1])
+		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-1")));
 	buf = getcwd(NULL, 0);
 	if (!buf)
 		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-2")));
