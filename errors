@@ -1,7 +1,0 @@
-1 pwd: too many arguments
-2 Error: getcwd() failed\n
-3 cd: too many arguments
-4 Error: %s does not exist or there is not enough memory
-5 export: incorrect argument
-6 env: too many arguments
-7 command is not recognized
