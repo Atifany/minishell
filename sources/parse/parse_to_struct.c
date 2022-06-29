@@ -117,7 +117,6 @@ int	parse_line_to_struct(t_line *line, char **exec_line)
 	total_shift = fill_struct(line, exec_line);
 	if (total_shift < 0)
 		return (total_shift);
-	quote_handler(line->args);
 	line->is_redirecting = FALSE;
 	line->is_piping = FALSE;
 	if (*(exec_line + total_shift) != NULL)
