@@ -17,5 +17,10 @@ V 2) ^D пишет \0 в текущий ввод.
 
 fails:
 V redirect is the first one -> parse error but needed: no error
-X valgrind finds cringe if there is unclosed single qoutes
+V valgrind finds cringe if there is unclosed single qoutes
 V leak in cd
+X cd - does not show pwd
+X "'text'" -> text' but should be 'text'
+X warning if redir arrow does not have an arg
+X error if no command but a redirect is present
+X export leaks on several =
