@@ -70,7 +70,6 @@ static int	parse(char **exec_line, void *arr,
 
 static int	check_parse_error(char **exec_line)
 {
-	char	ret_identify;
 	int		i;
 
 	i = 0;
@@ -78,8 +77,10 @@ static int	check_parse_error(char **exec_line)
 	{
 		if (!ft_strcmp(exec_line[i], "|"))
 			break ;
-		ret_identify = identify(exec_line, i);
-		if (ret_identify == ARROW)
+		if (is_arrow(exec_line[i])
+			&& (is_arrow(exec_line[i + 1])
+				|| !ft_strcmp(exec_line[i + 1], "|")
+				|| !exec_line[i + 1]))
 			return (1);
 		i++;
 	}

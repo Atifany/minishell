@@ -19,8 +19,9 @@ fails:
 V redirect is the first one -> parse error but needed: no error
 V valgrind finds cringe if there is unclosed single qoutes
 V leak in cd
-X cd - does not show pwd
-X "'text'" -> text' but should be 'text'
-X warning if redir arrow does not have an arg
-X error if no command but a redirect is present
+V cd - does not show pwd
+V "'text'" -> text' but should be 'text'
+V error if redir arrow does not have an arg
+V warning/error if no command but a redirect is present
 X export leaks on several =
+V error if wrong file specified for <
