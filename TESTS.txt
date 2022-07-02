@@ -25,3 +25,9 @@ V error if redir arrow does not have an arg
 V warning/error if no command but a redirect is present
 V export leaks on several =
 V error if wrong file specified for <
+
+^C:
+1) kill running binary
+2) force new line in input-mode
+3) kill the whole pipeline
+4) kill any read process

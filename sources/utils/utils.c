@@ -74,3 +74,17 @@ int	ft_to_positive(int n)
 		n = 0;
 	return (n);
 }
+
+char	is_in_array(char **array, char *str)
+{
+	int	i;
+
+	i = 0;
+	while (array[i])
+	{
+		if (!ft_strcmp(array[i], str))
+			return (TRUE);
+		i++;
+	}
+	return (FALSE);
+}

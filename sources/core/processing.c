@@ -1,13 +1,13 @@
 #include "../_headers/minishell.h"
 
-static char	*take_input(void)
+char	*rl_take_input(void)
 {
 	char	*buf;
 
 	buf = readline("minishell >> ");
 	if (!buf)
 	{
-		printf("\n");
+		write(1, "\n", 1);
 		return (NULL);
 	}
 	if (*buf)
@@ -15,85 +15,53 @@ static char	*take_input(void)
 	return (buf);
 }
 
-static int	pre_handle(t_line *line, char **exec_line)
+void	set_last_ret_env(t_line *line, int status)
 {
-	char	is_pipe_in_opened;
-	int		shift;
-
-	is_pipe_in_opened = open_pipe_in(line, OPEN);
-	shift = parse_line_to_struct(line, exec_line);
-	if (shift < 0)
+	if (WIFSIGNALED(status))
 	{
-		printf("Error: invalid parse instruction\n");
-		dict_set(&(line->env), ft_strdup("?"), ft_strdup("-12"));
-		return (shift);
+		dict_set(&(line->env),
+			ft_strdup("?"), ft_itoa(WTERMSIG(status) + 128));
+		write(2, "\n", 1);
 	}
-	is_pipe_in_opened = open_pipe_in(line, APPEND);
-	if (*(line->redir_input))
-		cat_to_pipe_in(line);
-	if (is_pipe_in_opened)
-		write(line->pip_in[WRITE], "\0", 1);
-	return (shift);
-}
-
-static int	execute_it(t_line *line)
-{
-	int	ret;
-
-	if (line->is_redirecting)
-		redirect_output(line, OPEN);
-	ret = ft_switch(line);
-	if (line->is_redirecting)
-		redirect_output(line, CLOSE);
-	return (ret);
-}
-
-static char	iterate_exec_line(char **exec_line, t_line *line)
-{
-	int		total_shift;
-	int		shift;
-
-	shift = 0;
-	total_shift = 0;
-	while (*exec_line)
-	{
-		shift = pre_handle(line, exec_line);
-		if (shift < 0)
-			break ;
-		total_shift += shift;
-		exec_line += shift;
-		if (execute_it(line))
-		{
-			open_pipe_in(line, CLOSE);
-			return (1);
-		}
-		if (((char *)(dict_get(&(line->env), "?")))[0] != '0')
-			print_error(line);
-	}
-	exec_line -= total_shift;
-	open_pipe_in(line, CLOSE);
-	return (0);
+	else
+		dict_set(&(line->env),
+			ft_strdup("?"), ft_itoa(WEXITSTATUS(status)));
 }
 
 char	process_input(t_line *line)
 {
 	char	**exec_line;
-	char	*input_str;
-	char	rotate;
 
-	input_str = NULL;
+	// ^\ & ^C in input mode
+	signals_ignore();
+	signal(SIGINT, sigint_hook);
+	// reinit all that needs reinit
 	clear_struct(line);
 	init_struct(line);
-	input_str = take_input();
-	if (!input_str)
+	// grab input
+	exec_line = take_input();
+	if (!exec_line)	// ^D on an empty line
 		return (1);
-	redirect_input(line, INIT);
-	exec_line = parse_to_array(input_str);
-	free(input_str);
-	input_str = NULL;
-	line->is_newline = TRUE;
-	rotate = iterate_exec_line(exec_line, line);
-	free_array(exec_line);
-	redirect_input(line, DEINIT);
-	return (rotate);
+	if (validate(exec_line))
+	{
+		write(2, "Error: invalid parse instruction\n", 34);
+		dict_set(&(line->env), ft_strdup("?"), ft_strdup("2"));
+		free_array(exec_line);
+		return (0);
+	}
+	// if no pipes -> parse -> simple execute
+	if (!is_in_array(exec_line, "|"))
+	{
+		simple_exe(line, exec_line);
+	}
+	// else -> while (cmd) -> parse -> simple execute
+	else
+	{
+		piped_exe(line, exec_line);
+	}
+	if (line->error_text)
+		printf("%s", line->error_text);
+	if (line->is_exit_pressed)
+		return (1);
+	return (0);
 }

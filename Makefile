@@ -6,6 +6,10 @@ _SRC =	builtins/commands.c			\
 		builtins/commands_1.c		\
 		core/core.c					\
 		core/processing.c			\
+		core/signals.c				\
+		core/simple_exe.c			\
+		core/piped_exe.c			\
+		core/processing_utils.c		\
 		envs/environment.c			\
 		parse/parse_to_struct.c		\
 		parse/parse_utils.c			\
@@ -23,6 +27,7 @@ _SRC =	builtins/commands.c			\
 		utils/utils.c				\
 		utils/utils_free.c			\
 		utils/func_dict_init.c		\
+		utils/validation.c			\
 		
 SRC_DIR = sources
 SRC = $(_SRC:%=$(SRC_DIR)/%)

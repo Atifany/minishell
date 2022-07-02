@@ -1,9 +1,6 @@
 #include "../_headers/minishell.h"
 
-// add "Warning: duplicated file names ignored"
-// convert line->fd_to_write and line->fd_to_appwrite
-// to t_inqu struct
-static void	write_output(t_line *line)
+void	write_output(t_line *line, char is_piping)
 {
 	size_t	str_len;
 	char	*str;
@@ -11,7 +8,8 @@ static void	write_output(t_line *line)
 	int		*fds;
 
 	open_files(line, &fds);
-	while (ft_cat(line->pip_out[READ], &str) > 0)
+	str = get_next_line(line->pip_out[READ]);
+	while (str)
 	{
 		str_len = ft_strlen(str);
 		i = 0;
@@ -21,32 +19,14 @@ static void	write_output(t_line *line)
 				write(fds[i], str, str_len);
 			i++;
 		}
-		if (line->is_piping)
+		if (is_piping)
 			write(line->pip_in[WRITE], str, str_len);
 		free(str);
-		str = NULL;
+		str = get_next_line(line->pip_out[READ]);
 	}
+	close(line->pip_out[READ]);
 	close_files(fds);
 	free(fds);
-}
-
-void	redirect_output(t_line *line, char mode)
-{
-	static int	save_out_stream;
-
-	if (mode == OPEN)
-	{
-		save_out_stream = dup(STDOUT_FILENO);
-		dup2(line->pip_out[WRITE], STDOUT_FILENO);
-	}
-	else if (mode == CLOSE)
-	{
-		dup2(save_out_stream, STDOUT_FILENO);
-		write(line->pip_out[WRITE], "\0", 1);
-		close(line->pip_out[WRITE]);
-		write_output(line);
-		close(line->pip_out[READ]);
-	}
 }
 
 void	redirect_input(t_line *line, char mode)

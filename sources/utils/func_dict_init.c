@@ -24,17 +24,13 @@ static void	init_first_half(t_line *line)
 static void	init_second_half(t_line *line)
 {
 	t_func	*export;
-	t_func	*cat;
 	t_func	*unset;
 
 	export = malloc(sizeof(t_func));
-	cat = malloc(sizeof(t_func));
 	unset = malloc(sizeof(t_func));
 	export->foo = execute_export;
-	cat->foo = execute_cat;
 	unset->foo = execute_unset;
 	dict_add(&(line->func_dict), ft_strdup("export"), export);
-	dict_add(&(line->func_dict), ft_strdup("cat"), cat);
 	dict_add(&(line->func_dict), ft_strdup("unset"), unset);
 }
 

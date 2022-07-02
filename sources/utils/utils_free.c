@@ -30,3 +30,11 @@ void	free_struct_array(t_inqu **array)
 	}
 	free(array);
 }
+
+void	clear_pips(t_line *line)
+{
+	free(line->pip_in);
+	free(line->pip_out);
+	free(line->pip_talk);
+	free(line->pip_status);
+}

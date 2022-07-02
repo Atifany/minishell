@@ -10,10 +10,6 @@ void	clear_struct(t_line *line)
 		free_struct_array(line->redir_output);
 	if (line->redir_input)
 		free_struct_array(line->redir_input);
-	if (line->pip_in)
-		free(line->pip_in);
-	if (line->pip_out)
-		free(line->pip_out);
 }
 
 void	init_env(t_line *line)
@@ -43,10 +39,19 @@ PATH DBUS_SESSION_BUS_ADDRESS UID LC_NUMERIC", ' ');
 	free_array(names);
 }
 
+void	init_streams(t_line *line)
+{
+	line->pip_in = (int *)ft_calloc(2, sizeof(int));
+	line->pip_out = (int *)ft_calloc(2, sizeof(int));
+	line->pip_talk = (int *)ft_calloc(2, sizeof(int));
+	line->pip_status = (int *)ft_calloc(2, sizeof(int));
+	line->save_stdin = dup(STDIN_FILENO);
+	line->save_stdout = dup(STDOUT_FILENO);
+	line->save_stderr = dup(STDERR_FILENO);
+}
+
 void	init_struct(t_line *line)
 {
-	line->pip_in = NULL;
-	line->pip_out = NULL;
 	line->is_redirecting = FALSE;
 	line->is_piping = FALSE;
 	line->is_newline = TRUE;
@@ -54,4 +59,7 @@ void	init_struct(t_line *line)
 	line->args = NULL;
 	line->redir_input = NULL;
 	line->redir_output = NULL;
+	line->is_newline = TRUE;
+	line->is_exit_pressed = FALSE;
+	line->error_text = NULL;
 }

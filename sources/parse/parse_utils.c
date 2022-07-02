@@ -1,16 +1,5 @@
 #include "../_headers/minishell.h"
 
-void	refresh_pip_out(t_line *line)
-{
-	if (line->pip_out)
-	{
-		free(line->pip_out);
-		line->pip_out = NULL;
-	}
-	line->pip_out = malloc(sizeof(int) * 2);
-	pipe(line->pip_out);
-}
-
 char	is_arrow(char *str)
 {
 	if (!ft_strcmp(str, ">")

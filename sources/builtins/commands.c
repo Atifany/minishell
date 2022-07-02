@@ -1,29 +1,57 @@
 #include "../_headers/minishell.h"
 
-void	execute_file(t_line *line)
+static int	public_execution(t_line *line, char	**paths)
 {
-	char	buf[2];
-	int		error;
-	int		pip[2];
+	int		i;
 
-	error = 0;
-	pipe(pip);
+	i = 0;
+	if (execve(line->args[0], line->args, NULL) == 0)
+		return (0);
+	while (paths[i] && line->command[0] != '/')
+	{
+		paths[i] = gnl_join(&(paths[i]), "/", 1);
+		paths[i] = gnl_join(&(paths[i]), line->command,
+				ft_strlen(line->command));
+		if (execve(paths[i], line->args, NULL) == 0)
+			return (0);
+		i++;
+	}
+	if (line->command[0] == '/')
+		write(2, "Error: no such file\n", 21);
+	else
+	{
+		write(2, line->command, ft_strlen(line->command));
+		write(2, " command is not recognized\n", 28);
+	}
+	return (1);
+}
+
+int	execute_file(t_line *line)
+{
+	int		status;
+	char	**paths;
+	char	*status_to_pipe;
+
+	signal(SIGINT, SIG_IGN);
+	paths = ft_split(dict_get(&(line->env), "PATH"), ':');
+	status = 0;
 	g_child_pid = fork();
 	if (g_child_pid == 0)
 	{
-		if (execve(line->args[0], line->args, NULL) < 0)
-			exit(write(pip[WRITE], "1", 1));
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+		if (public_execution(line, paths))
+			exit(1);
 	}
 	else
-		wait(&error);
+		wait(&status);
+	status_to_pipe = ft_itoa(status);
+	write(line->pip_status[WRITE],
+		status_to_pipe, ft_strlen(status_to_pipe));
+	free(status_to_pipe);
 	g_child_pid = 0;
-	write(pip[WRITE], "\0", 1);
-	read(pip[READ], &buf, 1);
-	close(pip[READ]);
-	close(pip[WRITE]);
-	if (*buf)
-		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-8")));
-	return (dict_set(&(line->env), ft_strdup("?"), ft_itoa(error)));
+	free_array(paths);
+	return (status);
 }
 
 static void	cd_spec_symbol_handler(t_line *line, char **path,
@@ -46,14 +74,17 @@ static void	cd_spec_symbol_handler(t_line *line, char **path,
 		*path = ft_strdup(line->args[1]);
 }
 
-void	execute_cd(t_line *line)
+char	execute_cd(t_line *line)
 {
 	static char	*prev_path = NULL;
 	int			dir;
 	char		*path;
 
 	if (line->args[1] && line->args[2])
-		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-3")));
+	{
+		write(2, "cd: too many args\n", 19);
+		return (1);
+	}
 	if (!prev_path)
 		prev_path = getcwd(NULL, 0);
 	if (!line->args[1])
@@ -67,11 +98,14 @@ void	execute_cd(t_line *line)
 		execute_pwd(line);
 	free(path);
 	if (dir == -1)
-		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("-4")));
-	return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("0")));
+	{
+		write(2, "cd: specified path not found\n", 30);
+		return (1);
+	}
+	return (0);
 }
 
-void	execute_echo(t_line *line)
+char	execute_echo(t_line *line)
 {
 	char	nl_flag;
 	char	**args;
@@ -81,7 +115,7 @@ void	execute_echo(t_line *line)
 	if (!*args)
 	{
 		write(1, "\n", 1);
-		return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("0")));
+		return (0);
 	}
 	if (!ft_strcmp(args[0], "-n"))
 	{
@@ -96,5 +130,5 @@ void	execute_echo(t_line *line)
 	}
 	write(1, *args, ft_strlen(*args));
 	write(1, &nl_flag, 1);
-	return (dict_set(&(line->env), ft_strdup("?"), ft_strdup("0")));
+	return (0);
 }
