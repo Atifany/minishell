@@ -28,19 +28,24 @@ void	set_last_ret_env(t_line *line, int status)
 			ft_strdup("?"), ft_itoa(WEXITSTATUS(status)));
 }
 
+int	exe(t_line *line)
+{
+	int	ret;
+
+	ret = ft_switch(line);
+	return (ret);
+}
+
 char	process_input(t_line *line)
 {
 	char	**exec_line;
 
-	// ^\ & ^C in input mode
-	signals_ignore();
+	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, sigint_hook);
-	// reinit all that needs reinit
 	clear_struct(line);
 	init_struct(line);
-	// grab input
 	exec_line = take_input();
-	if (!exec_line)	// ^D on an empty line
+	if (!exec_line)
 		return (1);
 	if (validate(exec_line))
 	{
@@ -49,19 +54,11 @@ char	process_input(t_line *line)
 		free_array(exec_line);
 		return (0);
 	}
-	// if no pipes -> parse -> simple execute
 	if (!is_in_array(exec_line, "|"))
-	{
 		simple_exe(line, exec_line);
-	}
-	// else -> while (cmd) -> parse -> simple execute
 	else
-	{
 		piped_exe(line, exec_line);
-	}
 	if (line->error_text)
 		printf("%s", line->error_text);
-	if (line->is_exit_pressed)
-		return (1);
-	return (0);
+	return (line->is_exit_pressed);
 }

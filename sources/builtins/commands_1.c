@@ -36,6 +36,14 @@ char	execute_env(t_line *line)
 	return (0);
 }
 
+static char	exit_export(char *name)
+{
+	if (name)
+		free(name);
+	write(2, "export: incorrect argument\n", 28);
+	return (1);
+}
+
 // dobavit oshibku soderjit v imeni zapreshennie v rf simvoli
 char	execute_export(t_line *line)
 {
@@ -43,31 +51,20 @@ char	execute_export(t_line *line)
 	char	*value;
 	int		i;
 
+	name = NULL;
 	i = 0;
 	if ((line->args[1] && line->args[2])
 		|| line->args[1] == NULL || !count(line->args[1], '='))
-	{
-		write(2, "export: incorrect argument\n", 28);
-		return (1);
-	}
+		return (exit_export(name));
 	value = ft_strchr(line->args[1], '=') + 1;
 	name = ft_substr(line->args[1], 0,
-		ft_strlen(line->args[1]) - ft_strlen(value) - 1);
+			ft_strlen(line->args[1]) - ft_strlen(value) - 1);
 	if (value == NULL || name == NULL)
-	{
-		free(name);
-		write(2, "export: incorrect argument\n", 28);
-		return (1);
-	}
+		return (exit_export(name));
 	while (name[i])
 	{
-		printf("%s\n", name);
 		if (name[i] != '_' && !ft_isalnum(name[i++]))
-		{
-			free(name);
-			write(2, "export: incorrect argument\n", 28);
-			return (1);
-		}
+			return (exit_export(name));
 	}
 	dict_set(&(line->env), name, ft_strdup(value));
 	return (0);
@@ -79,7 +76,7 @@ char	execute_unset(t_line *line)
 
 	if (!(line->args[1]))
 	{
-		write(2, "unset: no files specified\n", 27);
+		write(2, "unset: no envs specified\n", 27);
 		return (1);
 	}
 	i = 1;

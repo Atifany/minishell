@@ -9,15 +9,3 @@ void	sigint_hook(int sig)
 	write(1, "\n", 1);
 	rl_redisplay();
 }
-
-void	signals_default()
-{
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
-}
-
-void	signals_ignore()
-{
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
-}

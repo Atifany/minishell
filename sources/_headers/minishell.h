@@ -85,6 +85,10 @@ typedef struct s_input_queue
 //  from which every command reads (stdin is redirected here)
 // pip_out is a pipe
 //  to which every command writes (including pipe_in if needed)
+// pip_talk is a pipe
+//  to which sterr is redirected. Its contents are written to stdout.
+// pip_status is a pipe
+//  to which an exit status of executed binary is written
 // is_newline is set to TRUE each readline.
 typedef struct s_line
 {
@@ -125,8 +129,6 @@ void	set_last_ret_env(t_line *line, int status);
 int		read_pip_status(t_line *line, int status);
 
 // signals
-void	signals_default();
-void	signals_ignore();
 void	sigint_hook(int sig);
 
 // inits
@@ -139,7 +141,6 @@ void	init_streams(t_line *line);
 
 // pipe_in controller
 char	cat_to_pipe_in(t_line *line);
-char	open_pipe_in(t_line *line, char mode);
 
 // Redirects file output to a chosen file
 void	write_output(t_line *line, char is_piping);
@@ -164,11 +165,9 @@ char	is_arrow(char *str);
 
 // utils
 int		ft_to_positive(int n);
-int		ft_cat(int fd, char **str_ptr);
 int		ft_strcmp(char *str1, char *str2);
 void	free_struct_array(t_inqu **array);
 void	free_array(char **array);
-void	print_error(t_line *line);
 char	is_in_array(char **array, char *str);
 int		validate(char **exec_line);
 

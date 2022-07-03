@@ -36,8 +36,6 @@ int	main(void)
 	init_struct(&line);
 	g_child_pid = 0;
 	rotate = 0;
-	// bind exit command to a flag in struct, so that it executes
-	// in single cmd and not in piped cmd
 	while (!rotate)
 		rotate = process_input(&line);
 	rl_clear_history();

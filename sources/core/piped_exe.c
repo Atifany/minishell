@@ -4,7 +4,9 @@ static char	setup_pipes(t_line *line, char is_first_cmd)
 {
 	int	sig;
 
-	if (!is_first_cmd)
+	if (is_first_cmd && *(line->redir_input))
+		open_pip(&(line->pip_in));
+	if (!is_first_cmd || *(line->redir_input))
 	{
 		sig = cat_to_pipe_in(line);
 		if (sig)
@@ -15,22 +17,6 @@ static char	setup_pipes(t_line *line, char is_first_cmd)
 		}
 		redirect(STDIN_FILENO, line->pip_in[READ]);
 		close(line->pip_in[WRITE]);
-	}
-	else
-	{
-		if (*(line->redir_input))
-		{
-			open_pip(&(line->pip_in));
-			sig = cat_to_pipe_in(line);
-			if (sig)
-			{
-				close(line->pip_in[WRITE]);
-				close(line->pip_in[READ]);
-				return (sig);
-			}
-			redirect(STDIN_FILENO, line->pip_in[READ]);
-			close(line->pip_in[WRITE]);
-		}
 	}
 	if (line->is_piping || *(line->redir_output))
 	{
@@ -59,24 +45,17 @@ static void	release_pipes(t_line *line, char is_first_cmd)
 		open_pip(&(line->pip_in));
 }
 
-static char	piped_exe_body(t_line *line, char is_first_cmd)
+static char	forking_exe(t_line *line, char is_first_cmd)
 {
 	int	status;
 
-	status = setup_pipes(line, is_first_cmd);
-	if (status)
-	{
-		set_last_ret_env(line, status);
-		return (1);
-	}
 	if (fork())
 	{
 		wait(&status);
 		status = read_pip_status(line, status);
 		set_last_ret_env(line, status);
 		read_error_text(line);
-		if (WIFSIGNALED(status)
-			|| status == 1)
+		if (WIFSIGNALED(status) || status == 1)
 		{
 			release_pipes(line, is_first_cmd);
 			return (1);
@@ -87,6 +66,21 @@ static char	piped_exe_body(t_line *line, char is_first_cmd)
 		signal(SIGINT, SIG_DFL);
 		exit(exe(line));
 	}
+	return (0);
+}
+
+static char	piped_exe_body(t_line *line, char is_first_cmd)
+{
+	int	status;
+
+	status = setup_pipes(line, is_first_cmd);
+	if (status)
+	{
+		set_last_ret_env(line, status);
+		return (1);
+	}
+	if (forking_exe(line, is_first_cmd))
+		return (1);
 	release_pipes(line, is_first_cmd);
 	write_output(line, line->is_piping);
 	return (0);
@@ -105,12 +99,6 @@ char	piped_exe(t_line *line, char **exec_line)
 	{
 		line->error_text = NULL;
 		shift = parse_line_to_struct(line, exec_line);
-		if (shift < 0)
-		{
-			printf("Error: invalid parse instruction\n");
-			dict_set(&(line->env), ft_strdup("?"), ft_strdup("-12"));
-			break ;
-		}
 		total_shift += shift;
 		exec_line += shift;
 		if (piped_exe_body(line, is_first_cmd))

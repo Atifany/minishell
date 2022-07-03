@@ -1,34 +1,20 @@
 #include "../_headers/minishell.h"
 
-char	open_pipe_in(t_line *line, char mode)
+static char	wait_reader(void)
 {
-	static char	is_pipe_in_opened = FALSE;
+	int	status;
 
-	if (!is_pipe_in_opened)
-	{
-		if ((mode == OPEN && line->is_piping)
-			|| (mode == APPEND && *(line->redir_input)))
-		{
-			is_pipe_in_opened = TRUE;
-			redirect_input(line, OPEN);
-		}
-	}
-	if (mode == CLOSE)
-	{
-		if (is_pipe_in_opened)
-		{
-			redirect_input(line, CLOSE);
-			is_pipe_in_opened = FALSE;
-		}
-	}
-	return (is_pipe_in_opened);
+	signal(SIGINT, SIG_IGN);
+	wait(&status);
+	if (WIFSIGNALED(status))
+		return (WTERMSIG(status));
+	return (0);
 }
 
 static char	read_file_to_pipe(t_line *line, char *filename)
 {
 	int		fd;
 	char	*str;
-	int		status;
 
 	fd = open(filename, O_RDWR, 0666);
 	if (fd < 0)
@@ -37,13 +23,7 @@ static char	read_file_to_pipe(t_line *line, char *filename)
 		return (0);
 	}
 	if (fork())
-	{
-		signal(SIGINT,SIG_IGN);
-		wait(&status);
-		if (WIFSIGNALED(status))
-			return (WTERMSIG(status));
-		return (0);
-	}
+		return (wait_reader());
 	else
 	{
 		str = get_next_line(fd);
@@ -61,17 +41,10 @@ static char	read_file_to_pipe(t_line *line, char *filename)
 static char	read_term_to_pipe(t_line *line, char *delimiter)
 {
 	char	*str;
-	int		status;
 
 	printf("listening till \"%s\"\n", delimiter);
 	if (fork())
-	{
-		signal(SIGINT,SIG_IGN);
-		wait(&status);
-		if (WIFSIGNALED(status))
-			return (WTERMSIG(status));
-		return (0);
-	}
+		return (wait_reader());
 	else
 	{
 		signal(SIGINT, SIG_DFL);

@@ -3,7 +3,7 @@
 static char	setup_pipes(t_line *line)
 {
 	int	sig;
-	
+
 	if (*(line->redir_input))
 	{
 		open_pip(&(line->pip_in));

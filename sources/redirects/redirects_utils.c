@@ -69,3 +69,32 @@ void	close_files(int *fds)
 		i++;
 	}
 }
+
+void	write_output(t_line *line, char is_piping)
+{
+	size_t	str_len;
+	char	*str;
+	int		i;
+	int		*fds;
+
+	open_files(line, &fds);
+	str = get_next_line(line->pip_out[READ]);
+	while (str)
+	{
+		str_len = ft_strlen(str);
+		i = 0;
+		while (fds[i])
+		{
+			if (fds[i] != -1)
+				write(fds[i], str, str_len);
+			i++;
+		}
+		if (is_piping)
+			write(line->pip_in[WRITE], str, str_len);
+		free(str);
+		str = get_next_line(line->pip_out[READ]);
+	}
+	close(line->pip_out[READ]);
+	close_files(fds);
+	free(fds);
+}

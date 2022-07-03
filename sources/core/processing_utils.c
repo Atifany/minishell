@@ -11,6 +11,7 @@ void	redirect(int from, int to)
 	dup2(to, from);
 }
 
+// return NULL if ^D on an empty line
 char	**take_input(void)
 {
 	char	*input_str;
@@ -24,32 +25,25 @@ char	**take_input(void)
 	return (exec_line);
 }
 
+// reads error from switch via pip_talk
 void	read_error_text(t_line *line)
 {
 	char	*buf;
 
-	// get error from the switch
 	redirect(STDERR_FILENO, line->save_stderr);
 	close(line->pip_talk[WRITE]);
 	buf = get_next_line(line->pip_talk[READ]);
 	while (buf)
 	{
 		line->error_text = gnl_join(&(line->error_text),
-			buf, ft_strlen(buf));
+				buf, ft_strlen(buf));
 		free(buf);
 		buf = get_next_line(line->pip_talk[READ]);
 	}
 	close(line->pip_talk[READ]);
 }
 
-int	exe(t_line *line)
-{
-	int	ret;
-
-	ret = ft_switch(line);
-	return (ret);
-}
-
+// reads exit status of executed binary from a pip_status
 int	read_pip_status(t_line *line, int status)
 {
 	char	*status_from_pipe;

@@ -95,7 +95,7 @@ char	execute_cd(t_line *line)
 	prev_path = getcwd(NULL, 0);
 	dir = chdir(path);
 	if (!ft_strcmp(line->args[1], "-"))
-		execute_pwd(line);
+		printf("%s\n", path);
 	free(path);
 	if (dir == -1)
 	{

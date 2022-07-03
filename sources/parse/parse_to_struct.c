@@ -3,7 +3,7 @@
 // // tmp func. Delete it later.
 // void	temp_print_struct(t_line *line){
 // 	int i;
-
+//
 // 	printf("command: %s\n", line->command);
 // 	printf("args: ");
 // 	i = 0;
