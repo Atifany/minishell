@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   commands.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/05 12:22:33 by atifany           #+#    #+#             */
+/*   Updated: 2022/07/05 12:22:34 by atifany          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../_headers/minishell.h"
 
 static int	public_execution(t_line *line, char	**paths)
@@ -60,18 +72,23 @@ static void	cd_spec_symbol_handler(t_line *line, char **path,
 	char	*buf1;
 	char	*buf2;
 
-	if (*(line->args[1]) == '~')
-	{
-		buf1 = ft_strdup((char *)dict_get(&(line->env), "HOME"));
-		buf2 = ft_strdup(line->args[1] + 1);
-		*path = gnl_join(&buf1, buf2,
-				ft_strlen(line->args[1] + 1));
-		free(buf2);
-	}
-	else if (!ft_strcmp(line->args[1], "-"))
-		*path = ft_strdup(prev_path);
+	if (!line->args[1])
+		*path = ft_strdup((char *)dict_get(&(line->env), "HOME"));
 	else
-		*path = ft_strdup(line->args[1]);
+	{
+		if (*(line->args[1]) == '~')
+		{
+			buf1 = ft_strdup((char *)dict_get(&(line->env), "HOME"));
+			buf2 = ft_strdup(line->args[1] + 1);
+			*path = gnl_join(&buf1, buf2,
+					ft_strlen(line->args[1] + 1));
+			free(buf2);
+		}
+		else if (!ft_strcmp(line->args[1], "-"))
+			*path = ft_strdup(prev_path);
+		else
+			*path = ft_strdup(line->args[1]);
+	}
 }
 
 char	execute_cd(t_line *line)
@@ -87,10 +104,7 @@ char	execute_cd(t_line *line)
 	}
 	if (!prev_path)
 		prev_path = getcwd(NULL, 0);
-	if (!line->args[1])
-		path = ft_strdup((char *)dict_get(&(line->env), "HOME"));
-	else
-		cd_spec_symbol_handler(line, &path, prev_path);
+	cd_spec_symbol_handler(line, &path, prev_path);
 	free(prev_path);
 	prev_path = getcwd(NULL, 0);
 	dir = chdir(path);

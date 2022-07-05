@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   inits.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/05 12:24:14 by atifany           #+#    #+#             */
+/*   Updated: 2022/07/05 12:24:15 by atifany          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../_headers/minishell.h"
 
 void	clear_struct(t_line *line)
@@ -10,6 +22,8 @@ void	clear_struct(t_line *line)
 		free_struct_array(line->redir_output);
 	if (line->redir_input)
 		free_struct_array(line->redir_input);
+	if (line->error_text)
+		free(line->error_text);
 }
 
 void	init_env(t_line *line)

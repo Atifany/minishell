@@ -31,3 +31,10 @@ V error if wrong file specified for <
 2) force new line in input-mode
 3) kill the whole pipeline
 4) kill any read process
+5) always set $? to 130 if pressed
+
+
+
+FAILURES:
+1) leak in test: ./translate.out < Makefile
+2) 
