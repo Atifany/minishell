@@ -1,32 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   commands_1.c                                       :+:      :+:    :+:   */
+/*   env_commands.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 12:22:31 by atifany           #+#    #+#             */
-/*   Updated: 2022/07/05 12:22:32 by atifany          ###   ########.fr       */
+/*   Updated: 2022/07/06 14:23:46 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../_headers/minishell.h"
-
-char	execute_pwd(t_line *line)
-{
-	char	*buf;
-
-	(void)line;
-	buf = getcwd(NULL, 0);
-	if (!buf)
-	{
-		write(2, "Error: cannot get current working directory\n", 45);
-		return (1);
-	}
-	printf("%s\n", buf);
-	free(buf);
-	return (0);
-}
 
 char	execute_env(t_line *line)
 {
@@ -56,7 +40,6 @@ static char	exit_export(char *name)
 	return (1);
 }
 
-// dobavit oshibku soderjit v imeni zapreshennie v rf simvoli
 char	execute_export(t_line *line)
 {
 	char	*name;
