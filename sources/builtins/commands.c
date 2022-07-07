@@ -6,65 +6,11 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 12:22:33 by atifany           #+#    #+#             */
-/*   Updated: 2022/07/06 14:12:20 by atifany          ###   ########.fr       */
+/*   Updated: 2022/07/06 14:31:47 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../_headers/minishell.h"
-
-static int	public_execution(t_line *line, char	**paths)
-{
-	int		i;
-
-	i = 0;
-	if (execve(line->args[0], line->args, NULL) == 0)
-		return (0);
-	while (paths[i] && line->command[0] != '/')
-	{
-		paths[i] = gnl_join(&(paths[i]), "/", 1);
-		paths[i] = gnl_join(&(paths[i]), line->command,
-				ft_strlen(line->command));
-		if (execve(paths[i], line->args, NULL) == 0)
-			return (0);
-		i++;
-	}
-	if (line->command[0] == '/')
-		write(2, "Error: no such file\n", 21);
-	else
-	{
-		write(2, line->command, ft_strlen(line->command));
-		write(2, " command is not recognized\n", 28);
-	}
-	return (1);
-}
-
-int	execute_file(t_line *line)
-{
-	int		status;
-	char	**paths;
-	char	*status_to_pipe;
-
-	signal(SIGINT, SIG_IGN);
-	paths = ft_split(dict_get(&(line->env), "PATH"), ':');
-	status = 0;
-	g_child_pid = fork();
-	if (g_child_pid == 0)
-	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
-		if (public_execution(line, paths))
-			exit(1);
-	}
-	else
-		wait(&status);
-	status_to_pipe = ft_itoa(status);
-	write(line->pip_status[WRITE],
-		status_to_pipe, ft_strlen(status_to_pipe));
-	free(status_to_pipe);
-	g_child_pid = 0;
-	free_array(paths);
-	return (status);
-}
 
 static void	cd_spec_symbol_handler(t_line *line, char **path,
 	char *prev_path)
@@ -144,5 +90,21 @@ char	execute_echo(t_line *line)
 	}
 	write(1, *args, ft_strlen(*args));
 	write(1, &nl_flag, 1);
+	return (0);
+}
+
+char	execute_pwd(t_line *line)
+{
+	char	*buf;
+
+	(void)line;
+	buf = getcwd(NULL, 0);
+	if (!buf)
+	{
+		write(2, "Error: cannot get current working directory\n", 45);
+		return (1);
+	}
+	printf("%s\n", buf);
+	free(buf);
 	return (0);
 }
