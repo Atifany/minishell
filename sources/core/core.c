@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   core.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 12:22:35 by atifany           #+#    #+#             */
-/*   Updated: 2022/07/05 12:22:36 by atifany          ###   ########.fr       */
+/*   Updated: 2022/07/08 13:05:24 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,6 @@ int	ft_switch(t_line *line)
 
 	if (!line->command[0])
 		return (0);
-	if (!ft_strcmp(line->command, "exit"))
-	{
-		line->is_exit_pressed = TRUE;
-		return (0);
-	}
 	f = (t_func *)dict_get(&(line->func_dict), line->command);
 	if (!f)
 		return (execute_file(line));
@@ -54,5 +49,5 @@ int	main(void)
 	clear_dicts(&line);
 	clear_struct(&line);
 	clear_pips(&line);
-	return (0);
+	return (line.shell_exit_status);
 }

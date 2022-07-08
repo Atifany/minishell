@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 12:22:24 by atifany           #+#    #+#             */
-/*   Updated: 2022/07/05 12:22:25 by atifany          ###   ########.fr       */
+/*   Updated: 2022/07/08 13:04:51 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ typedef struct s_line
 	int		*pip_status;
 	char	*error_text;
 	char	is_exit_pressed;
+	int		shell_exit_status;
 	t_list	*func_dict;
 	t_list	*env;
 	t_list	*cmds;
@@ -191,6 +192,7 @@ char	execute_echo(t_line	*line);
 char	execute_env(t_line *line);
 char	execute_export(t_line *line);
 char	execute_unset(t_line *line);
+char	execute_exit(t_line *line);
 
 typedef struct s_func
 {

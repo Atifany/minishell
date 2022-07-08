@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 12:22:33 by atifany           #+#    #+#             */
-/*   Updated: 2022/07/06 14:23:23 by alex             ###   ########.fr       */
+/*   Updated: 2022/07/08 13:04:50 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ static void	cd_spec_symbol_handler(t_line *line, char **path,
 
 char	execute_cd(t_line *line)
 {
-	static char	*prev_path = NULL;
 	int			dir;
 	char		*path;
 
@@ -48,11 +47,10 @@ char	execute_cd(t_line *line)
 		write(2, "cd: too many args\n", 19);
 		return (1);
 	}
-	if (!prev_path)
-		prev_path = getcwd(NULL, 0);
-	cd_spec_symbol_handler(line, &path, prev_path);
-	free(prev_path);
-	prev_path = getcwd(NULL, 0);
+	if (!dict_get(&(line->env), "OLDPWD"))
+		dict_set(&(line->env), ft_strdup("OLDPWD"), getcwd(NULL, 0));
+	cd_spec_symbol_handler(line, &path, dict_get(&(line->env), "OLDPWD"));
+	dict_set(&(line->env), ft_strdup("OLDPWD"), getcwd(NULL, 0));
 	dir = chdir(path);
 	if (!ft_strcmp(line->args[1], "-"))
 		printf("%s\n", path);
@@ -107,4 +105,17 @@ char	execute_pwd(t_line *line)
 	printf("%s\n", buf);
 	free(buf);
 	return (0);
+}
+
+char	execute_exit(t_line *line)
+{
+	if (line->args[1] && line->args[2])
+	{
+		write(2, "cd: too many args\n", 19);
+		return (1);
+	}
+	line->is_exit_pressed = TRUE;
+	if (line->args[1])
+		line->shell_exit_status = ft_atoi(line->args[1]);
+	return 0;
 }

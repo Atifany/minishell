@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 12:22:31 by atifany           #+#    #+#             */
-/*   Updated: 2022/07/06 14:23:46 by alex             ###   ########.fr       */
+/*   Updated: 2022/07/08 12:53:01 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,13 @@ char	execute_export(t_line *line)
 	name = NULL;
 	i = 0;
 	if ((line->args[1] && line->args[2])
-		|| line->args[1] == NULL || !count(line->args[1], '='))
+		|| line->args[1] == NULL || !count(line->args[1], '=')
+		|| ft_isdigit(line->args[1][0]))
 		return (exit_export(name));
 	value = ft_strchr(line->args[1], '=') + 1;
 	name = ft_substr(line->args[1], 0,
 			ft_strlen(line->args[1]) - ft_strlen(value) - 1);
-	if (value == NULL || name == NULL)
+	if (value == NULL || name == NULL || !name[0])
 		return (exit_export(name));
 	while (name[i])
 	{

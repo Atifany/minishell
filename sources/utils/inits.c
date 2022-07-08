@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   inits.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 12:24:14 by atifany           #+#    #+#             */
-/*   Updated: 2022/07/05 12:24:15 by atifany          ###   ########.fr       */
+/*   Updated: 2022/07/08 12:44:09 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ void	init_struct(t_line *line)
 	line->redir_input = NULL;
 	line->redir_output = NULL;
 	line->is_newline = TRUE;
+	line->shell_exit_status = 0;
 	line->is_exit_pressed = FALSE;
 	line->error_text = NULL;
 }
