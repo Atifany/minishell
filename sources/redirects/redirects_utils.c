@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 12:22:57 by atifany           #+#    #+#             */
-/*   Updated: 2022/07/05 12:22:58 by atifany          ###   ########.fr       */
+/*   Updated: 2022/07/08 12:56:50 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,12 +95,10 @@ void	write_output(t_line *line, char is_piping)
 	{
 		str_len = ft_strlen(str);
 		i = 0;
-		while (fds[i])
-		{
-			if (fds[i] != -1)
-				write(fds[i], str, str_len);
+		while (fds[i] && fds[i + 1])
 			i++;
-		}
+		if (fds[i] != -1)
+			write(fds[i], str, str_len);
 		if (is_piping)
 			write(line->pip_in[WRITE], str, str_len);
 		free(str);
