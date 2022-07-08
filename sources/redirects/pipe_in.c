@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 12:23:00 by atifany           #+#    #+#             */
-/*   Updated: 2022/07/08 12:54:40 by atifany          ###   ########.fr       */
+/*   Updated: 2022/07/08 13:15:22 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ char	cat_to_pipe_in(t_line *line)
 	int	sig;
 
 	i = 0;
-	while (line->redir_input[i] && line->redir_input[i + 1])	
+	while (line->redir_input[i] && line->redir_input[i + 1])
 		i++;
 	if (line->redir_input[i]->mode == FD_READ)
 	{
