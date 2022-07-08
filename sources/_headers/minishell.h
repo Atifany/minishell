@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/05 12:22:24 by atifany           #+#    #+#             */
+/*   Updated: 2022/07/08 13:04:51 by alex             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -85,9 +97,16 @@ typedef struct s_input_queue
 //  from which every command reads (stdin is redirected here)
 // pip_out is a pipe
 //  to which every command writes (including pipe_in if needed)
+// pip_talk is a pipe
+//  to which sterr is redirected. Its contents are written to stdout.
+// pip_status is a pipe
+//  to which an exit status of executed binary is written
 // is_newline is set to TRUE each readline.
 typedef struct s_line
 {
+	int		save_stdin;
+	int		save_stdout;
+	int		save_stderr;
 	char	*command;
 	char	**args;
 	t_inqu	**redir_output;
@@ -97,25 +116,47 @@ typedef struct s_line
 	char	is_newline;
 	int		*pip_in;
 	int		*pip_out;
+	int		*pip_talk;
+	int		*pip_status;
+	char	*error_text;
+	char	is_exit_pressed;
+	int		shell_exit_status;
 	t_list	*func_dict;
 	t_list	*env;
 	t_list	*cmds;
 }	t_line;
 
 char	process_input(t_line *line);
-char	ft_switch(t_line *line);
+int		ft_switch(t_line *line);
+char	simple_exe(t_line *line, char **exec_line);
+char	piped_exe(t_line *line, char **exec_line);
+
+// processing utils
+int		exe(t_line *line);
+void	read_error_text(t_line *line);
+char	**take_input(void);
+void	redirect(int from, int to);
+void	open_pip(int **pip);
+char	*rl_take_input(void);
+void	set_last_ret_env(t_line *line, int status);
+int		read_pip_status(t_line *line, int status);
+
+// signals
+void	sigint_hook(int sig);
 
 // inits
 void	init_struct(t_line *line);
 void	clear_struct(t_line *line);
+void	clear_pips(t_line *line);
 void	func_dict_init(t_line *line);
 void	init_env(t_line *line);
+void	init_streams(t_line *line);
 
 // pipe_in controller
-void	cat_to_pipe_in(t_line *line);
-char	open_pipe_in(t_line *line, char mode);
+char	cat_to_pipe_in(t_line *line);
 
 // Redirects file output to a chosen file
+void	write_output(t_line *line, char is_piping);
 void	redirect_output(t_line *line, char mode);
 void	redirect_input(t_line *line, char mode);
 void	open_files(t_line *line, int **fds);
@@ -137,25 +178,25 @@ char	is_arrow(char *str);
 
 // utils
 int		ft_to_positive(int n);
-int		ft_cat(int fd, char **str_ptr);
 int		ft_strcmp(char *str1, char *str2);
 void	free_struct_array(t_inqu **array);
 void	free_array(char **array);
-void	print_error(t_line *line);
+char	is_in_array(char **array, char *str);
+int		validate(char **exec_line);
 
 // implemented built-in's
-void	execute_file(t_line *line);
-void	execute_pwd(t_line *line);
-void	execute_cd(t_line *line);
-void	execute_echo(t_line	*line);
-void	execute_env(t_line *line);
-void	execute_export(t_line *line);
-void	execute_cat(t_line *line);
-void	execute_unset(t_line *line);
+int		execute_file(t_line *line);
+char	execute_pwd(t_line *line);
+char	execute_cd(t_line *line);
+char	execute_echo(t_line	*line);
+char	execute_env(t_line *line);
+char	execute_export(t_line *line);
+char	execute_unset(t_line *line);
+char	execute_exit(t_line *line);
 
 typedef struct s_func
 {
-	void	(*foo)(t_line *);
+	char	(*foo)(t_line *);
 }	t_func;
 
 // parse to struct

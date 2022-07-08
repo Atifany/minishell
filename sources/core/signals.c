@@ -1,52 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_free.c                                       :+:      :+:    :+:   */
+/*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/05 12:24:17 by atifany           #+#    #+#             */
-/*   Updated: 2022/07/05 12:24:18 by atifany          ###   ########.fr       */
+/*   Created: 2022/07/05 12:22:44 by atifany           #+#    #+#             */
+/*   Updated: 2022/07/05 12:22:45 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../_headers/minishell.h"
 
-void	free_array(char **array)
+// core sigint_hook. clears readline.
+void	sigint_hook(int sig)
 {
-	int	i;
-
-	if (array == NULL)
-		return ;
-	i = 0;
-	while (array[i])
-	{
-		free(array[i]);
-		i++;
-	}
-	free(array);
-}
-
-void	free_struct_array(t_inqu **array)
-{
-	int	i;
-
-	if (array == NULL)
-		return ;
-	i = 0;
-	while (array[i])
-	{
-		free(array[i]->arg);
-		free(array[i]);
-		i++;
-	}
-	free(array);
-}
-
-void	clear_pips(t_line *line)
-{
-	free(line->pip_in);
-	free(line->pip_out);
-	free(line->pip_talk);
-	free(line->pip_status);
+	(void)sig;
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	write(1, "\n", 1);
+	rl_redisplay();
 }

@@ -1,15 +1,16 @@
-#include "../_headers/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/05 12:22:53 by atifany           #+#    #+#             */
+/*   Updated: 2022/07/05 12:22:54 by atifany          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void	refresh_pip_out(t_line *line)
-{
-	if (line->pip_out)
-	{
-		free(line->pip_out);
-		line->pip_out = NULL;
-	}
-	line->pip_out = malloc(sizeof(int) * 2);
-	pipe(line->pip_out);
-}
+#include "../_headers/minishell.h"
 
 char	is_arrow(char *str)
 {

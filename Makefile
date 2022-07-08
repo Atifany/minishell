@@ -3,17 +3,20 @@ NAME = minishell
 
 # sources
 _SRC =	builtins/commands.c			\
-		builtins/commands_1.c		\
+		builtins/env_commands.c		\
+		builtins/executable.c		\
 		core/core.c					\
 		core/processing.c			\
+		core/signals.c				\
+		core/simple_exe.c			\
+		core/piped_exe.c			\
+		core/processing_utils.c		\
 		envs/environment.c			\
 		parse/parse_to_struct.c		\
 		parse/parse_utils.c			\
 		parse/parse.c				\
 		redirects/pipe_in.c			\
-		redirects/redirects.c		\
 		redirects/redirects_utils.c	\
-		utils/cat.c					\
 		utils/class_methods.c		\
 		utils/dictionary.c			\
 		utils/dictionary_delete.c	\
@@ -23,6 +26,7 @@ _SRC =	builtins/commands.c			\
 		utils/utils.c				\
 		utils/utils_free.c			\
 		utils/func_dict_init.c		\
+		utils/validation.c			\
 		
 SRC_DIR = sources
 SRC = $(_SRC:%=$(SRC_DIR)/%)
