@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 12:22:33 by atifany           #+#    #+#             */
-/*   Updated: 2022/07/08 13:11:36 by alex             ###   ########.fr       */
+/*   Updated: 2022/07/08 13:15:07 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,5 +117,5 @@ char	execute_exit(t_line *line)
 	line->is_exit_pressed = TRUE;
 	if (line->args[1])
 		line->shell_exit_status = ft_atoi(line->args[1]);
-	return 0;
+	return (0);
 }
