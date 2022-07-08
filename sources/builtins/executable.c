@@ -49,7 +49,7 @@ static int	find_exe(t_line *line, char	**paths)
 		write(2, line->command, ft_strlen(line->command));
 		write(2, " command is not recognized\n", 28);
 	}
-	return (256);
+	return (1);
 }
 
 int	execute_file(t_line *line)
@@ -63,6 +63,8 @@ int	execute_file(t_line *line)
 	status = find_exe(line, paths);
 	if (!status)
 		wait(&status);
+	else
+		status <<= 8;
 	status_to_pipe = ft_itoa(status);
 	write(line->pip_status[WRITE],
 		status_to_pipe, ft_strlen(status_to_pipe));

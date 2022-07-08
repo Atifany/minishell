@@ -66,7 +66,10 @@ void	open_files(t_line *line, int **fds)
 	while (line->redir_output[size])
 		size++;
 	*fds = (int *)ft_calloc(size + 1, sizeof(int));
-	fill_fds(line, fds, line->redir_output);
+	if (size == 0)
+		(*fds)[size] = -1;
+	else
+		fill_fds(line, fds, line->redir_output);
 }
 
 void	close_files(int *fds)

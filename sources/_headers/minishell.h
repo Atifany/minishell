@@ -221,6 +221,10 @@ void	dict_add(t_list **lst, char *key, void *value);
 //char	*get_env(t_list **env, char *key);
 void	variable_handler(char **arr, t_list **env);
 
+// school special:
+void	rl_clear_history(void);
+void	rl_replace_line(const char *text, int clear_undo);
+
 //colors
 # define BLK "\e[0;30m"
 # define BBLK "\e[1;30m"

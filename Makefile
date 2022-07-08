@@ -41,7 +41,9 @@ LIBS = $(LIBFT:%=$(LIBFT_DIR)%)
 
 # Make commands
 CC = gcc
-C_FLAGS = -O2 -Wall -Wextra -Werror -Wno-unused-result
+C_FLAGS =		-O2 -Wall -Wextra -Werror -Wno-unused-result
+SCHOOL_FLAGS =	-L/Users/atifany/homebrew/opt/readline/lib		\
+				-I/Users/atifany/homebrew/opt/readline/include
 RM = rm -f
 
 # rules
@@ -52,7 +54,7 @@ compile_libs:
 	@make -C $(LIBFT_DIR) bonus
 
 $(NAME): $(OBJ)
-	$(CC) $(OBJ) $(LIBS) -lreadline -o $@
+	$(CC) $(OBJ) $(LIBS) -lreadline $(SCHOOL_FLAGS) -o $@
 
 %.o: %.c Makefile
 	$(CC) $(C_FLAGS) -MMD -MP -c $< -o $@

@@ -67,7 +67,7 @@ static char	forking_exe(t_line *line, char is_first_cmd)
 		status = read_pip_status(line, status);
 		set_last_ret_env(line, status);
 		read_error_text(line);
-		if (WIFSIGNALED(status) || status == 1)
+		if (WIFSIGNALED(status) || WEXITSTATUS(status) == 1)
 		{
 			release_pipes(line, is_first_cmd);
 			return (1);
